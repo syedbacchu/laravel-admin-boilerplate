@@ -28,3 +28,7 @@ Homestead.json
 .env.production
 .phpactor.json
 auth.json
+npm-debug.log
+yarn-error.log
+/.idea
+/.vscode
