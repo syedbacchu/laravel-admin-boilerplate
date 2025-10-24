@@ -3,9 +3,11 @@
 namespace App\Http\Controllers\Admin\Audit;
 
 use App\Http\Controllers\Controller;
+use App\Http\Services\Audit\AuditServiceInterface;
 use App\Models\AuditLog;
 use Illuminate\View\View;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\File;
@@ -14,6 +16,14 @@ use Yajra\DataTables\Facades\DataTables;
 
 class AuditSettingController extends Controller
 {
+
+    protected AuditServiceInterface $service;
+
+    public function __construct(AuditServiceInterface $service)
+    {
+        $this->service = $service;
+    }
+
     //
     public function settings(Request $request) {
         $data['pageTitle'] = __('Audit Settings');
@@ -98,18 +108,21 @@ class AuditSettingController extends Controller
     {
         $data['pageTitle'] = __('Audit Report');
         if ($request->ajax()) {
-            return $this->getDataTableAuditLog();
+            return $this->getDataTableAuditLog($request);
         }
 
         return view('admin.audit.index', $data);
     }
 
-    protected function getDataTableAuditLog(): JsonResponse
+    protected function getDataTableAuditLog($request): JsonResponse
     {
-        $query = AuditLog::with('user')->latest();
+        $query = $this->service->getDataTableData($request->model_type);
 
         return DataTables::eloquent($query)
             ->addIndexColumn()
+            ->addColumn('created_at', function ($item) {
+                return $item->created_at;
+            })
             ->addColumn('user', function ($item) {
                 return $item->user ? $item->user->name : 'System';
             })
@@ -117,12 +130,10 @@ class AuditSettingController extends Controller
                 return class_basename($item->model_type);
             })
             ->addColumn('actions', function ($item) {
-                return '<button
-                            class="btn btn-sm btn-primary view-details"
-                            data-id="'.$item->id.'"
-                        >
-                            View Details
-                        </button>';
+                return action_buttons([
+                    view_button($item->id, 'View Details'),
+                    delete_column(route('audit.log.delete', $item->id)),
+                ]);
             })
             ->rawColumns(['actions'])
             ->make(true);
@@ -130,20 +141,34 @@ class AuditSettingController extends Controller
 
     public function show($id)
     {
-        $log = AuditLog::findOrFail($id);
+        $item = $this->service->detailsData($id);
+        if ($item['success']) {
+            $log = $item['data'];
+            return response()->json([
+                'id' => $log->id,
+                'user' => optional($log->user)->name ?? 'System',
+                'event' => $log->event,
+                'model_type' => class_basename($log->model_type),
+                'model_id' => $log->model_id,
+                'ip_address' => $log->ip_address,
+                'user_agent' => $log->user_agent,
+                'created_at' => $log->created_at->format('Y-m-d H:i:s'),
+                'old_values' => $log->old_values,
+                'new_values' => $log->new_values,
+            ]);
+        } else {
+            return response()->json([]);
+        }
+    }
 
-        return response()->json([
-            'id' => $log->id,
-            'user' => optional($log->user)->name ?? 'System',
-            'event' => $log->event,
-            'model_type' => class_basename($log->model_type),
-            'model_id' => $log->model_id,
-            'ip_address' => $log->ip_address,
-            'user_agent' => $log->user_agent,
-            'created_at' => $log->created_at->format('Y-m-d H:i:s'),
-            'old_values' => $log->old_values,
-            'new_values' => $log->new_values,
-        ]);
+    public function destroy($id): RedirectResponse {
+
+        $response = $this->service->deleteData($id);
+        if ($response['success']) {
+            return redirect()->back()->with('success',$response['message']);
+        } else {
+            return redirect()->back()->with('dismiss',$response['message']);
+        }
     }
 
 }

@@ -38,6 +38,7 @@ use Illuminate\Support\Facades\Route;
     Route::group(['prefix' => 'audit', 'as' => 'audit.'], function () {
         Route::get('logs', [AuditSettingController::class, 'index'])->name('logs');
         Route::get('log/{id}', [AuditSettingController::class, 'show'])->name('log.show');
+        Route::get('delete/{id}', [AuditSettingController::class, 'destroy'])->name('log.delete');
         Route::get('settings', [AuditSettingController::class, 'settings'])->name('settings');
         Route::post('update-model', [AuditSettingController::class, 'updateModel'])->name('updateModel');
         Route::get('reset-audit-model', [AuditSettingController::class, 'resetModel'])->name('resetModel');

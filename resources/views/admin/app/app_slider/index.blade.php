@@ -7,7 +7,7 @@
     <div class="mt-8 bg-white shadow-xl rounded-2xl p-6 border border-gray-100">
     <!-- Header -->
         <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-6 gap-4">
-            <h5 class="text-2xl font-bold text-gray-800">App Slider</h5>
+            <h5 class="text-2xl font-bold text-gray-800">{{ $title ?? __('App Slider') }}</h5>
 
             <a href="{{ route('appSlider.create') }}"
             class="inline-flex items-center px-5 py-2.5 bg-gradient-to-r from-indigo-600 to-blue-600 text-white font-medium rounded-lg shadow-md hover:shadow-lg hover:from-indigo-700 hover:to-blue-700 focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-300">

@@ -46,16 +46,6 @@
                     </a>
                 </li>
 
-                {{-- Apps --}}
-                <h2
-                    class="py-3 px-7 flex items-center uppercase font-extrabold bg-white-light/30 dark:bg-dark dark:bg-opacity-[0.08] -mx-4 mb-1">
-
-                    <svg class="w-4 h-5 flex-none hidden" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"
-                        fill="none" stroke-linecap="round" stroke-linejoin="round">
-                        <line x1="5" y1="12" x2="19" y2="12"></line>
-                    </svg>
-                    <span>Apps</span>
-                </h2>
                 {{-- Apps slider & Onboard  --}}
                 <li class="menu nav-item">
                     <button type="button" class="nav-link group" :class="{ 'active': activeDropdown === 'app' }"
@@ -92,52 +82,6 @@
                     </ul>
                 </li>
 
-
-
-                <li class="menu nav-item">
-                    <button type="button" class="nav-link group" :class="{ 'active': activeDropdown === 'dashboard' }"
-                        @click="activeDropdown === 'dashboard' ? activeDropdown = null : activeDropdown = 'dashboard'">
-                        <div class="flex items-center">
-
-                            <svg class="group-hover:!text-primary" width="20" height="20" viewBox="0 0 24 24"
-                                fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path opacity="0.5"
-                                    d="M2 12.2039C2 9.91549 2 8.77128 2.5192 7.82274C3.0384 6.87421 3.98695 6.28551 5.88403 5.10813L7.88403 3.86687C9.88939 2.62229 10.8921 2 12 2C13.1079 2 14.1106 2.62229 16.116 3.86687L18.116 5.10812C20.0131 6.28551 20.9616 6.87421 21.4808 7.82274C22 8.77128 22 9.91549 22 12.2039V13.725C22 17.6258 22 19.5763 20.8284 20.7881C19.6569 22 17.7712 22 14 22H10C6.22876 22 4.34315 22 3.17157 20.7881C2 19.5763 2 17.6258 2 13.725V12.2039Z"
-                                    fill="currentColor" />
-                                <path
-                                    d="M9 17.25C8.58579 17.25 8.25 17.5858 8.25 18C8.25 18.4142 8.58579 18.75 9 18.75H15C15.4142 18.75 15.75 18.4142 15.75 18C15.75 17.5858 15.4142 17.25 15 17.25H9Z"
-                                    fill="currentColor" />
-                            </svg>
-
-                            <span
-                                class="ltr:pl-3 rtl:pr-3 text-black dark:text-[#506690] dark:group-hover:text-white-dark">Dashboard</span>
-                        </div>
-                        <div class="rtl:rotate-180" :class="{ '!rotate-90': activeDropdown === 'dashboard' }">
-
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
-                                xmlns="http://www.w3.org/2000/svg">
-                                <path d="M9 5L15 12L9 19" stroke="currentColor" stroke-width="1.5"
-                                    stroke-linecap="round" stroke-linejoin="round" />
-                            </svg>
-                        </div>
-                    </button>
-                    <ul x-cloak x-show="activeDropdown === 'dashboard'" x-collapse class="sub-menu text-gray-500">
-                        <li>
-                            <a href="/">Sales</a>
-                        </li>
-                        <li>
-                            <a href="/analytics">Analytics</a>
-                        </li>
-                        <li>
-                            <a href="/finance">Finance</a>
-                        </li>
-                        <li>
-                            <a href="/crypto">Crypto</a>
-                        </li>
-                    </ul>
-                </li>
-
-
                 <li class="menu nav-item">
                     <a href="/" target="_blank" class="nav-link group">
                         <div class="flex items-center">
@@ -155,6 +99,43 @@
                                 class="ltr:pl-3 rtl:pr-3 text-black dark:text-[#506690] dark:group-hover:text-white-dark">Documentation</span>
                         </div>
                     </a>
+                </li>
+                {{-- Audit Logs  --}}
+                <li class="menu nav-item">
+                    <button type="button" class="nav-link group" :class="{ 'active': activeDropdown === 'audit' }"
+                        @click="activeDropdown === 'audit' ? activeDropdown = null : activeDropdown = 'audit'">
+                        <div class="flex items-center">
+
+                            <svg class="group-hover:!text-primary" width="20" height="20" viewBox="0 0 24 24"
+                                fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path opacity="0.5"
+                                    d="M2 12.2039C2 9.91549 2 8.77128 2.5192 7.82274C3.0384 6.87421 3.98695 6.28551 5.88403 5.10813L7.88403 3.86687C9.88939 2.62229 10.8921 2 12 2C13.1079 2 14.1106 2.62229 16.116 3.86687L18.116 5.10812C20.0131 6.28551 20.9616 6.87421 21.4808 7.82274C22 8.77128 22 9.91549 22 12.2039V13.725C22 17.6258 22 19.5763 20.8284 20.7881C19.6569 22 17.7712 22 14 22H10C6.22876 22 4.34315 22 3.17157 20.7881C2 19.5763 2 17.6258 2 13.725V12.2039Z"
+                                    fill="currentColor" />
+                                <path
+                                    d="M9 17.25C8.58579 17.25 8.25 17.5858 8.25 18C8.25 18.4142 8.58579 18.75 9 18.75H15C15.4142 18.75 15.75 18.4142 15.75 18C15.75 17.5858 15.4142 17.25 15 17.25H9Z"
+                                    fill="currentColor" />
+                            </svg>
+
+                            <span
+                                class="ltr:pl-3 rtl:pr-3 text-black dark:text-[#506690] dark:group-hover:text-white-dark">{{ __('Audit Logs') }}</span>
+                        </div>
+                        <div class="rtl:rotate-180" :class="{ '!rotate-90': activeDropdown === 'audit' }">
+
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <path d="M9 5L15 12L9 19" stroke="currentColor" stroke-width="1.5"
+                                    stroke-linecap="round" stroke-linejoin="round" />
+                            </svg>
+                        </div>
+                    </button>
+                    <ul x-cloak x-show="activeDropdown === 'audit'" x-collapse class="sub-menu text-gray-500">
+                        <li>
+                            <a href="{{ route('audit.logs') }}">{{ __('Logs') }}</a>
+                        </li>
+                        <li>
+                            <a href="{{ route('audit.settings') }}">{{ __('Settings') }}</a>
+                        </li>
+                    </ul>
                 </li>
                 <li class="menu nav-item">
                     <a href="{{ route('errorLog') }}" target="_blank" class="nav-link group">

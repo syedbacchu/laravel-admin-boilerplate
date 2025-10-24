@@ -29,7 +29,7 @@ abstract class BaseService implements BaseServiceInterface
             'message' => $message,
             'data' => $data,
             'status' => $status,
-            'errorMessage' => $errorMessage,
+            'error_message' => $errorMessage,
         ];
     }
 

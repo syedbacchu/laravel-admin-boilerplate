@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Services\Response\Viewed;
 use Illuminate\Support\Facades\Log;
 
 function logStore($type, $text = '', $timestamp = true): void
@@ -42,34 +43,41 @@ if (! function_exists('action_buttons')) {
         return '<div class="flex gap-2 justify-center">'.implode('', $buttons).'</div>';
     }
 }
+
 if (! function_exists('edit_column')) {
     function edit_column(string $route, string $label = 'Edit'): string
     {
         return <<<HTML
         <a href="{$route}"
-            class="inline-flex items-center px-3 py-1.5 text-sm font-semibold text-blue-600 hover:text-white hover:bg-blue-600 border border-blue-600 rounded-lg transition duration-200">
-            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            title="{$label}"
+            class="inline-flex items-center justify-center w-8 h-8 text-blue-600 hover:text-white hover:bg-blue-600 border border-blue-600 rounded-lg transition duration-200"
+        >
+            <svg xmlns="http://www.w3.org/2000/svg"
+                class="w-4 h-4"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                    d="M11 4h2m-1 0v16m8-8H4" />
+                    d="M15.232 5.232l3.536 3.536M9 11l6.232-6.232a2 2 0 112.828 2.828L11.828 13.828a2 2 0 01-.828.486L7 15l1.686-4a2 2 0 01.314-.768z" />
             </svg>
-            {$label}
         </a>
         HTML;
     }
 }
 
+
+
 if (! function_exists('delete_column')) {
     function delete_column(string $route, string $label = 'Delete'): string
     {
         return <<<HTML
-        <button type="button"
+        <button type="button" title="{$label}"
             onclick="confirmDelete('{$route}')"
             class="inline-flex items-center px-3 py-1.5 text-sm font-semibold text-red-600 hover:text-white hover:bg-red-600 border border-red-600 rounded-lg transition duration-200">
-            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                     d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5-4h4a1 1 0 011 1v1H9V4a1 1 0 011-1z" />
             </svg>
-            {$label}
         </button>
         HTML;
     }
@@ -141,4 +149,33 @@ if (!function_exists('toggle_column')) {
             </label>
         HTML;
     }
+}
+
+if (! function_exists('view_button')) {
+    function view_button(int|string $id, string $label = 'View'): string
+    {
+        return <<<HTML
+        <button
+            type="button"
+            class="inline-flex items-center justify-center w-8 h-8 text-green-600 hover:text-white hover:bg-green-600 border border-green-600 rounded-lg transition duration-200 view-details"
+            data-id="{$id}"
+            title="{$label}"
+        >
+            <svg xmlns="http://www.w3.org/2000/svg"
+                class="w-4 h-4"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+            </svg>
+        </button>
+        HTML;
+    }
+}
+
+function viewss($type,$path) {
+    return Viewed::get($type,$path);
 }

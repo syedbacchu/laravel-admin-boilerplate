@@ -6,43 +6,18 @@ use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Throwable;
 use Illuminate\Http\Exceptions\ThrottleRequestsException;
 use Illuminate\Http\Response;
+use Illuminate\Validation\ValidationException;
 
 class Handler extends ExceptionHandler
 {
-    /**
-     * A list of exception types with their corresponding custom log levels.
-     *
-     * @var array<class-string<\Throwable>, \Psr\Log\LogLevel::*>
-     */
-    protected $levels = [
-        //
-    ];
-
-    /**
-     * A list of the exception types that are not reported.
-     *
-     * @var array<int, class-string<\Throwable>>
-     */
-    protected $dontReport = [
-        //
-    ];
-
-    /**
-     * A list of the inputs that are never flashed to the session on validation exceptions.
-     *
-     * @var array<int, string>
-     */
+    protected $levels = [];
+    protected $dontReport = [];
     protected $dontFlash = [
         'current_password',
         'password',
         'password_confirmation',
     ];
 
-    /**
-     * Register the exception handling callbacks for the application.
-     *
-     * @return void
-     */
     public function register()
     {
         $this->reportable(function (Throwable $e) {
@@ -52,29 +27,32 @@ class Handler extends ExceptionHandler
 
     public function render($request, Throwable $exception)
     {
+        // 🔹 Step 1: API request  handleApiExceptions
         if ($this->isApiRequest($request)) {
             return $this->handleApiExceptions($exception);
         }
 
+        // 🔹 Step 2: Web request — log + friendly view
         $functionName = $this->getFunctionFromTrace($exception);
         $lineNumber = $exception->getLine();
 
+        //  Exception  function name
         logStore($functionName . ' at line ' . $lineNumber, $exception->getMessage());
 
-        // For web routes, show a friendly error page
-        // return response()->view('errors.custom', [], Response::HTTP_INTERNAL_SERVER_ERROR);
+        // 🔹 Step 3: Production  Custom error page
         if (app()->environment('production')) {
+            session()->flash('dismiss', 'Something went wrong! Please try again later.');
+
             return response()->view('errors.custom', [], Response::HTTP_INTERNAL_SERVER_ERROR);
-        } else {
-            return parent::render($request, $exception); // Keep default in local
         }
 
+        // 🔹 Step 4: Local/dev  default Laravel debug
+        return parent::render($request, $exception);
     }
 
     protected function handleApiExceptions(Throwable $exception)
     {
-         if ($exception instanceof \Illuminate\Auth\AuthenticationException) {
-
+        if ($exception instanceof \Illuminate\Auth\AuthenticationException) {
             return response()->json([
                 'status' => Response::HTTP_UNAUTHORIZED,
                 'success' => false,
@@ -94,8 +72,6 @@ class Handler extends ExceptionHandler
             ], Response::HTTP_BAD_REQUEST);
         }
 
-        // Handle other types of exceptions for APIs
-
         if ($exception instanceof ThrottleRequestsException) {
             return response()->json([
                 'status' => Response::HTTP_TOO_MANY_REQUESTS,
@@ -106,11 +82,9 @@ class Handler extends ExceptionHandler
             ], Response::HTTP_TOO_MANY_REQUESTS);
         }
 
-
+        //  Exception   function name
         $functionName = $this->getFunctionFromTrace($exception);
         $lineNumber = $exception->getLine();
-
-        // Log the error with the function name and line number
         logStore($functionName . ' at line ' . $lineNumber, $exception->getMessage());
 
         return response()->json([

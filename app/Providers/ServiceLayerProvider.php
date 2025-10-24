@@ -2,6 +2,10 @@
 
 namespace App\Providers;
 
+use App\Http\Services\Audit\AuditRepository;
+use App\Http\Services\Audit\AuditRepositoryInterface;
+use App\Http\Services\Audit\AuditService;
+use App\Http\Services\Audit\AuditServiceInterface;
 use App\Http\Services\Slider\SliderRepository;
 use App\Http\Services\Slider\SliderRepositoryInterface;
 use App\Http\Services\Slider\SliderService;
@@ -18,6 +22,9 @@ class ServiceLayerProvider extends ServiceProvider
         //
         $this->app->bind(SliderRepositoryInterface::class, SliderRepository::class);
         $this->app->bind(SliderServiceInterface::class, SliderService::class);
+
+        $this->app->bind(AuditRepositoryInterface::class, AuditRepository::class);
+        $this->app->bind(AuditServiceInterface::class, AuditService::class);
     }
 
     /**

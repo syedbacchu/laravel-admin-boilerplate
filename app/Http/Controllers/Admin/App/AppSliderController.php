@@ -10,6 +10,7 @@ use Illuminate\View\View;
 use Yajra\DataTables\Facades\DataTables;
 use App\Enums\SliderTypeEnum;
 use App\Http\Requests\Slider\SliderCreateRequest;
+use App\Http\Services\Response\ResponseService;
 use Illuminate\Http\RedirectResponse;
 
 class AppSliderController extends Controller
@@ -23,11 +24,14 @@ class AppSliderController extends Controller
 
     public function index(Request $request): View|JsonResponse
     {
+        $data['title'] = __('Slider');
         if ($request->ajax()) {
             return $this->getDataTableSlider();
         }
 
-        return view('admin.app.app_slider.index');;
+        return ResponseService::send([
+            'data' => $data,
+        ], view: viewss('slider','list'));
     }
 
     protected function getDataTableSlider(): JsonResponse
@@ -65,21 +69,23 @@ class AppSliderController extends Controller
         $data['pageTitle'] = __('Create App Slider');
         $data['type'] = SliderTypeEnum::APP;
         $data['function_type'] = 'create';
-        return view('admin.app.app_slider.create', $data);
+
+        return ResponseService::send([
+            'data' => $data,
+        ], view: viewss('slider','create'));
     }
 
     public function store(SliderCreateRequest $request): RedirectResponse {
-        try {
-            $response = $this->service->storeOrUpdateSlider($request);
-            if ($response['success']) {
-                return redirect()->route('appSlider.list')->with('success',$response['message']);
-            } else {
-                return redirect()->back()->with('dismiss',$response['message']);
-            }
-        } catch (\Exception $e) {
-            logStore('SliderCreate',$e->getMessage());
-            return redirect()->back()->with('dismiss',somethingWrong());
-        }
+        $response = $this->service->storeOrUpdateSlider($request);
+        return ResponseService::send([
+            'response' => $response,
+        ], successRoute: 'appSlider.list');
+
+        // if ($response['success']) {
+        //     return redirect()->route('appSlider.list')->with('success',$response['message']);
+        // } else {
+        //     return redirect()->back()->with('dismiss',$response['message']);
+        // }
     }
 
     public function edit($id)
@@ -88,17 +94,21 @@ class AppSliderController extends Controller
         $data['type'] = SliderTypeEnum::APP;
         $data['function_type'] = 'update';
         $data['item'] = $this->service->getById($id);
-        if ($data['item']) {
-            return view('admin.app.app_slider.create', $data);
-        } else {
-            return redirect()->back()->with('dismiss',__('Data not found'));
+        if (!$data['item'] ) {
+            return ResponseService::send();
         }
+        return ResponseService::send([
+            'data' => $data,
+        ], view: viewss('slider','create'));
     }
 
 
     public function update(SliderCreateRequest $request): RedirectResponse {
         try {
             $response = $this->service->storeOrUpdateSlider($request);
+            return ResponseService::send([
+                'response' => $response,
+            ]);
             if ($response['success']) {
                 return redirect()->back()->with('success',$response['message']);
             } else {
@@ -113,6 +123,11 @@ class AppSliderController extends Controller
     public function destroy($id): RedirectResponse {
         try {
             $response = $this->service->deleteSlider($id);
+
+            return ResponseService::send([
+                'response' => $response,
+            ]);
+
             if ($response['success']) {
                 return redirect()->back()->with('success',$response['message']);
             } else {

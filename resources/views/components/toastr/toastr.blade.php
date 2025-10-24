@@ -9,13 +9,13 @@
         toastr.info("{{ Session::get('info') }}");
     @endif
 
-    // warning message popup notification
-    @if($errors->any())
-            @foreach($errors->getMessages() as $error)
+    // warning message popup notification (safe check for $errors)
+    @if(isset($errors) && $errors->any())
+        @foreach($errors->getMessages() as $error)
             toastr.warning("{{ $error[0] }}");
-                @break
-            @endforeach
-        @endif
+            @break
+        @endforeach
+    @endif
     @if(Session::has('warning'))
         toastr.warning("{{ Session::get('warning') }}");
     @endif
@@ -24,7 +24,7 @@
     @if(Session::has('dismiss'))
         toastr.error("{{ Session::get('dismiss') }}");
     @endif
-    // error message popup notification
+
     @if(Session::has('error'))
         toastr.error("{{ Session::get('error') }}");
     @endif
