@@ -2,12 +2,15 @@
 
 namespace App\Http\Services;
 
+use App\Enums\StatusEnum;
+use App\Enums\UserRole;
 use App\Models\User;
 use App\Http\Services\AdminActivityLogger;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\RateLimiter;
+use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 
 class AdminAuthService
@@ -21,51 +24,67 @@ class AdminAuthService
 
     public function authenticate(Request $request): bool
     {
-        $credentials = $request->only('email', 'password');
+        $loginInput = $request->input('login'); // can be username, email, or phone
+        $password = $request->input('password');
         $remember = $request->boolean('remember');
 
-        // Find user with admin/staff role
-        $user = User::where('email', $credentials['email'])
-            ->whereIn('user_type', [User::TYPE_ADMIN, User::TYPE_STAFF])
-            ->where('banned', false)
-            ->where('active_status', true)
-            ->where('verification_status', true)
+        // Rate limit key based on user identifier + IP
+        $key = Str::lower($loginInput) . '|' . $request->ip();
+
+        // ✅ Rate limit check: max 4 attempts per 20 minutes
+        if (RateLimiter::tooManyAttempts($key, 4)) {
+            $seconds = RateLimiter::availableIn($key);
+            throw ValidationException::withMessages([
+                'login' => ["Too many login attempts. Try again in " . ceil($seconds / 60) . " minutes."],
+            ]);
+        }
+
+        // ✅ Find user by email, username, or phone
+        $user = User::query()
+            ->where(function ($q) use ($loginInput) {
+                $q->where('email', $loginInput)
+                    ->orWhere('username', $loginInput)
+                    ->orWhere('phone', $loginInput);
+            })
+            ->whereIn('role_module', [UserRole::SUPER_ADMIN_ROLE, UserRole::ADMIN_ROLE])
+            ->where('status', StatusEnum::ACTIVE)
             ->first();
 
-        if (!$user || !Hash::check($credentials['password'], $user->password)) {
-            RateLimiter::hit($request->ip());
+        // ✅ Validate user and password
+        if (!$user || !Hash::check($password, $user->password)) {
+            RateLimiter::hit($key, 60 * 20); // block for 20 minutes after 4 fails
 
-            $this->activityLogger->logFailedLogin($credentials['email'], [
+            $this->activityLogger->logFailedLogin($loginInput, [
                 'ip' => $request->ip(),
                 'user_agent' => $request->userAgent(),
                 'reason' => 'invalid_credentials',
             ]);
 
             throw ValidationException::withMessages([
-                'email' => ['Invalid credentials or insufficient privileges.'],
+                'login' => ['Invalid credentials or insufficient privileges.'],
             ]);
         }
 
-        // Additional security checks
+        // ✅ Clear rate limit on success
+        RateLimiter::clear($key);
+
+        // ✅ Extra security check
         if (!$user->email_verified_at) {
             throw ValidationException::withMessages([
-                'email' => ['Please verify your email address before logging in.'],
+                'login' => ['Please verify your email address before logging in.'],
             ]);
         }
 
-        // Login the user
+        // ✅ Login user
         Auth::login($user, $remember);
 
-        // Clear rate limiting
-        RateLimiter::clear($request->ip());
-
-        // Update last login
+        // ✅ Update login info
         $user->update([
             'last_login_at' => now(),
             'last_login_ip' => $request->ip(),
         ]);
 
-        // Log successful login
+        // ✅ Log success
         $this->activityLogger->log($user, 'admin_login', [
             'ip' => $request->ip(),
             'user_agent' => $request->userAgent(),
@@ -80,11 +99,10 @@ class AdminAuthService
         $user = Auth::user();
 
         if ($user) {
-            // Calculate session duration
-            $sessionDuration = $user->last_login_at ?
-                now()->diffInMinutes($user->last_login_at) : 0;
+            $sessionDuration = $user->last_login_at
+                ? now()->diffInMinutes($user->last_login_at)
+                : 0;
 
-            // Log logout
             $this->activityLogger->log($user, 'admin_logout', [
                 'ip' => $request->ip(),
                 'session_duration_minutes' => $sessionDuration,

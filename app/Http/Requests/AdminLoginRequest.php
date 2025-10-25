@@ -17,7 +17,7 @@ class AdminLoginRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'email' => ['required', 'string', 'email', 'max:180'],
+            'login' => ['required', 'string', 'max:180'], // email / phone / username
             'password' => ['required', 'string', 'min:6'],
             'remember' => ['nullable', 'boolean'],
         ];
@@ -26,17 +26,17 @@ class AdminLoginRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'email.required' => 'Email address is required.',
-            'email.email' => 'Please enter a valid email address.',
-            'password.required' => 'Password is required.',
-            'password.min' => 'Password must be at least 8 characters.',
+            'login.required' => __('Please enter your email, username, or phone number.'),
+            'password.required' => __('Password is required.'),
+            'password.min' => __('Password must be at least 6 characters.'),
         ];
     }
 
     protected function prepareForValidation(): void
     {
+        // Trim login input (safe for username/phone/email)
         $this->merge([
-            'email' => strtolower(trim($this->email)),
+            'login' => strtolower(trim($this->login)),
         ]);
     }
 
@@ -49,7 +49,7 @@ class AdminLoginRequest extends FormRequest
         $seconds = RateLimiter::availableIn($this->throttleKey());
 
         throw ValidationException::withMessages([
-            'email' => trans('auth.throttle', [
+            'login' => trans('auth.throttle', [
                 'seconds' => $seconds,
                 'minutes' => ceil($seconds / 60),
             ]),
@@ -58,6 +58,7 @@ class AdminLoginRequest extends FormRequest
 
     public function throttleKey(): string
     {
-        return Str::transliterate(Str::lower($this->input('email')) . '|' . $this->ip());
+        // key = user input (login) + IP
+        return Str::transliterate(Str::lower($this->input('login')) . '|' . $this->ip());
     }
 }

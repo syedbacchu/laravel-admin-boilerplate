@@ -5,3 +5,5 @@ An enterprise-grade Laravel 10 boilerplate built for high-performance admin pane
 # Audit logs
 # Error logs
 # By Default error store no need try catch
+# Dynamic Response function
+# Common view path

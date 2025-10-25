@@ -80,12 +80,6 @@ class AppSliderController extends Controller
         return ResponseService::send([
             'response' => $response,
         ], successRoute: 'appSlider.list');
-
-        // if ($response['success']) {
-        //     return redirect()->route('appSlider.list')->with('success',$response['message']);
-        // } else {
-        //     return redirect()->back()->with('dismiss',$response['message']);
-        // }
     }
 
     public function edit($id)
@@ -104,39 +98,18 @@ class AppSliderController extends Controller
 
 
     public function update(SliderCreateRequest $request): RedirectResponse {
-        try {
-            $response = $this->service->storeOrUpdateSlider($request);
-            return ResponseService::send([
-                'response' => $response,
-            ]);
-            if ($response['success']) {
-                return redirect()->back()->with('success',$response['message']);
-            } else {
-                return redirect()->back()->with('dismiss',$response['message']);
-            }
-        } catch (\Exception $e) {
-            logStore('Slider update',$e->getMessage());
-            return redirect()->back()->with('dismiss',somethingWrong());
-        }
+
+        $response = $this->service->storeOrUpdateSlider($request);
+        return ResponseService::send([
+            'response' => $response,
+        ]);
     }
 
     public function destroy($id): RedirectResponse {
-        try {
-            $response = $this->service->deleteSlider($id);
-
-            return ResponseService::send([
-                'response' => $response,
-            ]);
-
-            if ($response['success']) {
-                return redirect()->back()->with('success',$response['message']);
-            } else {
-                return redirect()->back()->with('dismiss',$response['message']);
-            }
-        } catch (\Exception $e) {
-            logStore('Slider destroy',$e->getMessage());
-            return redirect()->back()->with('dismiss',somethingWrong());
-        }
+        $response = $this->service->deleteSlider($id);
+        return ResponseService::send([
+            'response' => $response,
+        ]);
     }
 
     public function publish(Request $request): JsonResponse {

@@ -47,7 +47,7 @@ class AuthController extends Controller
 
         } catch (\Exception $e) {
             return back()
-                ->withErrors(['email' => $e->getMessage()])
+                ->withErrors(['login' => $e->getMessage()])
                 ->withInput($request->except('password'));
         }
     }
