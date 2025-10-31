@@ -59,6 +59,8 @@ return new class extends Migration
             $table->string('referral_code')->nullable();
             $table->unsignedBigInteger('referred_by')->nullable();
             $table->timestamp('email_verified_at')->nullable();
+            $table->timestamp('last_login_at')->nullable();
+            $table->string('last_login_ip')->nullable();
             $table->string('password_reset_token', 32)->nullable();
             $table->rememberToken();
             $table->timestamps();

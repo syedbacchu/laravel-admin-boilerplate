@@ -14,9 +14,6 @@ class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable, Auditable;
 
-    public const TYPE_ADMIN = 'admin';
-    public const TYPE_STAFF = 'staff';
-
     /**
      * The attributes that are mass assignable.
      *
@@ -67,6 +64,8 @@ class User extends Authenticatable
         'referral_code',
         'referred_by',
         'email_verified_at',
+        'last_login_at',
+        'last_login_ip'
     ];
 
     /**

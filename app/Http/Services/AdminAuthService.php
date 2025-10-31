@@ -27,19 +27,15 @@ class AdminAuthService
         $loginInput = $request->input('login'); // can be username, email, or phone
         $password = $request->input('password');
         $remember = $request->boolean('remember');
-
-        // Rate limit key based on user identifier + IP
         $key = Str::lower($loginInput) . '|' . $request->ip();
 
-        // ✅ Rate limit check: max 4 attempts per 20 minutes
         if (RateLimiter::tooManyAttempts($key, 4)) {
             $seconds = RateLimiter::availableIn($key);
             throw ValidationException::withMessages([
-                'login' => ["Too many login attempts. Try again in " . ceil($seconds / 60) . " minutes."],
+                'login' => [__("Too many login attempts. Try again in ") . ceil($seconds / 60) . __(" minutes.")],
             ]);
         }
 
-        // ✅ Find user by email, username, or phone
         $user = User::query()
             ->where(function ($q) use ($loginInput) {
                 $q->where('email', $loginInput)
@@ -47,12 +43,10 @@ class AdminAuthService
                     ->orWhere('phone', $loginInput);
             })
             ->whereIn('role_module', [UserRole::SUPER_ADMIN_ROLE, UserRole::ADMIN_ROLE])
-            ->where('status', StatusEnum::ACTIVE)
             ->first();
 
-        // ✅ Validate user and password
         if (!$user || !Hash::check($password, $user->password)) {
-            RateLimiter::hit($key, 60 * 20); // block for 20 minutes after 4 fails
+            RateLimiter::hit($key, 60 * 20);
 
             $this->activityLogger->logFailedLogin($loginInput, [
                 'ip' => $request->ip(),
@@ -61,24 +55,20 @@ class AdminAuthService
             ]);
 
             throw ValidationException::withMessages([
-                'login' => ['Invalid credentials or insufficient privileges.'],
+                'login' => ['Invalid credentials.'],
             ]);
         }
 
-        // ✅ Clear rate limit on success
         RateLimiter::clear($key);
 
-        // ✅ Extra security check
         if (!$user->email_verified_at) {
             throw ValidationException::withMessages([
-                'login' => ['Please verify your email address before logging in.'],
+                'login' => [__('Please verify your email address before logging in.')],
             ]);
         }
 
-        // ✅ Login user
         Auth::login($user, $remember);
 
-        // ✅ Update login info
         $user->update([
             'last_login_at' => now(),
             'last_login_ip' => $request->ip(),

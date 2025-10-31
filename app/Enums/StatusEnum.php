@@ -5,14 +5,16 @@ enum StatusEnum: int
 {
     case ACTIVE = 1;
     case PENDING = 0;
-    case DELETED = 2;
+    case SUSPENDED = 2;
+    case TEMPORARY_DEACTIVE = 3;
 
     public static function getStatusArray(): array
     {
         return [
             self::ACTIVE->value => 'Active',
             self::PENDING->value => 'Pending',
-            self::DELETED->value => 'Deleted',
+            self::SUSPENDED->value => 'Suspended',
+            self::TEMPORARY_DEACTIVE->value => 'Temporary Deactive',
         ];
     }
 
@@ -21,7 +23,8 @@ enum StatusEnum: int
         return match($this) {
             self::ACTIVE => 'Active',
             self::PENDING => 'Pending',
-            self::DELETED => 'Deleted',
+            self::SUSPENDED => 'Suspended',
+            self::TEMPORARY_DEACTIVE => 'Temporary Deactive',
         };
     }
 
@@ -30,7 +33,8 @@ enum StatusEnum: int
         return match($this) {
             self::ACTIVE => 'green',
             self::PENDING => 'yellow',
-            self::DELETED => 'red',
+            self::SUSPENDED => 'red',
+            self::TEMPORARY_DEACTIVE => 'red',
         };
     }
 }

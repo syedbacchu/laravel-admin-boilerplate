@@ -29,10 +29,10 @@ class AuditSettingController extends Controller
         $data['pageTitle'] = __('Audit Settings');
         $data['disabled'] = [];
 
-        if (!Storage::exists('audit_settings.json')) {
-            Storage::put('audit_settings.json', json_encode($data['disabled'], JSON_PRETTY_PRINT));
+        if (!Storage::exists('sd_audit_settings.json')) {
+            Storage::put('sd_audit_settings.json', json_encode($data['disabled'], JSON_PRETTY_PRINT));
         } else {
-            $data['disabled'] = json_decode(Storage::get('audit_settings.json'), true) ?? [];
+            $data['disabled'] = json_decode(Storage::get('sd_audit_settings.json'), true) ?? [];
         }
         if ($request->ajax()) {
             return $this->modelList();
@@ -50,8 +50,8 @@ class AuditSettingController extends Controller
             });
 
         $disabled = [];
-        if (Storage::exists('audit_settings.json')) {
-            $disabled = json_decode(Storage::get('audit_settings.json'), true) ?? [];
+        if (Storage::exists('sd_audit_settings.json')) {
+            $disabled = json_decode(Storage::get('sd_audit_settings.json'), true) ?? [];
         }
 
         return DataTables::of($models)
@@ -73,8 +73,8 @@ class AuditSettingController extends Controller
         $enabled = filter_var($request->enabled, FILTER_VALIDATE_BOOLEAN);
 
         $disabled = [];
-        if (Storage::exists('audit_settings.json')) {
-            $disabled = json_decode(Storage::get('audit_settings.json'), true) ?? [];
+        if (Storage::exists('sd_audit_settings.json')) {
+            $disabled = json_decode(Storage::get('sd_audit_settings.json'), true) ?? [];
         }
 
         if ($enabled) {
@@ -83,24 +83,24 @@ class AuditSettingController extends Controller
             $disabled[$model] = false;
         }
 
-        Storage::put('audit_settings.json', json_encode($disabled, JSON_PRETTY_PRINT));
+        Storage::put('sd_audit_settings.json', json_encode($disabled, JSON_PRETTY_PRINT));
 
         return response()->json([
             'success' => true,
-            'message' => 'Audit setting updated successfully',
+            'message' => __('Audit setting updated successfully'),
             'data' => $disabled
         ]);
     }
 
     public function resetModel()
     {
-        if (Storage::exists('audit_settings.json')) {
-            Storage::delete('audit_settings.json');
+        if (Storage::exists('sd_audit_settings.json')) {
+            Storage::delete('sd_audit_settings.json');
         }
 
-        Storage::put('audit_settings.json', json_encode([], JSON_PRETTY_PRINT));
+        Storage::put('sd_audit_settings.json', json_encode([], JSON_PRETTY_PRINT));
 
-        return redirect()->back()->with('success', 'Audit settings reset successfully! All models are now enabled.');
+        return redirect()->back()->with('success', __('Audit settings reset successfully! All models are now enabled.'));
     }
 
 

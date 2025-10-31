@@ -35,11 +35,8 @@ class AuthController extends Controller
     {
         try {
             $request->ensureIsNotRateLimited();
-
             $this->authService->authenticate($request);
-
             $request->session()->regenerate();
-
             $user = Auth::user();
 
             return redirect()->intended(route('dashboard'))
@@ -60,6 +57,6 @@ class AuthController extends Controller
         $this->authService->logout($request);
 
         return redirect()->route('login')
-            ->with('success', 'You have been logged out successfully.');
+            ->with('success', __('You have been logged out successfully.'));
     }
 }

@@ -17,8 +17,8 @@ class AdminLoginRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'login' => ['required', 'string', 'max:180'], // email / phone / username
-            'password' => ['required', 'string', 'min:6'],
+            'login' => ['required', 'string', 'max:180'],
+            'password' => ['required', 'string'],
             'remember' => ['nullable', 'boolean'],
         ];
     }
@@ -28,21 +28,27 @@ class AdminLoginRequest extends FormRequest
         return [
             'login.required' => __('Please enter your email, username, or phone number.'),
             'password.required' => __('Password is required.'),
-            'password.min' => __('Password must be at least 6 characters.'),
         ];
     }
 
     protected function prepareForValidation(): void
     {
-        // Trim login input (safe for username/phone/email)
         $this->merge([
             'login' => strtolower(trim($this->login)),
         ]);
     }
 
+    /**
+     * Ensure that the user is not rate limited.
+     *
+     * @throws \Illuminate\Validation\ValidationException
+     */
     public function ensureIsNotRateLimited(): void
     {
-        if (!RateLimiter::tooManyAttempts($this->throttleKey(), 5)) {
+        $maxAttempts = 4;
+        $decaySeconds = 20 * 60;
+
+        if (!RateLimiter::tooManyAttempts($this->throttleKey(), $maxAttempts)) {
             return;
         }
 
@@ -56,9 +62,27 @@ class AdminLoginRequest extends FormRequest
         ]);
     }
 
+    /**
+     * Generate a unique key for rate limiting.
+     */
     public function throttleKey(): string
     {
-        // key = user input (login) + IP
         return Str::transliterate(Str::lower($this->input('login')) . '|' . $this->ip());
+    }
+
+    /**
+     * Record a failed login attempt.
+     */
+    public function hitRateLimiter(): void
+    {
+        RateLimiter::hit($this->throttleKey(), 20 * 60);
+    }
+
+    /**
+     * Clear the rate limiter on successful login.
+     */
+    public function clearRateLimiter(): void
+    {
+        RateLimiter::clear($this->throttleKey());
     }
 }
