@@ -4,11 +4,13 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\AdminLoginRequest;
+use App\Http\Requests\Auth\ForgotPasswordRequest;
 use App\Http\Services\AdminAuthService;
 use App\Http\Services\Response\ResponseService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\View\View;
 
 class AuthController extends Controller
@@ -43,13 +45,31 @@ class AuthController extends Controller
             $request->session()->regenerate();
             $user = Auth::user();
 
-            return redirect()->intended(route('dashboard'))
-                ->with('success', "Welcome back, {$user->name}!");
+            return ResponseService::send([
+                'response' => [
+                    'success' => true,
+                    'message' => "Welcome back, {$user->name}!",
+                    'data' => $user,
+                    'status' => 200,
+                    'error_message' => "",
+                ],
+            ], successRoute: 'dashboard');
+//            return redirect()->intended(route('dashboard'))
+//                ->with('success', "Welcome back, {$user->name}!");
 
         } catch (\Exception $e) {
-            return back()
-                ->withErrors(['login' => $e->getMessage()])
-                ->withInput($request->except('password'));
+            return ResponseService::send([
+                'response' => [
+                    'success' => false,
+                    'message' => __('Something went wrong, please try again later.'),
+                    'data' => [],
+                    'status' => 500,
+                    'error_message' => $e->getMessage(),
+                ],
+            ]);
+//            return back()
+//                ->withErrors(['login' => $e->getMessage()])
+//                ->withInput($request->except('password'));
         }
     }
 
@@ -60,9 +80,27 @@ class AuthController extends Controller
         ], view: viewss('auth','forgot'));
     }
 
-    public function forgotPasswordProcess(Request $request)
+    public function forgotPasswordProcess(ForgotPasswordRequest $request)
     {
-        dd($request->all());
+        $identifier = $request->email;
+        $key = 'forgot-password:' . $identifier . ':' . $request->ip();
+
+        // Check limit
+        if (RateLimiter::tooManyAttempts($key, 3)) {
+            return ResponseService::send([
+                'success' => false,
+                'message' => 'Too many attempts. Please try again after 20 minutes.',
+                'status' => 429
+            ]);
+        }
+
+        // Increase attempt count (expire in 20 min)
+        RateLimiter::hit($key, 1200);
+
+        $response = $this->authService->sendForgotPassword($request);
+        return ResponseService::send([
+            'response' => $response ,
+        ], successRoute: 'auth.forgot.password');
     }
 
     /**

@@ -179,3 +179,19 @@ if (! function_exists('view_button')) {
 function viewss($type,$path) {
     return Viewed::get($type,$path);
 }
+
+function sendResponse(
+    bool $success,
+    string $message = "Invalid request",
+    $data = [],
+    int $status = 200,
+    string $errorMessage = ""
+    ) {
+        return [
+            'success' => $success,
+            'message' => $message,
+            'data' => $data,
+            'status' => $status,
+            'error_message' => $errorMessage,
+        ];
+    }

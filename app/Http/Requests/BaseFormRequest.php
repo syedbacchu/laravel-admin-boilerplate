@@ -16,7 +16,7 @@ class BaseFormRequest extends FormRequest
                 'status' => 422,
                 'success' => false,
                 'message' => $validator->errors()->first() ?? __("Something went wrong with validation"),
-                'errorMessage' => $validator->errors()->first() ?? 'Validation Failed',
+                'error_message' => $validator->errors()->first() ?? 'Validation Failed',
                 'data' => []
             ], 422));
         }

@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('code',10);
             $table->tinyInteger('user_type')->default(1);
             $table->tinyInteger('type')->default(1);
-            $table->tinyInteger('attemts')->default(0);
+            $table->tinyInteger('attempts')->default(0);
             $table->dateTime('expired_at')->nullable();
             $table->timestamps();
         });
