@@ -1,5 +1,4 @@
 <x-layout.auth pageTitle="{{$pageTitle ?? 'Title Here'}}">
-
     <div class="flex min-h-screen">
         <!-- Left side cover -->
         <div
@@ -26,14 +25,26 @@
                 </div>
 
                 <!-- 🔹 Title -->
-                <h2 class="font-bold text-3xl mb-3 text-center">{{__('Admin Portal')}}</h2>
+                <h2 class="font-bold text-3xl mb-3 text-center">{{__('Forgot Password')}}</h2>
                 <p class="mb-7 text-center text-white-dark">
-                    {{__('Sign in to access the administrative dashboard')}}
+                    {{__('Using email/phone/username recover your account')}}
                 </p>
 
                 <!-- 🔹 Login Form -->
-                <form class="space-y-5" method="POST" action="{{ route('login') }}">
+                <form class="space-y-5" method="POST" action="{{ route('auth.forgot.password.process') }}">
                     @csrf
+                    <div>
+                        <label for="type">{{ __('Select Type') }}</label>
+                        <select name="type" id="type" class="form-select">
+                            <option value="">{{ __('Select') }}</option>
+                            @foreach(\App\Enums\VerificationCodeTypeEnum::getTypeArray() as $key => $value)
+                                <option value="{{ $key }}" {{ old('type') == $key ? 'selected' : '' }}>
+                                    {{ $value }}
+                                </option>
+                            @endforeach
+
+                        </select>
+                    </div>
                     <div>
                         <label for="login">{{ __('Email / Username / Phone') }}</label>
                         <input
@@ -45,32 +56,18 @@
                             placeholder="{{__('Enter Email / Username / Phone')}}"
                         />
                     </div>
-
-                    <div>
-                        <label for="password">{{__('Password')}}</label>
-                        <input
-                            name="password"
-                            id="password"
-                            type="password"
-                            class="form-input w-full"
-                            placeholder="{{__('Enter Password')}}"
-                        />
-                    </div>
-
-                    <!-- Remember + Forgot Password -->
                     <div class="flex items-center justify-between text-sm">
-                        <label class="cursor-pointer flex items-center space-x-2">
-                            <input type="checkbox" name="remember" class="form-checkbox" />
-                            <span class="text-white-dark">{{__('Remember me')}}</span>
-                        </label>
-
-                        <a href="{{route('auth.forgot.password')}}"
+                        <a href="{{route('login')}}"
+                           class="text-secondary hover:underline font-medium">
+                            {{__('Back')}}
+                        </a>
+                        <a href="{{route('login')}}"
                            class="text-primary hover:underline font-medium">
-                            {{__('Forgot password?')}}
+                            {{__('Login')}}
                         </a>
                     </div>
 
-                    <button type="submit" class="btn btn-primary w-full">{{__('SIGN IN')}}</button>
+                    <button type="submit" class="btn btn-primary w-full">{{__('Recover')}}</button>
                 </form>
 
                 <div class="mt-10 mb-5"></div> <!-- spacing -->

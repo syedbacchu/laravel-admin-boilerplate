@@ -5,6 +5,11 @@ namespace App\Http\Services\Response;
 class Viewed
 {
     protected static array $views = [
+        'auth' => [
+            'login' => 'auth.login',
+            'forgot' => 'auth.forgot_password',
+            'reset' => 'auth.reset_password',
+        ],
         'slider' => [
             'list'  => 'admin.app.app_slider.index',
             'create' => 'admin.app.app_slider.create',

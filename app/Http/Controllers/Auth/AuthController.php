@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\AdminLoginRequest;
 use App\Http\Services\AdminAuthService;
+use App\Http\Services\Response\ResponseService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -25,7 +26,10 @@ class AuthController extends Controller
      */
     public function showLogin(): View
     {
-        return view('auth.login');
+        $data['pageTitle'] = __('Admin Login');
+        return ResponseService::send([
+            'data' => $data,
+        ], view: viewss('auth','login'));
     }
 
     /**
@@ -47,6 +51,18 @@ class AuthController extends Controller
                 ->withErrors(['login' => $e->getMessage()])
                 ->withInput($request->except('password'));
         }
+    }
+
+    public  function forgotPassword() {
+        $data['pageTitle'] = __('Forgot Password');
+        return ResponseService::send([
+            'data' => $data,
+        ], view: viewss('auth','forgot'));
+    }
+
+    public function forgotPasswordProcess(Request $request)
+    {
+        dd($request->all());
     }
 
     /**
