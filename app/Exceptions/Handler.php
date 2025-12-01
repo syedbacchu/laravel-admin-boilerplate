@@ -57,7 +57,7 @@ class Handler extends ExceptionHandler
                 'status' => Response::HTTP_UNAUTHORIZED,
                 'success' => false,
                 'message' => '',
-                'errorMessage' => $exception->getMessage(),
+                'error_message' => $exception->getMessage(),
                 'data' => [],
             ], Response::HTTP_UNAUTHORIZED);
         }
@@ -67,7 +67,7 @@ class Handler extends ExceptionHandler
                 'status' => Response::HTTP_BAD_REQUEST,
                 'success' => false,
                 'message' => '',
-                'errorMessage' => $exception->getMessage(),
+                'error_message' => $exception->getMessage(),
                 'data' => [],
             ], Response::HTTP_BAD_REQUEST);
         }
@@ -77,7 +77,7 @@ class Handler extends ExceptionHandler
                 'status' => Response::HTTP_TOO_MANY_REQUESTS,
                 'success' => false,
                 'message' => 'Too Many Requests. Please try again later.',
-                'errorMessage' => $exception->getMessage(),
+                'error_message' => $exception->getMessage(),
                 'data' => [],
             ], Response::HTTP_TOO_MANY_REQUESTS);
         }
@@ -90,7 +90,7 @@ class Handler extends ExceptionHandler
         return response()->json([
             'status' => Response::HTTP_INTERNAL_SERVER_ERROR,
             'success' => false,
-            'errorMessage' => $exception->getMessage(),
+            'error_message' => $exception->getMessage(),
             'message' => 'Something went wrong',
             'data' => [],
         ], Response::HTTP_INTERNAL_SERVER_ERROR);

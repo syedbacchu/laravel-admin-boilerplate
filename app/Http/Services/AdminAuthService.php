@@ -4,6 +4,7 @@ namespace App\Http\Services;
 
 use App\Enums\StatusEnum;
 use App\Enums\UserRole;
+use App\Http\Requests\Auth\ForgotPasswordRequest;
 use App\Models\User;
 use App\Http\Services\AdminActivityLogger;
 use Illuminate\Http\Request;
@@ -82,6 +83,11 @@ class AdminAuthService
         ]);
 
         return true;
+    }
+
+    // send forgot password
+    public function sendForgotPassword(ForgotPasswordRequest $request) {
+        return sendResponse(true, __('Password reset successfully.'));
     }
 
     public function logout(Request $request): void

@@ -46,11 +46,11 @@
                         </select>
                     </div>
                     <div>
-                        <label for="login">{{ __('Email / Username / Phone') }}</label>
+                        <label for="email">{{ __('Email / Username / Phone') }}</label>
                         <input
-                            name="login"
-                            value="{{ old('login') }}"
-                            id="login"
+                            name="email"
+                            value="{{ old('email') }}"
+                            id="email"
                             type="text"
                             class="form-input w-full"
                             placeholder="{{__('Enter Email / Username / Phone')}}"

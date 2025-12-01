@@ -2,10 +2,9 @@
 
 namespace App\Http\Requests\Auth;
 
+use App\Enums\VerificationCodeTypeEnum;
 use App\Http\Requests\BaseFormRequest;
-use Illuminate\Support\Facades\RateLimiter;
-use Illuminate\Support\Str;
-use Illuminate\Validation\ValidationException;
+use Illuminate\Validation\Rule;
 
 class ForgotPasswordRequest extends BaseFormRequest
 {
@@ -17,7 +16,10 @@ class ForgotPasswordRequest extends BaseFormRequest
     public function rules(): array
     {
         return [
-            'type' => ['required'],
+            'type' => [
+                'required',
+                Rule::in(array_column(VerificationCodeTypeEnum::cases(), 'value')),
+            ],
             'email' => ['required', 'string'],
         ];
     }
@@ -25,8 +27,9 @@ class ForgotPasswordRequest extends BaseFormRequest
     public function messages(): array
     {
         return [
-            'login.required' => __('Please enter your email, username, or phone number.'),
-            'password.required' => __('Password is required.'),
+            'type.required' => __('Type is required.'),
+            'type.in' => __('Type is only email, username, or phone number.'),
+            'email.required' => __('Email / Phone / Username is required.'),
         ];
     }
 

@@ -13,7 +13,7 @@ class UserVerificationCode extends Model
         'user_id',
         'code',
         'type',
-        'attemts',
+        'attempts',
         'expired_at'
     ];
 
