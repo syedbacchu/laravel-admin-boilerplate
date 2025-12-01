@@ -15,11 +15,12 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('user_id');
             $table->string('code',10);
-            $table->tinyInteger('user_type')->default(1);
-            $table->tinyInteger('type')->default(1);
+            $table->tinyInteger('type')->default(1)->comment("1=email, 2=phone, 3=username");
             $table->tinyInteger('attempts')->default(0);
             $table->dateTime('expired_at')->nullable();
             $table->timestamps();
+
+            $table->index(['user_id', 'type']);
         });
     }
 

@@ -66,7 +66,7 @@ return new class extends Migration
             $table->timestamps();
 
             // Indexes
-            $table->index(["username", "phone","email"]);
+            $table->index(["phone", "status"]);
 
         });
     }

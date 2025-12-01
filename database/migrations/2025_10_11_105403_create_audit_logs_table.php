@@ -24,6 +24,7 @@ return new class extends Migration
             $table->timestamps();
 
             $table->index(['model_type', 'model_id']);
+            $table->index(['model_type', 'model_id', 'created_at']);
         });
     }
 

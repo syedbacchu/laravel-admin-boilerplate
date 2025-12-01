@@ -26,7 +26,6 @@ return new class extends Migration
             // Indexes for better query performance
             $table->index(['user_id', 'action']);
             $table->index('created_at');
-            $table->index('action');
         });
     }
 
