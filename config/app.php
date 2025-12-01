@@ -196,7 +196,8 @@ return [
         App\Providers\RouteServiceProvider::class,
 
         // custom service provider
-        App\Providers\ServiceLayerProvider::class
+        App\Providers\ServiceLayerProvider::class,
+        Sdtech\FileUploaderLaravel\Providers\FileUploadLaravelServiceProviders::class,
 
     ],
 

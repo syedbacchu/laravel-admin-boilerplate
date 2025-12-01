@@ -11,6 +11,7 @@
         "laravel/framework": "^10.2.0",
         "laravel/sanctum": "^3.2",
         "laravel/tinker": "^2.7",
+        "sdtech/file-uploader-laravel": "^1.0",
         "sdtech/log-viewer-laravel": "^1.0",
         "yajra/laravel-datatables-oracle": "^10.11"
     },
