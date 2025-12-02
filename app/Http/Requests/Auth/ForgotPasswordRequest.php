@@ -16,11 +16,12 @@ class ForgotPasswordRequest extends BaseFormRequest
     public function rules(): array
     {
         return [
-            'type' => [
-                'required',
-                Rule::in(array_column(VerificationCodeTypeEnum::cases(), 'value')),
-            ],
+//            'type' => [
+//                'required',
+//                Rule::in(array_column(VerificationCodeTypeEnum::cases(), 'value')),
+//            ],
             'email' => ['required', 'string'],
+            'resend' => ['nullable', 'boolean'],
         ];
     }
 

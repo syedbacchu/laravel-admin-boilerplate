@@ -33,18 +33,18 @@
                 <!-- 🔹 Login Form -->
                 <form class="space-y-5" method="POST" action="{{ route('auth.forgot.password.process') }}">
                     @csrf
-                    <div>
-                        <label for="type">{{ __('Select Type') }}</label>
-                        <select name="type" id="type" class="form-select">
-                            <option value="">{{ __('Select') }}</option>
-                            @foreach(\App\Enums\VerificationCodeTypeEnum::getTypeArray() as $key => $value)
-                                <option value="{{ $key }}" {{ old('type') == $key ? 'selected' : '' }}>
-                                    {{ $value }}
-                                </option>
-                            @endforeach
+{{--                    <div>--}}
+{{--                        <label for="type">{{ __('Select Type') }}</label>--}}
+{{--                        <select name="type" id="type" class="form-select">--}}
+{{--                            <option value="">{{ __('Select') }}</option>--}}
+{{--                            @foreach(\App\Enums\VerificationCodeTypeEnum::getTypeArray() as $key => $value)--}}
+{{--                                <option value="{{ $key }}" {{ old('type') == $key ? 'selected' : '' }}>--}}
+{{--                                    {{ $value }}--}}
+{{--                                </option>--}}
+{{--                            @endforeach--}}
 
-                        </select>
-                    </div>
+{{--                        </select>--}}
+{{--                    </div>--}}
                     <div>
                         <label for="email">{{ __('Email / Username / Phone') }}</label>
                         <input

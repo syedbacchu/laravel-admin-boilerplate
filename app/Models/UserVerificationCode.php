@@ -14,7 +14,8 @@ class UserVerificationCode extends Model
         'code',
         'type',
         'attempts',
-        'expired_at'
+        'expired_at',
+        'blocked_until'
     ];
 
     public function user()

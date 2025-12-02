@@ -195,3 +195,25 @@ function sendResponse(
             'error_message' => $errorMessage,
         ];
     }
+
+/**
+ * @param int $a
+ * @return string
+ */
+// random number
+function randomNumber($a = 10)
+{
+    $x = '0123456789';
+    $c = strlen($x) - 1;
+    $z = '';
+    for ($i = 0; $i < $a; $i++) {
+        $y = rand(0, $c);
+        $z .= substr($x, $y, 1);
+    }
+    return $z;
+}
+
+function settings()
+{
+    return [];
+}

@@ -23,6 +23,7 @@ return new class extends Migration
             $table->string('password')->nullable();
             $table->tinyInteger('role_module')->default(3)->comment("1= super admin, 2 = admin, 3 = user");
             $table->unsignedBigInteger('role_id')->nullable();
+            $table->tinyInteger('enable_login')->default(1);
             $table->tinyInteger('status')->default(0);
             $table->tinyInteger('is_private')->default(0);
             $table->unsignedBigInteger('added_by')->default(0);

@@ -198,6 +198,7 @@ return [
         // custom service provider
         App\Providers\ServiceLayerProvider::class,
         Sdtech\FileUploaderLaravel\Providers\FileUploadLaravelServiceProviders::class,
+        App\Providers\MailServiceProvider::class,
 
     ],
 

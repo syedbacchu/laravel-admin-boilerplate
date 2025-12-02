@@ -18,6 +18,7 @@ return new class extends Migration
             $table->tinyInteger('type')->default(1)->comment("1=email, 2=phone, 3=username");
             $table->tinyInteger('attempts')->default(0);
             $table->dateTime('expired_at')->nullable();
+            $table->timestamp('blocked_until')->nullable();
             $table->timestamps();
 
             $table->index(['user_id', 'type']);

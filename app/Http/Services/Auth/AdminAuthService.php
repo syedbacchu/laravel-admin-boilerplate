@@ -1,12 +1,11 @@
 <?php
 
-namespace App\Http\Services;
+namespace App\Http\Services\Auth;
 
-use App\Enums\StatusEnum;
 use App\Enums\UserRole;
+use App\Enums\VerificationCodeTypeEnum;
 use App\Http\Requests\Auth\ForgotPasswordRequest;
 use App\Models\User;
-use App\Http\Services\AdminActivityLogger;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -87,8 +86,36 @@ class AdminAuthService
 
     // send forgot password
     public function sendForgotPassword(ForgotPasswordRequest $request) {
-        return sendResponse(true, __('Password reset successfully.'));
+        $isResend = isset($request->resend) ? $request->resend : false;
+        $input = $request->email;
+
+        $checkUser = User::where('email', $input)
+            ->orWhere('phone', $input)
+            ->orWhere('username', $input)
+            ->first();
+        if ($checkUser) {
+            $type = match (true) {
+                $checkUser && $checkUser->email === $input => VerificationCodeTypeEnum::EMAIL,
+                $checkUser && $checkUser->phone === $input => VerificationCodeTypeEnum::PHONE,
+                $checkUser && $checkUser->username === $input => VerificationCodeTypeEnum::USERNAME,
+                default => null,
+            };
+            $request->merge(['user_id' => $checkUser->id,'type' => $type]);
+            $createOtp = UserVerifyCodeService::createUserOtpCode($request,$isResend);
+            if ($createOtp['success']) {
+                if ($type === VerificationCodeTypeEnum::PHONE) {
+
+                } else {
+
+                }
+            } else {
+                return $createOtp;
+            }
+        }
+
+        return sendResponse(true, __('OTP sent successfully, If your information is correct'));
     }
+
 
     public function logout(Request $request): void
     {
