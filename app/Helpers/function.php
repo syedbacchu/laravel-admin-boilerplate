@@ -2,6 +2,7 @@
 
 use App\Http\Services\Response\Viewed;
 use Illuminate\Support\Facades\Log;
+use App\Support\Settings;
 
 function logStore($type, $text = '', $timestamp = true): void
 {
@@ -213,7 +214,22 @@ function randomNumber($a = 10)
     return $z;
 }
 
-function settings()
+function settings(string $key = null, $default = null):mixed
 {
-    return [];
+    if ($key === null) {
+        return Settings::all();
+    }
+
+    return Settings::get($key, $default);
+}
+
+function enum($enum): mixed
+{
+    return $enum->value;
+}
+
+function uploadImageFileInStorage($reqFile,$path,$oldImage = null){
+    $service = new \Sdtech\FileUploaderLaravel\Service\FileUploadLaravelService();
+    $response = $service->uploadImageInStorage($reqFile,$path,$oldImage);
+    return $response;
 }

@@ -5,6 +5,9 @@ namespace App\Http\Services\Auth;
 use App\Enums\UserRole;
 use App\Enums\VerificationCodeTypeEnum;
 use App\Http\Requests\Auth\ForgotPasswordRequest;
+use App\Http\Services\Mail\MailerInterface;
+use App\Http\Services\SMS\SMSManager;
+use App\Http\Services\SMS\SMSService;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -95,18 +98,27 @@ class AdminAuthService
             ->first();
         if ($checkUser) {
             $type = match (true) {
-                $checkUser && $checkUser->email === $input => VerificationCodeTypeEnum::EMAIL,
-                $checkUser && $checkUser->phone === $input => VerificationCodeTypeEnum::PHONE,
-                $checkUser && $checkUser->username === $input => VerificationCodeTypeEnum::USERNAME,
+                $checkUser && $checkUser->email === $input => enum(VerificationCodeTypeEnum::EMAIL),
+                $checkUser && $checkUser->phone === $input => enum(VerificationCodeTypeEnum::PHONE),
+                $checkUser && $checkUser->username === $input => enum(VerificationCodeTypeEnum::USERNAME),
                 default => null,
             };
             $request->merge(['user_id' => $checkUser->id,'type' => $type]);
             $createOtp = UserVerifyCodeService::createUserOtpCode($request,$isResend);
             if ($createOtp['success']) {
-                if ($type === VerificationCodeTypeEnum::PHONE) {
-
-                } else {
-
+                $otpData = $createOtp['data'];
+                if ($type === enum(VerificationCodeTypeEnum::PHONE)) {
+                    $sms = new SMSService(new SMSManager());
+                    $sms->sendOtp($input, "Your OTP is ".$otpData->code);
+                } else if($type === enum(VerificationCodeTypeEnum::EMAIL)) {
+                    $mailer = app(MailerInterface::class);
+                    $mailer->send(
+                        'emails.forgot_password',
+                        ['otp' => $otpData->code],
+                        $input,
+                        $checkUser->name ?? '',
+                        'Your OTP Code'
+                    );
                 }
             } else {
                 return $createOtp;

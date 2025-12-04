@@ -31,7 +31,7 @@ class AuthController extends Controller
         $data['pageTitle'] = __('Admin Login');
         return ResponseService::send([
             'data' => $data,
-        ], view: viewss('auth','login'));
+        ], view: viewss('auth', 'login'));
     }
 
     /**
@@ -73,11 +73,12 @@ class AuthController extends Controller
         }
     }
 
-    public  function forgotPassword() {
+    public function forgotPassword()
+    {
         $data['pageTitle'] = __('Forgot Password');
         return ResponseService::send([
             'data' => $data,
-        ], view: viewss('auth','forgot'));
+        ], view: viewss('auth', 'forgot'));
     }
 
     public function forgotPasswordProcess(ForgotPasswordRequest $request)
@@ -89,7 +90,7 @@ class AuthController extends Controller
         if (RateLimiter::tooManyAttempts($key, 3)) {
             return ResponseService::send([
                 'success' => false,
-                'message' => 'Too many attempts. Please try again after 20 minutes.',
+                'message' => 'Sorry Too many attempts. Please try again after 20 minutes.',
                 'status' => 429
             ]);
         }
@@ -98,9 +99,25 @@ class AuthController extends Controller
         RateLimiter::hit($key, 1200);
 
         $response = $this->authService->sendForgotPassword($request);
+        $ptoken = encrypt($request->email);
+
         return ResponseService::send([
-            'response' => $response ,
-        ], successRoute: 'auth.forgot.password');
+            'response' => $response,
+        ],null, null,
+            ['ptoken' => $ptoken], successRoute: 'auth.forgot.password.reset');
+    }
+
+    public function resetPassword(Request $request) {
+        if ($request->ptoken) {
+            $data['auth_token'] = $request->ptoken;
+            $data['pageTitle'] = __('Reset Password');
+            return ResponseService::send([
+                'data' => $data,
+            ], view: viewss('auth', 'reset'));
+        } else {
+            return redirect()->route('login')->with('dismiss', __('Invalid token! Please try again.'));
+        }
+
     }
 
     /**

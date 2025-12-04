@@ -8,5 +8,6 @@ Route::middleware('guest')->group(function () {
     Route::group([ 'as' => 'auth.'], function () {
         Route::get('forgot-password', [AuthController::class, 'forgotPassword'])->name('forgot.password');
         Route::post('forgot-password', [AuthController::class, 'forgotPasswordProcess'])->name('forgot.password.process');
+        Route::get('reset-password', [AuthController::class, 'resetPassword'])->name('forgot.password.reset');
     });
 });

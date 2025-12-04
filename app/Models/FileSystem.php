@@ -1,0 +1,28 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+
+class FileSystem extends Model
+{
+    use HasFactory;
+
+    protected $fillable = [
+        'filename',
+        'original_name',
+        'type',
+        'extension',
+        'size',
+        'path',
+        'dimensions',
+        'alt_text',
+        'title',
+        'description',
+        'seo_keywords',
+        'seo_title',
+        'seo_description',
+        'uploaded_by'
+    ];
+}
