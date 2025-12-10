@@ -8,3 +8,7 @@ An enterprise-grade Laravel 10 boilerplate built for high-performance admin pane
 # Dynamic Response function
 # Common view path
 # forgot password
+# sms config
+# email config
+# file system
+# admin settings

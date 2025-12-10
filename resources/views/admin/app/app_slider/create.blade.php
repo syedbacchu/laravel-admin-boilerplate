@@ -56,27 +56,45 @@
                     </div>
 
                     <!-- Banner Upload with Preview inside -->
-                    <div class="mb-4">
-                        <label for="image" class="block text-gray-700 font-medium mb-2">Banner</label>
+{{--                    <div class="mb-4">--}}
+{{--                        <label for="image" class="block text-gray-700 font-medium mb-2">Banner</label>--}}
 
-                        <div id="dropzone"
-                            class="relative flex flex-col items-center justify-center w-full h-40 border-2 border-dashed border-gray-300 rounded-lg cursor-pointer">
+{{--                        <div id="dropzone"--}}
+{{--                            class="relative flex flex-col items-center justify-center w-full h-40 border-2 border-dashed border-gray-300 rounded-lg cursor-pointer">--}}
 
-                            <input id="fileInput" name="photo" type="file" accept="image/*" class="hidden" />
+{{--                            <input id="fileInput" name="photo" type="file" accept="image/*" class="hidden" />--}}
 
-                            <!-- Preview image -->
-                            <img id="imagePreview"
-                                class="absolute inset-0 w-full h-full object-contain bg-white"
-                                @if(isset($item) && !empty($item->photo))
-                                    src="{{ $item->photo }}"
-                                    style="display: block;"
-                                @else
-                                    style="display: none;"
-                                @endif />
+{{--                            <!-- Preview image -->--}}
+{{--                            <img id="imagePreview"--}}
+{{--                                class="absolute inset-0 w-full h-full object-contain bg-white"--}}
+{{--                                @if(isset($item) && !empty($item->photo))--}}
+{{--                                    src="{{ $item->photo }}"--}}
+{{--                                    style="display: block;"--}}
+{{--                                @else--}}
+{{--                                    style="display: none;"--}}
+{{--                                @endif />--}}
 
-                            <!-- Default message -->
-                            <p id="dropMessage" class="text-gray-400" @if(isset($item) && !empty($item->photo)) style="display: none;" @endif>Drag & drop or click to upload</p>
-                        </div>
+{{--                            <!-- Default message -->--}}
+{{--                            <p id="dropMessage" class="text-gray-400" @if(isset($item) && !empty($item->photo)) style="display: none;" @endif>Drag & drop or click to upload</p>--}}
+{{--                        </div>--}}
+{{--                    </div>--}}
+                    <div x-data="sliderForm()">
+                        <label>Banner Image</label>
+
+                        <!-- Trigger File Manager -->
+                        <button
+                            type="button"
+                            x-on:click="$dispatch('open-file-manager', { callback: 'bannerSelected' })"
+                            class="btn btn-primary mb-2"
+                        >
+                            Choose Image
+                        </button>
+
+                        <!-- Hidden input -->
+                        <input type="hidden" name="photo" x-model="bannerImage">
+
+                        <!-- Preview -->
+                        <img :src="bannerPreview" class="w-full h-40 object-cover bg-gray-100">
                     </div>
                 </div>
                 <div>
@@ -87,6 +105,22 @@
     </div>
 
 <script>
+
+    function sliderForm() {
+        return {
+            bannerImage: '',
+            bannerPreview: '',
+
+            init() {
+                // Receive image selected
+                window.addEventListener('bannerSelected', (e) => {
+                    this.bannerImage = e.detail.id;
+                    this.bannerPreview = e.detail.url;
+                });
+            }
+        }
+    }
+
     const dropzone = document.getElementById("dropzone");
     const fileInput = document.getElementById("fileInput");
     const preview = document.getElementById("imagePreview");

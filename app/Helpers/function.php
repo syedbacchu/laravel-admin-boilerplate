@@ -197,6 +197,22 @@ function sendResponse(
         ];
     }
 
+function sendApiResponse(
+    bool $success,
+    string $message = "Invalid request",
+    $data = [],
+    int $status = 200,
+    string $errorMessage = "")
+    {
+        return response()->json([
+            'success'       => $success ?? false,
+            'message'       => $message ?? '',
+            'data'          => $data ?? [],
+            'status'        => $status ?? 200,
+            'error_message' => $errorMessage ?? ($success ? '' : ($message ?? 'Error')),
+        ], $status ?? 200);
+    }
+
 /**
  * @param int $a
  * @return string

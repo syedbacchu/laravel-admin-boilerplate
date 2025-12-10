@@ -5,6 +5,7 @@ use App\Http\Controllers\Admin\Audit\AuditSettingController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\SettingsController;
 use App\Http\Controllers\Auth\AuthController;
+use App\Http\Controllers\Admin\FileManager\FileManagerController;
 use Illuminate\Support\Facades\Route;
 
 
@@ -44,4 +45,15 @@ use Illuminate\Support\Facades\Route;
         Route::get('reset-audit-model', [AuditSettingController::class, 'resetModel'])->name('resetModel');
     });
 
+    // File Manager
+    Route::group(['prefix' => 'file-manager', 'as' => 'fileManager.'], function () {
+        Route::get('list', [FileManagerController::class, 'list'])->name('all');
+        Route::get('/', [FileManagerController::class, 'index'])->name('list');
+        Route::get('create', [FileManagerController::class, 'create'])->name('create');
+        Route::post('store-file', [FileManagerController::class, 'storeFile'])->name('storeFile');
+        Route::post('store', [FileManagerController::class, 'store'])->name('store');
+        Route::get('edit/{id}', [FileManagerController::class, 'edit'])->name('edit');
+        Route::post('update', [FileManagerController::class, 'update'])->name('update');
+        Route::get('delete/{id}', [FileManagerController::class, 'destroy'])->name('delete');
+    });
 

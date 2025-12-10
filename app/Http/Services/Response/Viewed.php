@@ -19,6 +19,11 @@ class Viewed
             'index'  => 'admin.user.index',
             'create' => 'admin.user.create',
         ],
+        'file' => [
+            'list_data'  => 'admin.file_manager.list',
+            'list'  => 'admin.file_manager.index',
+            'create' => 'admin.file_manager.create',
+        ],
     ];
 
     /**

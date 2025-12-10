@@ -170,6 +170,9 @@
         });
 
     </script>
+
+    <x-file-manager-modal />
+
 </body>
 
 </html>

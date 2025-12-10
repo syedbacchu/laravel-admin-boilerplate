@@ -16,6 +16,7 @@ class FileSystem extends Model
         'extension',
         'size',
         'path',
+        'full_url',
         'dimensions',
         'alt_text',
         'title',

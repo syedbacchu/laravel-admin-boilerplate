@@ -3758,16 +3758,16 @@
         },
         {
             "name": "sdtech/file-uploader-laravel",
-            "version": "v1.0.7",
+            "version": "v1.0.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/syedbacchu/file-uploader-laravel.git",
-                "reference": "1bdd1c30cf6e4f610d83e7fe733acb7aa76df18b"
+                "reference": "af451c1b8d4c99e9bdd770eb76700790fd465454"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/syedbacchu/file-uploader-laravel/zipball/1bdd1c30cf6e4f610d83e7fe733acb7aa76df18b",
-                "reference": "1bdd1c30cf6e4f610d83e7fe733acb7aa76df18b",
+                "url": "https://api.github.com/repos/syedbacchu/file-uploader-laravel/zipball/af451c1b8d4c99e9bdd770eb76700790fd465454",
+                "reference": "af451c1b8d4c99e9bdd770eb76700790fd465454",
                 "shasum": ""
             },
             "require": {
@@ -3811,9 +3811,9 @@
             ],
             "support": {
                 "issues": "https://github.com/syedbacchu/file-uploader-laravel/issues",
-                "source": "https://github.com/syedbacchu/file-uploader-laravel/tree/v1.0.7"
+                "source": "https://github.com/syedbacchu/file-uploader-laravel/tree/v1.0.8"
             },
-            "time": "2025-10-31T18:26:12+00:00"
+            "time": "2025-12-10T05:23:45+00:00"
         },
         {
             "name": "sdtech/log-viewer-laravel",

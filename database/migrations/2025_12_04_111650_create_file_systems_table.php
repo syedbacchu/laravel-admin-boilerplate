@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('extension')->nullable(); // jpg, png, pdf
             $table->unsignedBigInteger('size')->nullable(); // in bytes
             $table->string('path');           // storage path
+            $table->string('full_url')->nullable();           // storage path
             // Image-specific
             $table->string('dimensions')->nullable(); // e.g., 1600x838
             $table->string('alt_text')->nullable();
