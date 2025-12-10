@@ -35,13 +35,9 @@
             <h5 class="text-2xl font-bold text-gray-800">{{ $title ?? __('Title') }}</h5>
 
             <!-- Upload Button -->
-            <form method="POST" action="{{ route('appSlider.storeFile') }}" enctype="multipart/form-data"
-                  class="inline-flex items-center px-5 py-2.5 bg-gradient-to-r from-indigo-600 to-blue-600
-                 text-white font-medium rounded-lg shadow-md hover:shadow-lg
-                 hover:from-indigo-700 hover:to-blue-700 focus:ring-2 focus:ring-offset-2
-                 focus:ring-blue-500 transition-all duration-300 relative cursor-pointer">
-
-                @csrf
+            <div
+                class="inline-flex items-center px-5 py-2.5 bg-gradient-to-r from-indigo-600 to-blue-600
+    text-white font-medium rounded-lg shadow-md hover:shadow-lg transition-all duration-300 relative cursor-pointer">
 
                 <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 mr-2" fill="none"
                      viewBox="0 0 24 24" stroke="currentColor">
@@ -51,14 +47,14 @@
 
                 <span>Upload Photo</span>
 
-                <!-- Hidden File Input -->
                 <input
                     type="file"
                     name="photo"
                     class="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-                    onchange="this.form.submit()"
+                    onchange="uploadFile(this)"
                 >
-            </form>
+            </div>
+
         </div>
 
 
@@ -128,7 +124,53 @@ flex flex-col items-center justify-center gap-3 rounded-xl transition">
                 })
             );
         }
-    </script>
+
+
+        function uploadFile(input) {
+            let file = input.files[0];
+            if (!file) return;
+
+            let formData = new FormData();
+            formData.append("photo", file);
+            formData.append("_token", "{{ csrf_token() }}");
+
+            axios.post("{{ route('fileManager.storeFile') }}", formData, {
+                headers: { 'Content-Type': 'multipart/form-data' }
+            })
+            .then(function (response) {
+                console.log(response)
+                if (response?.data?.success) {
+                    toastr.success(response?.data?.message);
+                } else {
+                    toastr.error(response?.data?.message);
+                }
+
+                loadImages();
+
+                input.value = ""; // reset file input
+            })
+            .catch(function (error) {
+
+                toastr.error(error.response?.data?.error_message ?? "Upload failed!");
+                input.value = "";
+            });
+        }
+
+
+            // Auto reload images
+        function loadImages() {
+            axios.get("{{ request()->fullUrl() }}") // same page URL returning blade?
+                .then(function (res) {
+                    let parser = new DOMParser();
+                    let html = parser.parseFromString(res.data, "text/html");
+
+                    let newGrid = html.querySelector(".grid");
+                    document.querySelector(".grid").innerHTML = newGrid.innerHTML;
+                });
+        }
+
+
+</script>
 <script src="/assets/js/alpine-collaspe.min.js"></script>
 <script src="/assets/js/alpine-persist.min.js"></script>
 <script defer src="/assets/js/alpine-ui.min.js"></script>

@@ -70,7 +70,7 @@ class FileManagerController extends Controller
         ], view: viewss('file','list_data'));
     }
 
-    public function storeFile(Request $request): RedirectResponse {
+    public function storeFile(Request $request) {
         if ($request->photo) {
             $response = FileManager::uploadFilePublic($request->photo,enum(FileDestinationEnum::GENERAL_IMAGE_PATH));
             return $response;
