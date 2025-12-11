@@ -25,6 +25,9 @@ class Viewed
             'create' => 'admin.file_manager.create',
             'partial_data' => 'admin.file_manager.file_data',
         ],
+        'custom' => [
+            'index'  => 'admin.custom_fields.index',
+        ],
     ];
 
     /**

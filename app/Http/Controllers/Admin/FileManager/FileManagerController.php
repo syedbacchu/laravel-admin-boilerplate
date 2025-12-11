@@ -17,7 +17,7 @@ class FileManagerController extends Controller
 {
     public function index(Request $request): View|JsonResponse
     {
-        $data['title'] = __('File Manager');
+        $data['pageTitle'] = __('File Manager');
         $data['items'] = FileManager::list($request);
 
         return ResponseService::send([
@@ -58,7 +58,7 @@ class FileManagerController extends Controller
 
     public function list(Request $request): View|JsonResponse
     {
-        $data['title'] = __('File Manager');
+        $data['pageTitle'] = __('File Manager');
         $user = Auth::user();
         if ($user->role_module != enum(UserRole::SUPER_ADMIN_ROLE)) {
             $request->merge(['user_id' => $user->id]);
@@ -81,7 +81,7 @@ class FileManagerController extends Controller
 
     public function listPartial(Request $request)
     {
-        $data['title'] = __('File Manager');
+        $data['pageTitle'] = __('File Manager');
         $user = Auth::user();
         if ($user->role_module != enum(UserRole::SUPER_ADMIN_ROLE)) {
             $request->merge(['user_id' => $user->id]);

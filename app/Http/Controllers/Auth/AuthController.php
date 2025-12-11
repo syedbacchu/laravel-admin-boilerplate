@@ -41,24 +41,37 @@ class AuthController extends Controller
     public function login(AdminLoginRequest $request): RedirectResponse
     {
         try {
-            $request->ensureIsNotRateLimited();
-            $this->authService->authenticate($request);
-            $request->session()->regenerate();
-            $user = Auth::user();
+            try {
+                $request->ensureIsNotRateLimited();
+                $this->authService->authenticate($request);
+                $request->session()->regenerate();
+                $user = Auth::user();
 
-            return ResponseService::send([
-                'response' => [
-                    'success' => true,
-                    'message' => "Welcome back, {$user->name}!",
-                    'data' => $user,
-                    'status' => 200,
-                    'error_message' => "",
-                ],
-            ], successRoute: 'dashboard');
-//            return redirect()->intended(route('dashboard'))
-//                ->with('success', "Welcome back, {$user->name}!");
+                return ResponseService::send([
+                    'response' => [
+                        'success' => true,
+                        'message' => "Welcome back, {$user->name}!",
+                        'data' => $user,
+                        'status' => 200,
+                        'error_message' => "",
+                    ],
+                ], successRoute: 'dashboard');
+
+            } catch (\Illuminate\Validation\ValidationException $e) {
+                return ResponseService::send([
+                    'response' => [
+                        'success' => false,
+                        'message' => $e->getMessage(),
+                        'data' => [],
+                        'status' => 422,
+                        'error_message' => $e->getMessage(),
+                    ],
+                ]);
+
+            }
 
         } catch (\Exception $e) {
+            logStore('login', $e->getMessage());
             return ResponseService::send([
                 'response' => [
                     'success' => false,
@@ -68,9 +81,6 @@ class AuthController extends Controller
                     'error_message' => $e->getMessage(),
                 ],
             ]);
-//            return back()
-//                ->withErrors(['login' => $e->getMessage()])
-//                ->withInput($request->except('password'));
         }
     }
 

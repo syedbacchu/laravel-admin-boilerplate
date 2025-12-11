@@ -4,7 +4,7 @@
     <div class="mt-8 bg-white shadow-xl rounded-2xl p-6 border border-gray-100">
     <!-- Header -->
         <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-6 gap-4">
-            <h5 class="text-2xl font-bold text-gray-800">{{ $title ?? __('Title') }}</h5>
+            <h5 class="text-2xl font-bold text-gray-800">{{ $pageTitle ?? __('Title') }}</h5>
 
             <!-- Upload Button -->
             <label class="relative inline-flex items-center px-5 py-2.5

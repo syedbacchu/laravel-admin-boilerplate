@@ -31,7 +31,7 @@
 
             <!-- Title -->
             <h5 class="text-2xl font-bold text-gray-800 tracking-tight">
-                {{ $title ?? __('Files') }}
+                {{ $pageTitle ?? __('Files') }}
             </h5>
 
             <!-- Upload Button -->
