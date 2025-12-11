@@ -31,9 +31,9 @@
                 </p>
 
                 <!-- 🔹 Login Form -->
-                <form class="space-y-5" method="POST" action="{{ route('auth.forgot.password.process') }}">
+                <form class="space-y-5" method="POST" action="{{ route('auth.forgot.password.resetProcess') }}">
                     @csrf
-                    <input name="ptoken" type="hidden" value="{{$auth_token}}">
+                    <input name="password_token" type="hidden" value="{{$auth_token}}">
                     <div>
                         <label for="otp">{{ __('Otp') }}</label>
                         <input
@@ -41,6 +41,7 @@
                             id="otp"
                             type="text"
                             class="form-input w-full"
+                            value="{{ old('otp') }}"
                         />
                     </div>
                     <div>
@@ -64,7 +65,7 @@
                     <div class="flex items-center justify-between text-sm">
                         <a href="{{route('login')}}"
                            class="text-secondary hover:underline font-medium">
-                            {{__('Back')}}
+                            {{__('')}}
                         </a>
                         <a href="{{route('login')}}"
                            class="text-primary hover:underline font-medium">

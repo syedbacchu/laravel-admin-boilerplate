@@ -37,7 +37,7 @@ class FileManagerController extends Controller
 
     public function store(Request $request): RedirectResponse {
         if ($request->photo) {
-            $response = FileManager::uploadFilePublic($request->photo,enum(FileDestinationEnum::GENERAL_IMAGE_PATH));
+            $response = FileManager::uploadFileStorage($request->photo,enum(FileDestinationEnum::GENERAL_IMAGE_PATH));
             return ResponseService::send([
                 'response' => $response,
             ], successRoute: 'fileManager.list');
@@ -72,11 +72,22 @@ class FileManagerController extends Controller
 
     public function storeFile(Request $request) {
         if ($request->photo) {
-            $response = FileManager::uploadFilePublic($request->photo,enum(FileDestinationEnum::GENERAL_IMAGE_PATH));
+            $response = FileManager::uploadFileStorage($request->photo,enum(FileDestinationEnum::GENERAL_IMAGE_PATH));
             return $response;
         } else {
             return sendResponse(false, __('File upload failed'),[],400);
         }
+    }
+
+    public function listPartial(Request $request)
+    {
+        $data['title'] = __('File Manager');
+        $user = Auth::user();
+        if ($user->role_module != enum(UserRole::SUPER_ADMIN_ROLE)) {
+            $request->merge(['user_id' => $user->id]);
+        }
+        $data['items'] = FileManager::list($request);
+        return view(viewss('file', 'partial_data'), $data)->render();
     }
 
 }

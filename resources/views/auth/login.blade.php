@@ -60,7 +60,7 @@
                     <!-- Remember + Forgot Password -->
                     <div class="flex items-center justify-between text-sm">
                         <label class="cursor-pointer flex items-center space-x-2">
-                            <input type="checkbox" name="remember" class="form-checkbox" />
+                            <input value="1" type="checkbox" name="remember" class="form-checkbox" />
                             <span class="text-white-dark">{{__('Remember me')}}</span>
                         </label>
 

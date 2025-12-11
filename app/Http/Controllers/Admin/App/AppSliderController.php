@@ -76,6 +76,7 @@ class AppSliderController extends Controller
     }
 
     public function store(SliderCreateRequest $request): RedirectResponse {
+//        dd($request->all());
         $response = $this->service->storeOrUpdateSlider($request);
         return ResponseService::send([
             'response' => $response,

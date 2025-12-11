@@ -23,6 +23,7 @@ class Viewed
             'list_data'  => 'admin.file_manager.list',
             'list'  => 'admin.file_manager.index',
             'create' => 'admin.file_manager.create',
+            'partial_data' => 'admin.file_manager.file_data',
         ],
     ];
 

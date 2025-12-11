@@ -55,37 +55,18 @@
                         </div>
                     </div>
 
-                    <!-- Banner Upload with Preview inside -->
-{{--                    <div class="mb-4">--}}
-{{--                        <label for="image" class="block text-gray-700 font-medium mb-2">Banner</label>--}}
+                    <div
+                        x-data="sliderForm('{{ $item->photo ?? '' }}')"
+                        class="space-y-2"
+                    >
 
-{{--                        <div id="dropzone"--}}
-{{--                            class="relative flex flex-col items-center justify-center w-full h-40 border-2 border-dashed border-gray-300 rounded-lg cursor-pointer">--}}
-
-{{--                            <input id="fileInput" name="photo" type="file" accept="image/*" class="hidden" />--}}
-
-{{--                            <!-- Preview image -->--}}
-{{--                            <img id="imagePreview"--}}
-{{--                                class="absolute inset-0 w-full h-full object-contain bg-white"--}}
-{{--                                @if(isset($item) && !empty($item->photo))--}}
-{{--                                    src="{{ $item->photo }}"--}}
-{{--                                    style="display: block;"--}}
-{{--                                @else--}}
-{{--                                    style="display: none;"--}}
-{{--                                @endif />--}}
-
-{{--                            <!-- Default message -->--}}
-{{--                            <p id="dropMessage" class="text-gray-400" @if(isset($item) && !empty($item->photo)) style="display: none;" @endif>Drag & drop or click to upload</p>--}}
-{{--                        </div>--}}
-{{--                    </div>--}}
-                    <div x-data="sliderForm()">
-                        <label>Banner Image</label>
+                        <label class="font-semibold text-gray-700">Banner Image</label>
 
                         <!-- Trigger File Manager -->
                         <button
                             type="button"
                             x-on:click="$dispatch('open-file-manager', { callback: 'bannerSelected' })"
-                            class="btn btn-primary mb-2"
+                            class="px-4 py-2 bg-blue-600 text-white text-sm rounded-lg shadow hover:bg-blue-700"
                         >
                             Choose Image
                         </button>
@@ -93,9 +74,18 @@
                         <!-- Hidden input -->
                         <input type="hidden" name="photo" x-model="bannerImage">
 
-                        <!-- Preview -->
-                        <img :src="bannerPreview" class="w-full h-40 object-cover bg-gray-100">
+                        <!-- Preview (Show only if image exists) -->
+                        <template x-if="bannerPreview">
+                            <div class="mt-3">
+                                <img
+                                    :src="bannerPreview"
+                                    class=" rounded-xl border object-cover shadow-sm" width="300"
+                                >
+                            </div>
+                        </template>
+
                     </div>
+
                 </div>
                 <div>
                     <button type="submit" class="btn btn-secondary mt-6">Submit</button>
@@ -106,39 +96,20 @@
 
 <script>
 
-    function sliderForm() {
+    function sliderForm(existingImage = '') {
         return {
-            bannerImage: '',
-            bannerPreview: '',
+            bannerImage: existingImage,
+            bannerPreview: existingImage ? existingImage : '',
 
             init() {
-                // Receive image selected
                 window.addEventListener('bannerSelected', (e) => {
-                    this.bannerImage = e.detail.id;
+                    this.bannerImage = e.detail.url;
                     this.bannerPreview = e.detail.url;
                 });
             }
         }
     }
 
-    const dropzone = document.getElementById("dropzone");
-    const fileInput = document.getElementById("fileInput");
-    const preview = document.getElementById("imagePreview");
-    const message = document.getElementById("dropMessage");
 
-    dropzone.addEventListener("click", () => fileInput.click());
-
-    fileInput.addEventListener("change", (e) => {
-        const file = e.target.files[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.onload = (ev) => {
-                preview.src = ev.target.result;
-                preview.style.display = "block";   // make visible
-                message.style.display = "none";    // hide message
-            };
-            reader.readAsDataURL(file);
-        }
-    });
 </script>
 </x-layout.default>

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\AdminLoginRequest;
 use App\Http\Requests\Auth\ForgotPasswordRequest;
+use App\Http\Requests\Auth\ResetPasswordRequest;
 use App\Http\Services\Auth\AdminAuthService;
 use App\Http\Services\Response\ResponseService;
 use Illuminate\Http\RedirectResponse;
@@ -99,12 +100,12 @@ class AuthController extends Controller
         RateLimiter::hit($key, 1200);
 
         $response = $this->authService->sendForgotPassword($request);
-        $ptoken = encrypt($request->email);
+        $response['data']['ptoken'] = encrypt($request->email);
 
         return ResponseService::send([
             'response' => $response,
         ],null, null,
-            ['ptoken' => $ptoken], successRoute: 'auth.forgot.password.reset');
+            ['ptoken' => $response['data']['ptoken']], successRoute: 'auth.forgot.password.reset');
     }
 
     public function resetPassword(Request $request) {
@@ -117,7 +118,16 @@ class AuthController extends Controller
         } else {
             return redirect()->route('login')->with('dismiss', __('Invalid token! Please try again.'));
         }
+    }
 
+    public function resetPasswordProcess(ResetPasswordRequest $request)
+    {
+        $request->merge(['password_token' => decrypt($request->password_token)]);
+        $response = $this->authService->resetPassword($request);
+
+        return ResponseService::send([
+            'response' => $response,
+        ],successRoute: 'login');
     }
 
     /**

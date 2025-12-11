@@ -49,6 +49,7 @@ use Illuminate\Support\Facades\Route;
     Route::group(['prefix' => 'file-manager', 'as' => 'fileManager.'], function () {
         Route::get('list', [FileManagerController::class, 'list'])->name('all');
         Route::get('/', [FileManagerController::class, 'index'])->name('list');
+        Route::get('list-partial', [FileManagerController::class, 'listPartial'])->name('partial');
         Route::get('create', [FileManagerController::class, 'create'])->name('create');
         Route::post('store-file', [FileManagerController::class, 'storeFile'])->name('storeFile');
         Route::post('store', [FileManagerController::class, 'store'])->name('store');

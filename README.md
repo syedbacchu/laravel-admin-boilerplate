@@ -11,4 +11,5 @@ An enterprise-grade Laravel 10 boilerplate built for high-performance admin pane
 # sms config
 # email config
 # file system
+# file manager
 # admin settings

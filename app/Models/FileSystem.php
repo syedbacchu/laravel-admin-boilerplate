@@ -2,13 +2,14 @@
 
 namespace App\Models;
 
+use App\Traits\Auditable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class FileSystem extends Model
 {
     use HasFactory;
-
+    use Auditable;
     protected $fillable = [
         'filename',
         'original_name',

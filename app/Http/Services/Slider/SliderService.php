@@ -42,8 +42,9 @@ class SliderService extends BaseService implements SliderServiceInterface
         if ($request->edit_id) {
             $existItem = $this->sliderRepository->find($request->edit_id);
             if ($existItem) {
-                if ($request->hasFile('photo')) {
-                    $data['photo'] = $this->uploadFilePublic($request->file('photo'),UploadFolderEnum::GENERAL->value, $existItem->raw_photo);
+                if ($request->photo) {
+                    $data['photo'] = $request->photo;
+//                    $data['photo'] = $this->uploadFilePublic($request->file('photo'),UploadFolderEnum::GENERAL->value, $existItem->raw_photo);
                 }
                 $this->sliderRepository->update($existItem->id,$data);
                 $item = $this->sliderRepository->find($existItem->id);
@@ -52,8 +53,9 @@ class SliderService extends BaseService implements SliderServiceInterface
                 return $this->sendResponse(false,__('Data not found'));
             }
         } else {
-            if ($request->hasFile('photo')) {
-                $data['photo'] = $this->uploadFilePublic($request->file('photo'),UploadFolderEnum::GENERAL->value);
+            if ($request->photo) {
+                $data['photo'] = $request->photo;
+//                $data['photo'] = $this->uploadFilePublic($request->file('photo'),UploadFolderEnum::GENERAL->value);
             }
             $item = $this->sliderRepository->createSlider($data);
             $message = __('Slider created successfully');

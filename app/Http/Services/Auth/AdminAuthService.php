@@ -5,6 +5,7 @@ namespace App\Http\Services\Auth;
 use App\Enums\UserRole;
 use App\Enums\VerificationCodeTypeEnum;
 use App\Http\Requests\Auth\ForgotPasswordRequest;
+use App\Http\Requests\Auth\ResetPasswordRequest;
 use App\Http\Services\Mail\MailerInterface;
 use App\Http\Services\SMS\SMSManager;
 use App\Http\Services\SMS\SMSService;
@@ -103,6 +104,9 @@ class AdminAuthService
                 $checkUser && $checkUser->username === $input => enum(VerificationCodeTypeEnum::USERNAME),
                 default => null,
             };
+            $this->activityLogger->log($checkUser, 'sendForgotPassword', [
+                'ip' => $request->ip(),
+            ]);
             $request->merge(['user_id' => $checkUser->id,'type' => $type]);
             $createOtp = UserVerifyCodeService::createUserOtpCode($request,$isResend);
             if ($createOtp['success']) {
@@ -128,6 +132,34 @@ class AdminAuthService
         return sendResponse(true, __('OTP sent successfully, If your information is correct'));
     }
 
+    public function resetPassword(ResetPasswordRequest $request) {
+        $input = $request->password_token;
+
+        $checkUser = User::where('email', $input)
+            ->orWhere('phone', $input)
+            ->orWhere('username', $input)
+            ->first();
+        if ($checkUser) {
+            $type = match (true) {
+                $checkUser && $checkUser->email === $input => enum(VerificationCodeTypeEnum::EMAIL),
+                $checkUser && $checkUser->phone === $input => enum(VerificationCodeTypeEnum::PHONE),
+                $checkUser && $checkUser->username === $input => enum(VerificationCodeTypeEnum::USERNAME),
+                default => null,
+            };
+            $codeVerify = UserVerifyCodeService::otpCodeVerification($checkUser->id,$request->otp,$type);
+            if ($codeVerify['success']) {
+                $this->activityLogger->log($checkUser, 'resetPassword', [
+                    'ip' => $request->ip(),
+                ]);
+                $checkUser->update(['password' => Hash::make($request->password)]);
+            } else {
+                return $codeVerify;
+            }
+        } else {
+            return sendResponse(false, __('Invalid user or otp.'));
+        }
+        return sendResponse(true, __('Password reset successfully.'));
+    }
 
     public function logout(Request $request): void
     {

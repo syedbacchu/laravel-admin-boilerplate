@@ -30,7 +30,7 @@ class SliderCreateRequest extends FormRequest
             'serial' => 'nullable|integer',
         ];
         if (empty($this->edit_id)) {
-            $rule['photo'] =  'required|image|max:2024';
+            $rule['photo'] =  'required';
         }
 
         return $rule;

@@ -55,6 +55,20 @@ class FileManager
         }
     }
 
+    public static function uploadFileStorage(UploadedFile $file, string $folder = 'uploads', ?string $oldFile = null)
+    {
+        $self = new self();
+        $response = $self->service->uploadImageInStorage($file, $folder, $oldFile);
+        $user = Auth::user();
+        if ($response ['success'] == false) {
+            return $response;
+        } else {
+            $data = $response['data'];
+            self::createFile($data, $user->id);
+            return sendResponse(true, __('File successfully uploaded.'), $data);
+        }
+    }
+
     public static function list($request): array
     {
         $totalPages = 0;

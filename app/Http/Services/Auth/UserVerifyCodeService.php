@@ -95,4 +95,23 @@ class UserVerifyCodeService
 
         return sendResponse(true, __("Otp created successfully"),$otp);
     }
+
+    public static function checkOpt($userId,$code,$type):mixed
+    {
+        $verify = UserVerificationCode::where(['user_id' => $userId])
+            ->where('code', $code)
+            ->where(['type' => $type])
+            ->whereDate('expired_at', '>', Carbon::now()->format('Y-m-d h:i:s'))
+            ->first();
+        return $verify;
+    }
+
+    public static function otpCodeVerification($userId,$code,$type) {
+        $verify = self::checkOpt($userId,$code,$type);
+        if($verify) {
+            return sendResponse(true, __("OTP verification success"));
+        } else {
+            return sendResponse(false, __("Invalid OTP code or expired."),[],400);
+        }
+    }
 }

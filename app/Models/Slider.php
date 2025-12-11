@@ -10,7 +10,7 @@ class Slider extends Model
 {
     use HasFactory;
     use Auditable;
-    
+
     protected $fillable = [
         'photo',
         'position',
@@ -25,24 +25,24 @@ class Slider extends Model
         'video_link'
     ];
 
-    public function getRawPhotoAttribute()
-    {
-        return $this->attributes['photo'];
-    }
-    public function getRawMobileBannerAttribute()
-    {
-        return $this->attributes['mobile_banner'];
-    }
-
-    public function getPhotoAttribute($value)
-    {
-        if (empty($value)) return '';
-        return asset('uploads/'.$value);
-    }
-
-    public function getMobileBannerAttribute($value)
-    {
-        if (empty($value)) return '';
-        return asset('uploads/'.$value);
-    }
+//    public function getRawPhotoAttribute()
+//    {
+//        return $this->attributes['photo'];
+//    }
+//    public function getRawMobileBannerAttribute()
+//    {
+//        return $this->attributes['mobile_banner'];
+//    }
+//
+//    public function getPhotoAttribute($value)
+//    {
+//        if (empty($value)) return '';
+//        return asset('uploads/'.$value);
+//    }
+//
+//    public function getMobileBannerAttribute($value)
+//    {
+//        if (empty($value)) return '';
+//        return asset('uploads/'.$value);
+//    }
 }
