@@ -5,22 +5,21 @@
             <h5 class="text-2xl font-bold text-gray-800">{{ $pageTitle }}</h5>
         </div>
 
-        <div class="panel" x-data="{ tab: '{{ str_replace('\\', '_', $models[0] ?? '') }}' }">
+        <div class="panel" x-data="{ tab: '{{ md5($models[0] ?? '') }}' }">
 
-            <div class="flex flex-col sm:flex-row gap-4">
+            <div class="flex flex-col sm:flex-row gap-6">
 
                 <!-- LEFT: MODEL LIST -->
                 <div class="sm:w-1/5">
                     <ul class="space-y-2">
                         @foreach($models as $model)
                             @php
-                                $key = str_replace('\\', '_', $model);
+                                $key = md5($model);
                                 $short = class_basename($model);
                             @endphp
-
                             <li>
                                 <a href="javascript:;"
-                                   @click="tab = '{{ $key }}'"
+                                   @click="tab='{{ $key }}'; loadFields('{{ $model }}','{{ $key }}')"
                                    :class="{ '!bg-success text-white': tab === '{{ $key }}' }"
                                    class="p-3 py-2 block rounded-md hover:bg-success hover:text-white transition-all">
                                     {{ $short }}
@@ -30,46 +29,53 @@
                     </ul>
                 </div>
 
-                <!-- RIGHT: FIELD MANAGER -->
+                <!-- RIGHT PANEL -->
                 <div class="flex-1">
 
                     @foreach($models as $model)
-                        @php $key = str_replace('\\', '_', $model); @endphp
+                        @php $key = md5($model); @endphp
 
                         <template x-if="tab === '{{ $key }}'">
                             <div class="space-y-6">
 
-                                <h4 class="text-xl font-bold mb-3">
+                                <h4 class="text-xl font-bold">
                                     {{ class_basename($model) }} Custom Fields
                                 </h4>
 
-                                <!-- Existing Fields -->
+                                <!-- EXISTING FIELDS -->
                                 <div class="border rounded-lg p-4">
                                     <h5 class="font-semibold mb-3">Existing Fields</h5>
 
                                     <table class="w-full text-sm">
                                         <thead>
                                         <tr class="border-b">
-                                            <th class="py-2 text-left">Label</th>
-                                            <th class="py-2 text-left">Name</th>
-                                            <th class="py-2 text-left">Type</th>
-                                            <th class="py-2 text-left">Required</th>
-                                            <th class="py-2 text-left">Actions</th>
+                                            <th>Label</th>
+                                            <th>Name</th>
+                                            <th>Type</th>
+                                            <th>Required</th>
+                                            <th>Status</th>
                                         </tr>
                                         </thead>
                                         <tbody id="field_list_{{ $key }}">
-                                        <!-- Load via AJAX -->
+                                        <tr>
+                                            <td colspan="5" class="text-center py-4 text-gray-400">
+                                                Select model to load fields
+                                            </td>
+                                        </tr>
                                         </tbody>
                                     </table>
                                 </div>
 
-                                <!-- Add Field Form -->
+                                <!-- ADD FIELD -->
                                 <div class="border rounded-lg p-4 bg-gray-50">
                                     <h5 class="font-semibold mb-3">Add New Field</h5>
 
-                                    <form class="space-y-4" onsubmit="return saveField('{{ $model }}')">
+                                    <form onsubmit="return saveField(this,'{{ $model }}','{{ $key }}')" class="space-y-4">
 
-                                        <input type="hidden" name="model" value="{{ $model }}">
+                                        @csrf
+
+                                        <input type="hidden" name="module" value="{{ $model }}">
+                                        <input type="hidden" name="status" value="1">
 
                                         <div>
                                             <label>Label *</label>
@@ -79,28 +85,29 @@
                                         <div>
                                             <label>Field Name</label>
                                             <input type="text" name="name" class="form-input w-full"
-                                                   placeholder="auto generate">
+                                                   placeholder="auto-generate">
                                         </div>
 
-                                        <div x-data="{ showOptions:false }">
+                                        <div x-data="{ show:false }">
                                             <label>Type *</label>
-                                            <select name="field_type" class="form-select w-full"
-                                                    x-on:change="showOptions=($event.target.value=='select'||$event.target.value=='radio')"
+                                            <select name="type" class="form-select w-full"
+                                                    @change="show=['select','radio','checkbox'].includes($event.target.value)"
                                                     required>
                                                 <option value="text">Text</option>
                                                 <option value="textarea">Textarea</option>
+                                                <option value="number">Number</option>
                                                 <option value="checkbox">Checkbox</option>
                                                 <option value="radio">Radio</option>
                                                 <option value="select">Select</option>
-                                                <option value="number">Number</option>
                                                 <option value="file">File</option>
                                             </select>
 
-                                            <template x-if="showOptions">
+                                            <template x-if="show">
                                                 <div class="mt-3">
                                                     <label>Options (comma separated)</label>
-                                                    <input type="text" name="options" class="form-input w-full"
-                                                           placeholder="red, blue, green">
+                                                    <input type="text" name="options"
+                                                           class="form-input w-full"
+                                                           placeholder="red, green, blue">
                                                 </div>
                                             </template>
                                         </div>
@@ -114,19 +121,21 @@
                                         </div>
 
                                         <div>
-                                            <label>Show In *</label>
-                                            <select name="show_in[]" class="form-select w-full" multiple required>
-                                                <option value="create">Create Form</option>
-                                                <option value="update">Update Form</option>
-                                                <option value="api">API</option>
-                                            </select>
+                                            <label>Default Value</label>
+                                            <input type="text" name="default_value"
+                                                   class="form-input w-full">
                                         </div>
 
-                                        <button type="submit"
-                                                class="btn btn-success mt-2 px-4 py-2">
+                                        <div>
+                                            <label>Validation Rules</label>
+                                            <input type="text" name="validation_rules"
+                                                   class="form-input w-full"
+                                                   placeholder="nullable|string|max:255">
+                                        </div>
+
+                                        <button class="btn btn-success px-4 py-2">
                                             Save Field
                                         </button>
-
                                     </form>
                                 </div>
 
@@ -139,11 +148,57 @@
         </div>
     </div>
 
+    <!-- JS -->
     <script>
-        function saveField(model) {
-            alert("This will be saved via AJAX.");
+        function saveField(form, module, key) {
+            const formData = new FormData(form);
+
+            fetch("{{ route('customField.store') }}", {
+                method: "POST",
+                headers: {
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                },
+                body: formData
+            })
+                .then(res => res.json())
+                .then(res => {
+                    if(res.success){
+                        form.reset();
+                        loadFields(module, key);
+                        toastr.success(res.message);
+                    } else {
+                        toastr.error(res.message);
+                    }
+                });
+
             return false;
         }
-    </script>
 
+        function loadFields(module, key) {
+            fetch("{{ route('customField.index') }}?module=" + module)
+                .then(res => res.json())
+                .then(res => {
+                    const tbody = document.getElementById('field_list_' + key);
+                    tbody.innerHTML = '';
+
+                    if(!res.data || res.data.length === 0){
+                        tbody.innerHTML = `<tr>
+                            <td colspan="5" class="text-center py-4 text-gray-400">No fields found</td>
+                        </tr>`;
+                        return;
+                    }
+
+                    res.data.forEach(f => {
+                        tbody.innerHTML += `
+                            <tr class="border-b">
+                                <td>${f.label}</td>
+                                <td>${f.name}</td>
+                                <td>${f.type}</td>
+                                <td>${f.is_required ? 'Yes' : 'No'}</td>
+                                <td>${f.status ? 'Active' : 'Inactive'}</td>
+                            </tr>`;
+                    });
+                });
+        }
+    </script>
 </x-layout.default>

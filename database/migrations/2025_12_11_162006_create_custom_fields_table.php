@@ -23,6 +23,7 @@ return new class extends Migration
             $table->string('validation_rules')->nullable(); // e.g. "string|max:255"
             $table->boolean('status')->default(true);
             $table->unsignedInteger('sort_order')->default(0);
+            $table->json('show_in')->nullable()->comment('create, update, api');
             $table->timestamps();
 
             $table->unique(['module', 'name']);

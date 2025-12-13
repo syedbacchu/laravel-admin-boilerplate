@@ -16,12 +16,14 @@ class CustomField extends Model
         'default_value',
         'validation_rules',
         'status',
-        'sort_order'
+        'sort_order',
+        'show_in'
     ];
 
 
     protected $casts = [
         'options' => 'array',
+        'show_in' => 'array',
         'is_required' => 'boolean',
         'status' => 'boolean',
     ];

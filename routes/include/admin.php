@@ -60,5 +60,6 @@ use App\Http\Controllers\Admin\Settings\CustomFieldController;
     // custom fields
     Route::group(['prefix' => 'custom-fields', 'as' => 'customField.'], function () {
         Route::get('/', [CustomFieldController::class, 'index'])->name('index');
+        Route::post('store', [CustomFieldController::class, 'store'])->name('store');
     });
 
