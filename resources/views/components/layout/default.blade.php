@@ -4,7 +4,7 @@
 <head>
     <meta charset='utf-8' />
     <meta http-equiv='X-UA-Compatible' content='IE=edge' />
-    <title>{{ $title ?? 'Laravel - Tailwind Boilerplate Template' }}</title>
+    <title>@yield('title', 'Laravel - Tailwind Boilerplate Template')</title>
 
     <meta name='viewport' content='width=device-width, initial-scale=1' />
     <link rel="icon" type="image/svg" href="{{asset('assets/images/favicon.svg')}}" />

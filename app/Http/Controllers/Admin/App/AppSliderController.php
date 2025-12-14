@@ -24,7 +24,7 @@ class AppSliderController extends Controller
 
     public function index(Request $request): View|JsonResponse
     {
-        $data['title'] = __('Slider');
+        $data['pageTitle'] = __('Slider');
         if ($request->ajax()) {
             return $this->getDataTableSlider();
         }

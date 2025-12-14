@@ -1,5 +1,5 @@
 <x-layout.default>
-
+@section('title', $pageTitle)
 <link rel="stylesheet" href="{{ asset('assets/common/datatables/jquery.dataTables.min.css') }}">
 <script src="{{ asset('assets/common/jquery-3.7.0.min.js') }}"></script>
 <script src="{{ asset('assets/common/datatables/jquery.dataTables.min.js') }}"></script>

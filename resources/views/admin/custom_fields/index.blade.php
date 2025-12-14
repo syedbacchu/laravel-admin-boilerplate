@@ -1,4 +1,5 @@
 <x-layout.default>
+    @section('title', $pageTitle)
     <div class="mt-8 bg-white shadow-xl rounded-2xl p-6 border border-gray-100">
 
         <div class="flex items-center justify-between mb-6">

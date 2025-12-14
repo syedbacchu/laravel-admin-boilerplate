@@ -1,4 +1,5 @@
 <x-layout.default>
+    @section('title', $pageTitle)
     <div class="panel mt-6">
         <h1 class="text-2xl font-bold text-gray-800 dark:text-gray-100 mb-6">{{ $pageTitle }}</h1>
         <div>
