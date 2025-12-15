@@ -71,12 +71,11 @@ class CustomFieldService extends BaseService implements CustomFieldServiceInterf
 
      public function getByModule($module): array
      {
-        $item = $this->customRepository->find($module);
-        if ($item) {
-            return $this->sendResponse(true,__('Status updated successfully'));
-        } else {
-            return $this->sendResponse(false,__('Data not found'));
-        }
+         logStore('MODULE FROM REQUEST:', $module);
+         $module = str_replace('\\\\', '\\', $module);
+         logStore('MODULE :', $module);
+         $data = $this->customRepository->getByModuleData($module);
+         return $this->sendResponse(true,__('Data get successfully'), $data);
      }
 
      public function getModuleData(): array {

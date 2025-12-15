@@ -26,7 +26,18 @@ class CustomFieldController extends Controller
         ], view: viewss('custom','index'));
     }
 
+    public function listByModule(Request $request)
+    {
+        return $this->service->getByModule($request->module);
+    }
+
+
     public function store(CustomFieldCreateRequest $request) {
+        $response = $this->service->storeOrUpdateItem($request);
+        return $response;
+    }
+
+    public function update(CustomFieldCreateRequest $request) {
         $response = $this->service->storeOrUpdateItem($request);
         return $response;
     }

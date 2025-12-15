@@ -36,8 +36,8 @@ class CustomFieldCreateRequest extends FormRequest
             'sort_order' => 'nullable|integer',
             'edit_id' => 'nullable|integer',
         ];
-        if (empty($this->edit_id)) {
-
+        if (in_array($this->type, ['select', 'radio', 'checkbox'])) {
+            $rule['options'] = 'required|string';
         }
 
         return $rule;

@@ -1,12 +1,18 @@
 <x-layout.default>
     @section('title', $pageTitle)
+    @php
+        $firstModel = $models[0] ?? null;
+        $firstKey   = $firstModel ? md5($firstModel) : '';
+    @endphp
     <div class="mt-8 bg-white shadow-xl rounded-2xl p-6 border border-gray-100">
 
         <div class="flex items-center justify-between mb-6">
             <h5 class="text-2xl font-bold text-gray-800">{{ $pageTitle }}</h5>
         </div>
 
-        <div class="panel" x-data="{ tab: '{{ md5($models[0] ?? '') }}' }">
+        <div class="panel"
+             x-data="{ tab: '{{ $firstKey }}' }"
+             x-init="loadFields(@js($firstModel), '{{ $firstKey }}')">
 
             <div class="flex flex-col sm:flex-row gap-6">
 
@@ -20,12 +26,13 @@
                             @endphp
                             <li>
                                 <a href="javascript:;"
-                                   @click="tab='{{ $key }}'; loadFields('{{ $model }}','{{ $key }}')"
-                                   :class="{ '!bg-success text-white': tab === '{{ $key }}' }"
-                                   class="p-3 py-2 block rounded-md hover:bg-success hover:text-white transition-all">
+                                   @click="tab='{{ $key }}'; loadFields(@js($model), '{{ $key }}')"
+                                   :class="{ '!bg-success text-blue-800': tab === '{{ $key }}' }"
+                                   class="p-3 py-2 block rounded-md hover:bg-success hover:text-blue-800 transition-all">
                                     {{ $short }}
                                 </a>
                             </li>
+
                         @endforeach
                     </ul>
                 </div>
@@ -40,27 +47,28 @@
                             <div class="space-y-6">
 
                                 <h4 class="text-xl font-bold">
-                                    {{ class_basename($model) }} Custom Fields
+                                    {{ class_basename($model) }} {{__('Custom Fields')}}
                                 </h4>
 
                                 <!-- EXISTING FIELDS -->
                                 <div class="border rounded-lg p-4">
-                                    <h5 class="font-semibold mb-3">Existing Fields</h5>
+                                    <h5 class="font-semibold mb-3">{{__('Existing Fields')}}</h5>
 
                                     <table class="w-full text-sm">
                                         <thead>
                                         <tr class="border-b">
-                                            <th>Label</th>
-                                            <th>Name</th>
-                                            <th>Type</th>
-                                            <th>Required</th>
-                                            <th>Status</th>
+                                            <th>{{__('Label')}}</th>
+                                            <th>{{__('Name')}}</th>
+                                            <th>{{__('Type')}}</th>
+                                            <th>{{__('Required')}}</th>
+                                            <th>{{__('Status')}}</th>
+                                            <th>{{__('Action')}}</th>
                                         </tr>
                                         </thead>
                                         <tbody id="field_list_{{ $key }}">
                                         <tr>
                                             <td colspan="5" class="text-center py-4 text-gray-400">
-                                                Select model to load fields
+                                                {{__('Select model to load fields')}}
                                             </td>
                                         </tr>
                                         </tbody>
@@ -69,14 +77,13 @@
 
                                 <!-- ADD FIELD -->
                                 <div class="border rounded-lg p-4 bg-gray-50">
-                                    <h5 class="font-semibold mb-3">Add New Field</h5>
+                                    <h3 class="font-bold mb-3 text-2xl">{{__('Add New Field')}}</h3>
 
-                                    <form onsubmit="return saveField(this,'{{ $model }}','{{ $key }}')" class="space-y-4">
-
+                                    <form data-form="{{ $key }}" onsubmit="return saveField(this, @js($model), '{{ $key }}')">
                                         @csrf
-
                                         <input type="hidden" name="module" value="{{ $model }}">
                                         <input type="hidden" name="status" value="1">
+                                        <input type="hidden" name="edit_id" id="edit_id_{{ $key }}">
 
                                         <div>
                                             <label>Label *</label>
@@ -85,15 +92,13 @@
 
                                         <div>
                                             <label>Field Name</label>
-                                            <input type="text" name="name" class="form-input w-full"
-                                                   placeholder="auto-generate">
+                                            <input type="text" name="name" class="form-input w-full" placeholder="auto-generate">
                                         </div>
 
-                                        <div x-data="{ show:false }">
+                                        <div x-data="{ show: false }" x-ref="optionsDiv">
                                             <label>Type *</label>
                                             <select name="type" class="form-select w-full"
-                                                    @change="show=['select','radio','checkbox'].includes($event.target.value)"
-                                                    required>
+                                                    @change="show=['select','radio','checkbox'].includes($event.target.value)">
                                                 <option value="text">Text</option>
                                                 <option value="textarea">Textarea</option>
                                                 <option value="number">Number</option>
@@ -103,14 +108,10 @@
                                                 <option value="file">File</option>
                                             </select>
 
-                                            <template x-if="show">
-                                                <div class="mt-3">
-                                                    <label>Options (comma separated)</label>
-                                                    <input type="text" name="options"
-                                                           class="form-input w-full"
-                                                           placeholder="red, green, blue">
-                                                </div>
-                                            </template>
+                                            <div class="mt-3 options-container" style="display:none;">
+                                                <label>Options (comma separated)</label>
+                                                <input type="text" name="options" class="form-input w-full" placeholder="red, green, blue">
+                                            </div>
                                         </div>
 
                                         <div>
@@ -123,20 +124,27 @@
 
                                         <div>
                                             <label>Default Value</label>
-                                            <input type="text" name="default_value"
-                                                   class="form-input w-full">
+                                            <input type="text" name="default_value" class="form-input w-full">
                                         </div>
 
                                         <div>
                                             <label>Validation Rules</label>
-                                            <input type="text" name="validation_rules"
-                                                   class="form-input w-full"
-                                                   placeholder="nullable|string|max:255">
+                                            <input type="text" name="validation_rules" class="form-input w-full">
                                         </div>
 
-                                        <button class="btn btn-success px-4 py-2">
-                                            Save Field
-                                        </button>
+                                        <div>
+                                            <label>Show In *</label>
+                                            <select name="show_in[]" class="form-select w-full" multiple required x-ref="showIn">
+                                                <option value="create">Create Form</option>
+                                                <option value="update">Update Form</option>
+                                                <option value="api">API</option>
+                                            </select>
+                                        </div>
+                                        <div class="mt-4">
+                                            <button class="btn btn-secondary px-4 py-2">
+                                                {{__('Save Field')}}
+                                            </button>
+                                        </div>
                                     </form>
                                 </div>
 
@@ -154,11 +162,17 @@
         function saveField(form, module, key) {
             const formData = new FormData(form);
 
+            // Frontend validation: if type requires options, ensure it's not empty
+            const type = form.querySelector('[name="type"]').value;
+            const options = form.querySelector('[name="options"]')?.value || '';
+            if(['select','radio','checkbox'].includes(type) && !options.trim()){
+                toastr.error('Options are required for select, radio, or checkbox type.');
+                return false;
+            }
+
             fetch("{{ route('customField.store') }}", {
                 method: "POST",
-                headers: {
-                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                },
+                headers: {'X-CSRF-TOKEN': '{{ csrf_token() }}'},
                 body: formData
             })
                 .then(res => res.json())
@@ -166,6 +180,7 @@
                     if(res.success){
                         form.reset();
                         loadFields(module, key);
+                        form.querySelector('[name="label"]').focus();
                         toastr.success(res.message);
                     } else {
                         toastr.error(res.message);
@@ -175,31 +190,88 @@
             return false;
         }
 
+
         function loadFields(module, key) {
-            fetch("{{ route('customField.index') }}?module=" + module)
+            fetch("{{ route('customField.list') }}?module=" + encodeURIComponent(module))
                 .then(res => res.json())
                 .then(res => {
                     const tbody = document.getElementById('field_list_' + key);
                     tbody.innerHTML = '';
-
-                    if(!res.data || res.data.length === 0){
-                        tbody.innerHTML = `<tr>
-                            <td colspan="5" class="text-center py-4 text-gray-400">No fields found</td>
-                        </tr>`;
+                    if(!res.data || !res.data.length){
+                        tbody.innerHTML = `<tr><td colspan="6" class="text-center py-4 text-gray-400">No custom fields found</td></tr>`;
                         return;
                     }
 
-                    res.data.forEach(f => {
+                    res.data.forEach(field => {
                         tbody.innerHTML += `
-                            <tr class="border-b">
-                                <td>${f.label}</td>
-                                <td>${f.name}</td>
-                                <td>${f.type}</td>
-                                <td>${f.is_required ? 'Yes' : 'No'}</td>
-                                <td>${f.status ? 'Active' : 'Inactive'}</td>
-                            </tr>`;
+<tr class="border-b">
+<td>${field.label}</td>
+<td>${field.name}</td>
+<td>${field.type}</td>
+<td>${field.is_required ? 'Yes' : 'No'}</td>
+<td>${field.show_in ? field.show_in.join(', ') : ''}</td>
+<td>
+<button class="text-primary edit-btn"
+    data-id="${field.id}"
+    data-module="${module}"
+    data-key="${key}">Edit</button>
+</td>
+</tr>`;
                     });
                 });
         }
+
+        document.addEventListener('click', function(e){
+            if(e.target.matches('.edit-btn')){
+                const btn = e.target;
+                editField(btn.dataset.id, btn.dataset.module, btn.dataset.key);
+            }
+        });
+
+        function editField(id, module, key) {
+            fetch("{{ route('customField.list') }}?module=" + encodeURIComponent(module))
+                .then(res => res.json())
+                .then(res => {
+                    const field = res.data.find(f => f.id == id);
+                    if (!field) return;
+
+                    const form = document.querySelector(`[data-form="${key}"]`);
+                    if (!form) return;
+
+                    // Fill basic fields
+                    form.querySelector('[name="edit_id"]').value = field.id;
+                    form.querySelector('[name="label"]').value = field.label;
+                    form.querySelector('[name="name"]').value = field.name;
+                    form.querySelector('[name="type"]').value = field.type;
+                    form.querySelector('[name="is_required"]').value = field.is_required ? 1 : 0;
+                    form.querySelector('[name="default_value"]').value = field.default_value ?? '';
+                    form.querySelector('[name="validation_rules"]').value = field.validation_rules ?? '';
+
+                    // Show options input if needed
+                    const optionsContainer = form.querySelector('.options-container'); // just a normal class
+                    const optionsInput = form.querySelector('[name="options"]');
+                    if (['select', 'radio', 'checkbox'].includes(field.type)) {
+                        if (optionsContainer) optionsContainer.style.display = 'block';
+                        optionsInput.value = field.options ? field.options.join(', ') : '';
+                    } else {
+                        if (optionsContainer) optionsContainer.style.display = 'none';
+                        optionsInput.value = '';
+                    }
+
+                    // Fill show_in multi-select
+                    const showInSelect = form.querySelector('[name="show_in[]"]');
+                    if (field.show_in && showInSelect) {
+                        [...showInSelect.options].forEach(opt => {
+                            opt.selected = field.show_in.includes(opt.value);
+                        });
+                    }
+
+                    form.scrollIntoView({ behavior: 'smooth' });
+                });
+        }
+
+
+
+
     </script>
 </x-layout.default>
