@@ -61,8 +61,7 @@
                                             <th>{{__('Name')}}</th>
                                             <th>{{__('Type')}}</th>
                                             <th>{{__('Required')}}</th>
-                                            <th>{{__('Serial')}}</th>
-                                            <th>{{__('Show In')}}</th>
+                                            <th>{{__('Status')}}</th>
                                             <th>{{__('Action')}}</th>
                                         </tr>
                                         </thead>
@@ -96,11 +95,10 @@
                                             <input type="text" name="name" class="form-input w-full" placeholder="auto-generate">
                                         </div>
 
-                                        <div x-data="{ show: false }">
+                                        <div x-data="{ show: false }" x-ref="optionsDiv">
                                             <label>Type *</label>
-
                                             <select name="type" class="form-select w-full"
-                                                    @change="show = ['select','radio','checkbox'].includes($event.target.value)">
+                                                    @change="show=['select','radio','checkbox'].includes($event.target.value)">
                                                 <option value="text">Input</option>
                                                 <option value="textarea">Textarea</option>
                                                 <option value="number">Number</option>
@@ -110,15 +108,11 @@
                                                 <option value="file">File</option>
                                             </select>
 
-                                            <div class="mt-3 options-container"
-                                                 x-show="show"
-                                                 x-transition>
+                                            <div class="mt-3 options-container" style="display:none;">
                                                 <label>Options (comma separated)</label>
-                                                <input type="text" name="options" class="form-input w-full"
-                                                       placeholder="red, green, blue">
+                                                <input type="text" name="options" class="form-input w-full" placeholder="red, green, blue">
                                             </div>
                                         </div>
-
 
                                         <div>
                                             <label>Required</label>
@@ -137,10 +131,7 @@
                                             <label>Validation Rules</label>
                                             <input type="text" name="validation_rules" class="form-input w-full">
                                         </div>
-                                        <div>
-                                            <label>Serial</label>
-                                            <input type="number" name="sort_order" value="0" class="form-input w-full">
-                                        </div>
+
                                         <div>
                                             <label>Show In *</label>
                                             <select name="show_in[]" class="form-select w-full" multiple required x-ref="showIn">
@@ -218,7 +209,6 @@
 <td>${field.name}</td>
 <td>${field.type}</td>
 <td>${field.is_required ? 'Yes' : 'No'}</td>
-<td>${field.sort_order}</td>
 <td>${field.show_in ? field.show_in.join(', ') : ''}</td>
 <td>
 <button class="text-primary edit-btn"
@@ -253,7 +243,6 @@
                     form.querySelector('[name="label"]').value = field.label;
                     form.querySelector('[name="name"]').value = field.name;
                     form.querySelector('[name="type"]').value = field.type;
-                    form.querySelector('[name="sort_order"]').value = field.sort_order;
                     form.querySelector('[name="is_required"]').value = field.is_required ? 1 : 0;
                     form.querySelector('[name="default_value"]').value = field.default_value ?? '';
                     form.querySelector('[name="validation_rules"]').value = field.validation_rules ?? '';
@@ -268,7 +257,8 @@
                         if (optionsContainer) optionsContainer.style.display = 'none';
                         optionsInput.value = '';
                     }
-// Fill show_in multi-select
+
+                    // Fill show_in multi-select
                     const showInSelect = form.querySelector('[name="show_in[]"]');
                     if (field.show_in && showInSelect) {
                         [...showInSelect.options].forEach(opt => {

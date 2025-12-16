@@ -89,6 +89,7 @@ class AppSliderController extends Controller
         $data['type'] = SliderTypeEnum::APP;
         $data['function_type'] = 'update';
         $data['item'] = $this->service->getById($id);
+//        dd($data['item']->customFieldValues);
         if (!$data['item'] ) {
             return ResponseService::send();
         }

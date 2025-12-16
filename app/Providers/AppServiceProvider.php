@@ -6,6 +6,8 @@ use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Facades\Blade;
+use App\Http\Services\CustomField\CustomFieldServiceInterface;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -26,6 +28,10 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        Blade::directive('customFields', function ($expression = null) {
+            return "<?php echo resolve(\\App\\Http\\Services\\CustomField\\CustomFieldServiceInterface::class)->render($expression); ?>";
+        });
+
         Schema::defaultStringLength(191);
         RateLimiter::for('forgot-password', function ($request) {
             // The unique identifier (email / phone / username)

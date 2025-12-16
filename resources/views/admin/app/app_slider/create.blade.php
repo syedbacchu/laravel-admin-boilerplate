@@ -80,7 +80,7 @@
                             <div class="mt-3">
                                 <img
                                     :src="bannerPreview"
-                                    class=" rounded-xl border object-cover shadow-sm" width="300"
+                                    class=" rounded-xl border object-cover shadow-sm" width="200"
                                 >
                             </div>
                         </template>
@@ -88,6 +88,8 @@
                     </div>
 
                 </div>
+                @if(isset($item)) @customFields($item) @else @customFields(\App\Models\Slider::class) @endif
+
                 <div>
                     <button type="submit" class="btn btn-secondary mt-6">Submit</button>
                 </div>

@@ -3,13 +3,13 @@
 namespace App\Models;
 
 use App\Traits\Auditable;
+use App\Traits\HasCustomFields;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Slider extends Model
 {
-    use HasFactory;
-    use Auditable;
+    use HasFactory, Auditable, HasCustomFields;
 
     protected $fillable = [
         'photo',

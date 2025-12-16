@@ -7,7 +7,10 @@ use App\Http\Requests\CustomField\CustomFieldCreateRequest;
 use App\Http\Requests\Slider\SliderCreateRequest;
 use App\Http\Services\BaseService;
 use App\Http\Services\Response\ModelScannerService;
+use App\Support\FormContextResolver;
+use App\Support\ModelResolver;
 use App\Traits\FileUploadTrait;
+use Illuminate\Database\Eloquent\Model;
 
 class CustomFieldService extends BaseService implements CustomFieldServiceInterface
 {
@@ -21,6 +24,67 @@ class CustomFieldService extends BaseService implements CustomFieldServiceInterf
         $this->customRepository = $repository; // use this specifically
     }
 
+    public function render(Model|string|null $model = null): string
+    {
+        if ($model instanceof Model) {
+            $modelType = get_class($model);
+        } elseif (is_string($model) && class_exists($model) && is_subclass_of($model, Model::class)) {
+            $modelType = $model;
+            $model = null; // no instance yet
+        } else {
+            return ''; // nothing to render
+        }
+
+        logStore('render -> '. $model.'-----------'. $modelType);
+        $fields = $this->fieldsWithValues($model, $modelType);
+        logStore('render $fields -> '. $fields);
+        if ($fields->isEmpty()) {
+            return '';
+        }
+
+        return view('components.custom-fields.auto', compact('fields'))->render();
+    }
+
+    public function autoFields(?string $modelType = null)
+    {
+        $module = $modelType ?? ModelResolver::resolveFromRoute();
+        $context = FormContextResolver::resolve();
+        logStore('autoFields $module -> '. $module);
+        logStore('autoFields $context -> '. $context);
+        if (!$module) {
+            return collect();
+        }
+
+        return $this->customRepository->getValueByModuleContext($module, $context);
+    }
+
+
+    public function fieldsWithValues(?Model $model = null, ?string $modelType = null)
+    {
+        $fields = $this->autoFields($modelType);
+
+        if (!$model) {
+            return $fields; // create page
+        }
+
+        return $fields->map(function ($field) use ($model) {
+            $value = $model->customFieldValues
+                ->firstWhere('custom_field_id', $field->id)
+                ->value ?? null;
+
+            $field->resolved_value = $this->normalizeValue($field, $value);
+            return $field;
+        });
+    }
+
+
+    public function normalizeValue($field, $value)
+    {
+        if (in_array($field->type, ['checkbox'])) {
+            return json_decode($value ?? '[]', true);
+        }
+        return $value;
+    }
 
     public function storeOrUpdateItem(CustomFieldCreateRequest $request): array
     {
@@ -71,16 +135,14 @@ class CustomFieldService extends BaseService implements CustomFieldServiceInterf
 
      public function getByModule($module): array
      {
-         logStore('MODULE FROM REQUEST:', $module);
          $module = str_replace('\\\\', '\\', $module);
-         logStore('MODULE :', $module);
          $data = $this->customRepository->getByModuleData($module);
          return $this->sendResponse(true,__('Data get successfully'), $data);
      }
 
      public function getModuleData(): array {
          $data['models'] = ModelScannerService::getModels([
-             'CustomField','CustomFieldValue','AdminActivityLog','AdminSettings','AuditLog','FileSystem'
+             'CustomField','CustomFieldValue','AdminActivityLog','AdminSettings','AuditLog','FileSystem','BaseModel'
          ]);
 
          return $this->sendResponse(true,__('Data retrieved successfully'),$data);
