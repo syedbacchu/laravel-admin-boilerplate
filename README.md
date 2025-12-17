@@ -13,4 +13,5 @@ An enterprise-grade Laravel 10 boilerplate built for high-performance admin pane
 # file system
 # file manager
 # custom field
+# Role management
 # admin settings

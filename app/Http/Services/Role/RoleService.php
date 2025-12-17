@@ -4,6 +4,7 @@ namespace App\Http\Services\Role;
 
 use App\Enums\StatusEnum;
 use App\Enums\UploadFolderEnum;
+use App\Http\Requests\Role\RoleCreateRequest;
 use App\Http\Requests\Slider\SliderCreateRequest;
 use App\Http\Services\BaseService;
 use App\Traits\FileUploadTrait;
@@ -27,39 +28,29 @@ class RoleService extends BaseService implements RoleServiceInterface
         return $this->sendResponse(true,__('Data get successfully.'),$data);
     }
 
-    public function storeOrUpdateSlider(SliderCreateRequest $request): array
+    public function storeOrUpdateData(RoleCreateRequest $request): array
     {
         $item = "";
         $data = [
-            'type' => $request->type,
-            'title' => $request->title,
-            'subtitle' => $request->subtitle,
-            'offer' => $request->offer,
-            'link' => $request->link,
-            'serial' => isset($request->serial) ? $request->serial : 0 ,
-            'published' => $request->published ? $request->published : StatusEnum::ACTIVE
+            'name' => $request->name,
+            'guard' => $request->guard
         ];
         $message = "";
         if ($request->edit_id) {
-            $existItem = $this->itemRepository->find($request->edit_id);
-            if ($existItem) {
-                if ($request->photo) {
-                    $data['photo'] = $request->photo;
-//                    $data['photo'] = $this->uploadFilePublic($request->file('photo'),UploadFolderEnum::GENERAL->value, $existItem->raw_photo);
-                }
-                $this->itemRepository->update($existItem->id,$data);
-                $item = $this->itemRepository->find($existItem->id);
-                $message = __('Slider updated successfully');
+            $item = $this->itemRepository->find($request->edit_id);
+            if ($item) {
+                $this->itemRepository->update($item->id,$data);
+                $item->permissions()->sync($request->permissions);
+                $item = $this->itemRepository->find($item->id);
+                $message = __('Role updated successfully');
             } else {
                 return $this->sendResponse(false,__('Data not found'));
             }
         } else {
-            if ($request->photo) {
-                $data['photo'] = $request->photo;
-//                $data['photo'] = $this->uploadFilePublic($request->file('photo'),UploadFolderEnum::GENERAL->value);
-            }
-            $item = $this->itemRepository->createSlider($data);
-            $message = __('Slider created successfully');
+            $data['slug'] = make_unique_slug($request->name, 'roles');
+            $item = $this->itemRepository->create($data);
+            $item->permissions()->sync($request->permissions);
+            $message = __('Role created successfully');
         }
 
         return $this->sendResponse(true,$message,$item);

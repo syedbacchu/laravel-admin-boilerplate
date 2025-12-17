@@ -77,7 +77,7 @@ class RoleRepository extends BaseRepository implements RoleRepositoryInterface
         return $data;
     }
 
-    public function createSlider(array $data): Model
+    public function createData(array $data): Model
     {
         return $this->create($data);
     }

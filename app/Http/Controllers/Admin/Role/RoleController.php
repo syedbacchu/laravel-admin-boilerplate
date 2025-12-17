@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin\Role;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Role\RoleCreateRequest;
 use App\Http\Services\Response\ResponseService;
 use App\Http\Services\Role\RoleServiceInterface;
 use App\Models\Permission;
@@ -39,11 +40,12 @@ class RoleController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create(Request $request)
     {
         $data['pageTitle'] = __('Create New Role');
         $data['function_type'] = 'create';
-        $data['permissions'] = Permission::where('guard', 'web')
+        $data['type'] = isset($request->type)?$request->type:'web';
+        $data['permissions'] = Permission::where('guard', $data['type'])
         ->orderBy('module')
         ->get()
         ->groupBy('module');
@@ -55,9 +57,11 @@ class RoleController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
-    {
-        //
+    public function store(RoleCreateRequest $request):RedirectResponse {
+        $response = $this->service->storeOrUpdateData($request);
+        return ResponseService::send([
+            'response' => $response,
+        ], successRoute: 'role.index');
     }
 
     /**

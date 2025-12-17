@@ -11,7 +11,7 @@ use Illuminate\Http\Request;
 interface RoleRepositoryInterface extends BaseRepositoryInterface
 {
     public function roleList(Request $request): array;
-    public function createSlider(array $data): Model;
+    public function createData(array $data): Model;
     public function getPermission($id): Model;
 
     public function updatePermission($id,array $data): mixed;

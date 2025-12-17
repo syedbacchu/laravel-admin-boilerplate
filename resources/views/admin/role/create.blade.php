@@ -17,12 +17,13 @@
         <div>
             <form method="POST" @if($function_type == 'create') action="{{ route('role.store') }}" @else action="{{ route('role.update') }}" @endif enctype="multipart/form-data">
                 @csrf
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
                     <div class="mb-2">
                         <label for="title" class="">{{ __('Name') }}</label>
                         @if(isset($item))
                             <input type="hidden" name="edit_id" value="{{ $item->id }}">
                         @endif
+                        <input type="hidden" name="guard" value="{{$type}}">
                         <div class="flex">
                             {!! defaultInputIcon() !!}
                             <input name="name" type="text" @if(isset($item)) value="{{ $item->name }}" @else value="{{ old('name') }}" @endif class="form-input ltr:rounded-l-none rtl:rounded-r-none" />
@@ -35,16 +36,7 @@
                             <input name="slug" type="text" @if(isset($item)) value="{{ $item->slug }}" @else value="{{ old('slug') }}" @endif class="form-input ltr:rounded-l-none rtl:rounded-r-none" />
                         </div>
                     </div>
-                    <div class="mb-2">
-                        <label for="guard" class="">{{ __('Guard') }}</label>
-                        <div class="flex">
-                            {!! defaultInputIcon() !!}
-                            <select name="guard" id="" class="form-select">
-                                <option value="web">{{__('Web')}}</option>
-{{--                                <option value="api">{{__('Api')}}</option>--}}
-                            </select>
-                        </div>
-                    </div>
+
                 </div>
                 <div>
                     <div>
@@ -68,7 +60,7 @@
                                             @if(isset($item) && $item->permissions->contains($permission->id)) checked @endif
                                         >
                                         <span class="text-sm">
-                                        {{ str_replace($module.'.', '', $permission->slug) }}
+                                        {{ $permission->name }}
                                     </span>
                                     </label>
                                 @endforeach
