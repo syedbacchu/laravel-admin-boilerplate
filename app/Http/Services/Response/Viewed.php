@@ -28,6 +28,14 @@ class Viewed
         'custom' => [
             'index'  => 'admin.custom_fields.index',
         ],
+        'role' => [
+            'list'  => 'admin.role.index',
+            'create' => 'admin.role.create',
+            'edit'   => 'admin.role.edit',
+            'permission'   => 'admin.role.permissions',
+            'permissionApi'   => 'admin.role.permissions_api',
+            'apiList'   => 'admin.role.role_api',
+        ],
     ];
 
     /**

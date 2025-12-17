@@ -2,7 +2,7 @@
 use App\Http\Controllers\Auth\AuthController;
 
 
-Route::middleware('guest')->group(function () {
+Route::middleware(['guest'])->group(function () {
     Route::get('login', [AuthController::class, 'showLogin'])->name('login');
     Route::post('login', [AuthController::class, 'login']);
     Route::group([ 'as' => 'auth.'], function () {

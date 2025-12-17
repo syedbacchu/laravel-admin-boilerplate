@@ -1,0 +1,20 @@
+<?php
+
+namespace App\Http\Services\Role;
+
+use App\Http\Repositories\BaseRepositoryInterface;
+use Illuminate\Contracts\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Http\Request;
+
+interface RoleRepositoryInterface extends BaseRepositoryInterface
+{
+    public function roleList(Request $request): array;
+    public function createSlider(array $data): Model;
+    public function getPermission($id): Model;
+
+    public function updatePermission($id,array $data): mixed;
+    public function deletePermission($id): mixed;
+    public function permissionList(Request $request): array;
+}

@@ -94,5 +94,16 @@ class User extends Authenticatable
         return $this->avatar_original ? ($this->avatar_original) : null;
     }
 
+    public function role()
+    {
+        return $this->belongsTo(Role::class);
+    }
+
+    public function hasPermission(string $permission): bool
+    {
+        return $this->role
+            ?->permissions
+            ->contains('slug', $permission) ?? false;
+    }
 
 }

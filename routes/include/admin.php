@@ -8,6 +8,7 @@ use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Admin\FileManager\FileManagerController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\Settings\CustomFieldController;
+use App\Http\Controllers\Admin\Role\RoleController;
 
 
     Route::get('log', [Sdtech\LogViewerLaravel\Controllers\LogViewerLaravelController::class, 'index'])->name('errorLog');
@@ -60,8 +61,22 @@ use App\Http\Controllers\Admin\Settings\CustomFieldController;
     // custom fields
     Route::group(['prefix' => 'custom-fields', 'as' => 'customField.'], function () {
         Route::get('/', [CustomFieldController::class, 'index'])->name('index');
-        Route::get('list', [CustomFieldController::class, 'listByModule'])->name('list');
+        Route::get('list', [CustomFieldController::class, 'listByModule'])->name('list')->middleware('skip.permission');
         Route::post('store', [CustomFieldController::class, 'store'])->name('store');
         Route::post('update', [CustomFieldController::class, 'update'])->name('update');
     });
 
+    Route::resource('role', RoleController::class)->names([
+        'index'   => 'role.index',
+        'store'   => 'role.store',
+        'update'  => 'role.update',
+        'destroy' => 'role.destroy',
+    ]);
+    Route::group([ 'as' => 'role.'], function () {
+        Route::get('role-sync-permission', [RoleController::class, 'syncPermission'])->name('syncPermission');
+        Route::get('web-permission', [RoleController::class, 'webPermission'])->name('webPermission');
+        Route::get('api-permission', [RoleController::class, 'apiPermission'])->name('apiPermission');
+        Route::get('api-role', [RoleController::class, 'apiRole'])->name('apiRole');
+        Route::get('delete-permission/{id}', [RoleController::class, 'deletePermission'])->name('deletePermission');
+        Route::post('permission-publish', [RoleController::class, 'permissionPublish'])->name('permissionPublish');
+    });

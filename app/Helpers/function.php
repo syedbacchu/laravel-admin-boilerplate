@@ -3,6 +3,7 @@
 use App\Http\Services\Response\Viewed;
 use Illuminate\Support\Facades\Log;
 use App\Support\Settings;
+use Illuminate\Support\Str;
 
 function logStore($type, $text = '', $timestamp = true): void
 {
@@ -249,3 +250,15 @@ function uploadImageFileInStorage($reqFile,$path,$oldImage = null){
     $response = $service->uploadImageInStorage($reqFile,$path,$oldImage);
     return $response;
 }
+
+function formatPermissionName(string $input): string {
+    $formatted = Str::of($input)
+        ->replace(['.', '_', '-'], ' ')          // replace separators with space
+        ->replaceMatches('/([a-z])([A-Z])/', '$1 $2') // split camelCase
+        ->replaceMatches('/\s+/', ' ')          // collapse multiple spaces
+        ->trim()
+        ->title();                              // capitalize
+
+    return $formatted;
+}
+
