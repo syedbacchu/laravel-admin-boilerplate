@@ -66,6 +66,6 @@ class Kernel extends HttpKernel
         'admin.auth' => \App\Http\Middleware\AdminAuth::class,
         'admin.only' => \App\Http\Middleware\AdminOnly::class,
         'permission'      => \App\Http\Middleware\PermissionMiddleware::class,
-        'skin.permission'      => \App\Http\Middleware\SkipPermission::class,
+        'skip.permission'      => \App\Http\Middleware\SkipPermission::class,
     ];
 }

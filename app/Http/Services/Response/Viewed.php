@@ -36,6 +36,9 @@ class Viewed
             'permissionApi'   => 'admin.role.permissions_api',
             'apiList'   => 'admin.role.role_api',
         ],
+        'settings' => [
+            'index'  => 'admin.settings.index',
+        ],
     ];
 
     /**

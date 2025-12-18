@@ -251,15 +251,14 @@ function uploadImageFileInStorage($reqFile,$path,$oldImage = null){
     return $response;
 }
 
-function formatPermissionName(string $input): string {
-    $formatted = Str::of($input)
-        ->replace(['.', '_', '-'], ' ')          // replace separators with space
-        ->replaceMatches('/([a-z])([A-Z])/', '$1 $2') // split camelCase
-        ->replaceMatches('/\s+/', ' ')          // collapse multiple spaces
+function formatPermissionName(string $input): string
+{
+    return (string) Str::of($input)
+        ->replaceMatches('/([a-z])([A-Z])/', '$1 $2')
+        ->replace(['.', '_', '-'], ' ')
+        ->replaceMatches('/\s+/', ' ')
         ->trim()
-        ->title();                              // capitalize
-
-    return $formatted;
+        ->title();
 }
 
 

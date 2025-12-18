@@ -5,9 +5,9 @@ namespace App\Http\Services\Role;
 use App\Http\Repositories\BaseRepository;
 use App\Models\Permission;
 use App\Models\Role;
-use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Collection;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Builder;
+
 
 class RoleRepository extends BaseRepository implements RoleRepositoryInterface
 {
@@ -157,5 +157,18 @@ class RoleRepository extends BaseRepository implements RoleRepositoryInterface
 
     public function deletePermission($id): mixed {
         return Permission::where('id',$id)->delete();
+    }
+
+    public function getModulePermissions($guard = null): Collection {
+        $query = Permission::query();
+
+        if (!empty($type)) {
+            $query->where('guard', $guard);
+        }
+
+        return $query
+            ->orderBy('module')
+            ->get()
+            ->groupBy('module');
     }
 }

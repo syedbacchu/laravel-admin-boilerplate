@@ -37,6 +37,12 @@ class SyncPermission
 
             [$module] = explode('.', $name);
 
+            if ($module == 'sanctum') {
+                continue;
+            }
+            if ($module == 'ignition') {
+                continue;
+            }
             Permission::firstOrCreate(
                 [
                     'slug'  => $name,

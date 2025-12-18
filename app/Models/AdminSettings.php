@@ -13,7 +13,6 @@ class AdminSettings extends Model
     protected $fillable = [
         'group',
         'slug',
-        'label',
         'value',
     ];
 }

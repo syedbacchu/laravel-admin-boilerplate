@@ -15,7 +15,6 @@ return new class extends Migration
             $table->id();
             $table->string('group', 50);
             $table->string('slug', 180)->unique();
-            $table->string('label')->nullable();        // For admin panel UI
             $table->longText('value')->nullable();
             $table->timestamps();
         });

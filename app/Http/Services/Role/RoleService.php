@@ -96,4 +96,32 @@ class RoleService extends BaseService implements RoleServiceInterface
     public function getSinglePermission($id): array {
         return $this->sendResponse(true,__('Data get successfully'),$this->itemRepository->getPermission($id) );
     }
+
+    public function statusRole($id,$status): array
+    {
+        $item = $this->itemRepository->find($id);
+        if ($item) {
+            $this->itemRepository->update($item->id,['status' => $status]);
+            return $this->sendResponse(true,__('Status updated successfully'));
+        } else {
+            return $this->sendResponse(false,__('Data not found'));
+        }
+    }
+
+    public function roleCreateData($guard): array
+    {
+        $data = $this->itemRepository->getModulePermissions($guard);
+
+        return $this->sendResponse(true,__('Data get successfully'),$data);
+    }
+
+    public function roleEditData($id): array {
+        $data['item'] = $this->itemRepository->find($id);
+        if ($data['item']) {
+            $data['permissions'] = $this->itemRepository->getModulePermissions($data['item']->guard);
+            return $this->sendResponse(true,__('Data get successfully'), $data);
+        } else {
+            return $this->sendResponse(false,__('Data not found'));
+        }
+    }
 }

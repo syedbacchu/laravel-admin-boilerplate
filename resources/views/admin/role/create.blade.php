@@ -15,25 +15,28 @@
             </a>
         </div>
         <div>
-            <form method="POST" @if($function_type == 'create') action="{{ route('role.store') }}" @else action="{{ route('role.update') }}" @endif enctype="multipart/form-data">
+            <form method="POST" action="{{ route('role.store') }}" enctype="multipart/form-data">
                 @csrf
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
                     <div class="mb-2">
                         <label for="title" class="">{{ __('Name') }}</label>
                         @if(isset($item))
                             <input type="hidden" name="edit_id" value="{{ $item->id }}">
+                            <input type="hidden" name="guard" value="{{$item->guard}}">
+                        @else
+                            <input type="hidden" name="guard" value="{{$type}}">
                         @endif
-                        <input type="hidden" name="guard" value="{{$type}}">
+
                         <div class="flex">
                             {!! defaultInputIcon() !!}
-                            <input name="name" type="text" @if(isset($item)) value="{{ $item->name }}" @else value="{{ old('name') }}" @endif class="form-input ltr:rounded-l-none rtl:rounded-r-none" />
+                            <input id="name" name="name" type="text" @if(isset($item)) value="{{ $item->name }}" @else value="{{ old('name') }}" @endif class="form-input ltr:rounded-l-none rtl:rounded-r-none" />
                         </div>
                     </div>
                     <div class="mb-2">
                         <label for="subtitle" class="">{{ __('Slug') }}</label>
                         <div class="flex">
                             {!! defaultInputIcon() !!}
-                            <input name="slug" type="text" @if(isset($item)) value="{{ $item->slug }}" @else value="{{ old('slug') }}" @endif class="form-input ltr:rounded-l-none rtl:rounded-r-none" />
+                            <input id="slug" name="slug" type="text" @if(isset($item)) value="{{ $item->slug }}" @else value="{{ old('slug') }}" @endif class="form-input ltr:rounded-l-none rtl:rounded-r-none" />
                         </div>
                     </div>
 
@@ -47,7 +50,7 @@
                         @foreach($permissions as $module => $modulePermissions)
                             <div class="border rounded-lg p-3">
                                 <h6 class="font-semibold mb-2 text-indigo-700 uppercase">
-                                    {{ ucfirst($module) }}
+                                    {{ formatPermissionName($module) }}
                                 </h6>
 
                                 @foreach($modulePermissions as $permission)
@@ -96,6 +99,30 @@
         }
     }
 
+    document.addEventListener('DOMContentLoaded', function () {
+        const nameInput = document.getElementById('name');
+        const slugInput = document.getElementById('slug');
+
+        nameInput.addEventListener('input', function () {
+            // only auto-fill if slug is empty or creating
+            if (!slugInput.dataset.manual) {
+                slugInput.value = generateSlug(this.value);
+            }
+        });
+
+        slugInput.addEventListener('input', function () {
+            slugInput.dataset.manual = true;
+        });
+
+        function generateSlug(text) {
+            return text
+                .toLowerCase()
+                .trim()
+                .replace(/[^\w\s-]/g, '')   // remove special chars
+                .replace(/[\s_-]+/g, '-')   // spaces to dash
+                .replace(/^-+|-+$/g, '');   // trim dash
+        }
+    });
 
 </script>
 </x-layout.default>

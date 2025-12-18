@@ -40,7 +40,7 @@ class RouteServiceProvider extends ServiceProvider
                 ->prefix('admin')
                 ->group(base_path('routes/include/admin.php'));
 
-            Route::middleware(['web', 'guest'])
+            Route::middleware(['web', 'guest','skip.permission'])
                 ->group(base_path('routes/include/auth.php'));
         });
     }

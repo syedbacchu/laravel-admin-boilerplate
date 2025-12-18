@@ -3,25 +3,25 @@
 use App\Http\Controllers\Admin\App\AppSliderController;
 use App\Http\Controllers\Admin\Audit\AuditSettingController;
 use App\Http\Controllers\Admin\DashboardController;
-use App\Http\Controllers\Admin\SettingsController;
-use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Admin\FileManager\FileManagerController;
-use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Admin\Settings\CustomFieldController;
 use App\Http\Controllers\Admin\Role\RoleController;
+use App\Http\Controllers\Admin\Settings\CustomFieldController;
+use App\Http\Controllers\Admin\Settings\SettingsController;
+use App\Http\Controllers\Auth\AuthController;
+use Illuminate\Support\Facades\Route;
 
 
-    Route::get('log', [Sdtech\LogViewerLaravel\Controllers\LogViewerLaravelController::class, 'index'])->name('errorLog');
+Route::get('log', [Sdtech\LogViewerLaravel\Controllers\LogViewerLaravelController::class, 'index'])->name('errorLog');
 
     // Dashboard
     Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
     Route::get('logout', [AuthController::class, 'logout'])->name('logout');
 
-
-
-     // General Setting
-    Route::group(['prefix' => 'general-setting'], function () {
-        Route::get('/', [SettingsController::class, 'generalSetting'])->name('generalSettingList');
+    // General Setting
+    Route::group(['prefix' => 'settings', 'as' => 'settings.'], function () {
+        Route::get('/', [SettingsController::class, 'index'])->name('generalSetting');
+        Route::post('/settings/{group}', [SettingsController::class, 'update'])
+            ->name('update');
     });
 
 
@@ -73,10 +73,11 @@ use App\Http\Controllers\Admin\Role\RoleController;
         'destroy' => 'role.destroy',
     ]);
     Route::group([ 'as' => 'role.'], function () {
+        Route::post('role-publish', [RoleController::class, 'roleStatus'])->name('status');
         Route::get('role-sync-permission', [RoleController::class, 'syncPermission'])->name('syncPermission');
         Route::get('web-permission', [RoleController::class, 'webPermission'])->name('webPermission');
         Route::get('api-permission', [RoleController::class, 'apiPermission'])->name('apiPermission');
         Route::get('api-role', [RoleController::class, 'apiRole'])->name('apiRole');
         Route::get('delete-permission/{id}', [RoleController::class, 'deletePermission'])->name('deletePermission');
-        Route::post('permission-publish', [RoleController::class, 'permissionPublish'])->name('permissionPublish');
+        Route::post('permission-publish', [RoleController::class, 'permissionPublish'])->name('permissionStatus');
     });

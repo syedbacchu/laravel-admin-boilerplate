@@ -44,11 +44,9 @@ class RoleController extends Controller
     {
         $data['pageTitle'] = __('Create New Role');
         $data['function_type'] = 'create';
-        $data['type'] = isset($request->type)?$request->type:'web';
-        $data['permissions'] = Permission::where('guard', $data['type'])
-        ->orderBy('module')
-        ->get()
-        ->groupBy('module');
+        $data['type'] = isset($request->type) ? $request->type : 'web';
+        $data['permissions'] = $this->service->roleCreateData($data['type'])['data'];;
+
         return ResponseService::send([
             'data' => $data,
         ], view: viewss('role','create'));
@@ -77,7 +75,16 @@ class RoleController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $response = $this->service->roleEditData($id);
+        if ($response['success'] == false) {
+            return ResponseService::send();
+        }
+        $data = $response['data'];
+        $data['pageTitle'] = __('Update Role');
+        $data['function_type'] = 'update';
+        return ResponseService::send([
+            'data' => $data,
+        ], view: viewss('role','create'));
     }
 
     /**
@@ -105,14 +112,30 @@ class RoleController extends Controller
 
             ->addColumn('status', function ($item) {
                 return toggle_column(
-                    route('role.permissionStatus'),
+                    route('role.status'),
                     $item->id,
                     $item->status == 1
                 );
             })
+            ->addColumn('actions', function ($item) {
+                return action_buttons([
+                    edit_column(route('role.edit', $item->id)),
+                    delete_column(route('role.destroy', $item->id)),
+                ]);
+            })
 
-            ->rawColumns(['status'])
+            ->rawColumns(['status','actions'])
             ->make(true);
+    }
+
+    public function roleStatus(Request $request): JsonResponse {
+        try {
+            $response = $this->service->statusRole($request->id,$request->status);
+            return response()->json($response);
+        } catch (\Exception $e) {
+            logStore('roleStatus',$e->getMessage());
+            return response()->json(['success'=>false,'message'=>somethingWrong()]);
+        }
     }
 
     public function syncPermission(Request $request){
@@ -161,7 +184,7 @@ class RoleController extends Controller
 
             ->addColumn('status', function ($item) {
                 return toggle_column(
-                    route('role.permissionPublish'),
+                    route('role.permissionStatus'),
                     $item->id,
                     $item->status == 1
                 );
