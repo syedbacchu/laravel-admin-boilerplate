@@ -252,7 +252,7 @@
                             <a href="{{ route('settings.generalSetting') }}">{{ __('General Settings') }}</a>
                         </li>
                         <li>
-                            <a href="{{ route('settings.generalSetting') }}">{{ __('Additional Settings') }}</a>
+                            <a href="{{ route('settings.fields.index') }}">{{ __('Settings Fields') }}</a>
                         </li>
                     </ul>
                 </li>

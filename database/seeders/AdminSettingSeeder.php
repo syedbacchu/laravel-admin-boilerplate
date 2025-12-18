@@ -28,10 +28,12 @@ class AdminSettingSeeder extends Seeder
         AdminSettings::firstOrCreate(['slug'=>'company_email'],['group' => enum(SettingGroupEnum::SETTING_GROUP_GENERAL),'value'=>'info@laravel.com']);
         AdminSettings::firstOrCreate(['slug'=>'company_address'],['group' => enum(SettingGroupEnum::SETTING_GROUP_GENERAL),'value'=>'']);
         AdminSettings::firstOrCreate(['slug'=>'helpline'],['group' => enum(SettingGroupEnum::SETTING_GROUP_GENERAL),'value'=>'']);
-        AdminSettings::firstOrCreate(['slug' => 'logo'],['group' => enum(SettingGroupEnum::SETTING_GROUP_LOGO),'value' => '', 'type' => 'file']);
-        AdminSettings::firstOrCreate(['slug' => 'login_logo'],['group' => enum(SettingGroupEnum::SETTING_GROUP_LOGO),'value' => '', 'type' => 'file']);
-        AdminSettings::firstOrCreate(['slug' => 'login_sidebar_image'],['group' => enum(SettingGroupEnum::SETTING_GROUP_LOGO),'value' => '', 'type' => 'file']);
-        AdminSettings::firstOrCreate(['slug' => 'favicon'], ['group' => enum(SettingGroupEnum::SETTING_GROUP_LOGO),'value' => '', 'type' => 'file']);
+
+        AdminSettings::firstOrCreate(['slug' => 'logo'],['group' => enum(SettingGroupEnum::SETTING_GROUP_LOGO),'value' => '']);
+        AdminSettings::firstOrCreate(['slug' => 'login_logo'],['group' => enum(SettingGroupEnum::SETTING_GROUP_LOGO),'value' => '']);
+        AdminSettings::firstOrCreate(['slug' => 'login_sidebar_image'],['group' => enum(SettingGroupEnum::SETTING_GROUP_LOGO),'value' => '']);
+        AdminSettings::firstOrCreate(['slug' => 'favicon'], ['group' => enum(SettingGroupEnum::SETTING_GROUP_LOGO),'value' => '']);
+
         AdminSettings::firstOrCreate(['slug' => 'copyright_text'], ['group' => enum(SettingGroupEnum::SETTING_GROUP_GENERAL),'value' => 'Copyright@2025']);
         AdminSettings::firstOrCreate(['slug' => 'pagination_count'], ['group' => enum(SettingGroupEnum::SETTING_GROUP_GENERAL),'value' => '10']);
         AdminSettings::firstOrCreate(['slug' => 'currency'],['group' => enum(SettingGroupEnum::SETTING_GROUP_GENERAL), 'value' => 'USD']);

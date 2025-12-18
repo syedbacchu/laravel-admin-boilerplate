@@ -7,6 +7,7 @@ use App\Http\Controllers\Admin\FileManager\FileManagerController;
 use App\Http\Controllers\Admin\Role\RoleController;
 use App\Http\Controllers\Admin\Settings\CustomFieldController;
 use App\Http\Controllers\Admin\Settings\SettingsController;
+use App\Http\Controllers\Admin\Settings\SettingFieldController;
 use App\Http\Controllers\Auth\AuthController;
 use Illuminate\Support\Facades\Route;
 
@@ -20,8 +21,24 @@ Route::get('log', [Sdtech\LogViewerLaravel\Controllers\LogViewerLaravelControlle
     // General Setting
     Route::group(['prefix' => 'settings', 'as' => 'settings.'], function () {
         Route::get('/', [SettingsController::class, 'index'])->name('generalSetting');
-        Route::post('/settings/{group}', [SettingsController::class, 'update'])
-            ->name('update');
+        Route::post('/settings/{group}', [SettingsController::class, 'update'])->name('update');
+
+        Route::get('fields', [SettingFieldController::class, 'index'])
+            ->name('fields.index');
+
+        Route::get('fields/create', [SettingFieldController::class, 'create'])
+            ->name('fields.create');
+
+        Route::post('fields', [SettingFieldController::class, 'store'])
+            ->name('fields.store');
+        Route::get('fields/{field}/edit', [SettingFieldController::class, 'edit'])
+            ->name('fields.edit');
+
+        Route::put('fields/{field}', [SettingFieldController::class, 'update'])
+            ->name('fields.update');
+
+        Route::delete('fields/{field}', [SettingFieldController::class, 'destroy'])
+            ->name('fields.destroy');
     });
 
 

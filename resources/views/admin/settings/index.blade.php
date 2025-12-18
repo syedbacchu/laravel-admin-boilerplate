@@ -12,20 +12,17 @@
                 <!-- LEFT TABS -->
                 <aside class="w-full md:w-56 border-b md:border-b-0 md:border-r border-gray-200">
                     <ul class="p-4 space-y-1">
-                        @foreach($groups as $group => $items)
+                        @foreach($groups as $group => $fields)
                             <li>
-                                <button
-                                    type="button"
-                                    @click="tab = '{{ $group }}'"
-                                    class="w-full flex items-center gap-3 px-4 py-2 rounded-lg text-sm font-medium transition"
-                                    :class="tab === '{{ $group }}'
-                                ? 'bg-success/10 text-success'
-                                : 'text-gray-600 hover:bg-gray-100'">
+                                <button type="button"
+                                        @click="tab = '{{ $group }}'"
+                                        class="w-full flex items-center gap-3 px-4 py-2 rounded-lg text-sm font-medium transition"
+                                        :class="tab === '{{ $group }}'
+                                    ? 'bg-success/10 text-success'
+                                    : 'text-gray-600 hover:bg-gray-100'">
 
-                                    <!-- Active dot -->
-                                    <span
-                                        class="h-2 w-2 rounded-full"
-                                        :class="tab === '{{ $group }}' ? 'bg-success' : 'bg-transparent'">
+                            <span class="h-2 w-2 rounded-full"
+                                  :class="tab === '{{ $group }}' ? 'bg-success' : 'bg-transparent'">
                             </span>
 
                                     {{ ucfirst($group) }}
@@ -37,43 +34,104 @@
 
                 <!-- CONTENT -->
                 <section class="flex-1 p-6">
-                    @foreach($groups as $group => $items)
+                    @foreach($groups as $group => $fields)
                         <div x-show="tab === '{{ $group }}'" x-cloak>
-                            <form method="POST"  action="{{ route('settings.update', $group) }}"
+
+                            <form method="POST"
+                                  action="{{ route('settings.update', $group) }}"
                                   enctype="multipart/form-data">
                                 @csrf
-                                <input type="hidden" name="group" value="{{$group}}">
+
                                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                    @foreach($items as $setting)
+
+                                    @foreach($fields as $field)
+                                        @php
+                                            $value = $values[$field->slug] ?? null;
+                                        @endphp
+
                                         <div>
                                             <label class="block mb-1 text-sm font-medium text-gray-700">
-                                                {{ __($setting->label ?? Str::headline($setting->slug)) }}
+                                                {{ __($field->label) }}
                                             </label>
 
-                                            {{-- TEXT --}}
-                                            @if($setting->type !== 'file')
-                                                <input
-                                                    type="text"
-                                                    name="{{ $setting->slug }}"
-                                                    value="{{ old($setting->slug, $setting->value) }}"
-                                                    class="form-input w-full"
-                                                >
+                                            {{-- TEXT / NUMBER / PASSWORD --}}
+                                            @if(in_array($field->type, ['text','number','password']))
+                                                <input type="{{ $field->type }}"
+                                                       name="{{ $field->slug }}"
+                                                       value="{{ old($field->slug, $value) }}"
+                                                       class="form-input w-full">
+                                            @endif
+
+                                            @if(in_array($field->type, ['textarea']))
+                                                <textarea name="{{ $field->slug }}" class="form-textarea">{{ old($field->slug, $value) }}</textarea>
+
+                                            @endif
+
+                                            {{-- SELECT --}}
+                                            @if($field->type === 'select')
+                                                <select name="{{ $field->slug }}"
+                                                        class="form-select w-full">
+                                                    @foreach($field->options as $opt)
+                                                        <option value="{{ $opt }}"
+                                                            @selected(old($field->slug, $value) == $opt)>
+                                                            {{ ucfirst($opt) }}
+                                                        </option>
+                                                    @endforeach
+                                                </select>
+                                            @endif
+
+                                            {{-- RADIO --}}
+                                            @if($field->type === 'radio')
+                                                <div class="flex flex-wrap gap-4 mt-1">
+                                                    @foreach($field->options as $opt)
+                                                        <label class="inline-flex items-center">
+                                                            <input type="radio"
+                                                                   name="{{ $field->slug }}"
+                                                                   value="{{ $opt }}"
+                                                                   class="form-radio"
+                                                                @checked(old($field->slug, $value) == $opt)>
+                                                            <span class="ml-1">{{ ucfirst($opt) }}</span>
+                                                        </label>
+                                                    @endforeach
+                                                </div>
+                                            @endif
+
+                                            {{-- CHECKBOX --}}
+                                            @if($field->type === 'checkbox')
+                                                @php
+                                                    $vals = is_array($value)
+                                                        ? $value
+                                                        : json_decode($value, true) ?? [];
+                                                @endphp
+
+                                                <div class="flex flex-wrap gap-4 mt-1">
+                                                    @foreach($field->options as $opt)
+                                                        <label class="inline-flex items-center">
+                                                            <input type="checkbox"
+                                                                   name="{{ $field->slug }}[]"
+                                                                   value="{{ $opt }}"
+                                                                   class="form-checkbox"
+                                                                @checked(in_array($opt, $vals))>
+                                                            <span class="ml-1">{{ ucfirst($opt) }}</span>
+                                                        </label>
+                                                    @endforeach
+                                                </div>
                                             @endif
 
                                             {{-- FILE --}}
-                                            @if($setting->type === 'file')
-                                                <input
-                                                    type="file"
-                                                    name="{{ $setting->slug }}"
-                                                    class="form-input w-full">
+                                            @if($field->type === 'file')
+                                                <input type="file"
+                                                       name="{{ $field->slug }}"
+                                                       class="form-input w-full">
 
-                                                @if($setting->value)
-                                                    <img src="{{ asset($setting->value) }}"
+                                                @if($value)
+                                                    <img src="{{ asset('storage/'.$value) }}"
                                                          class="mt-2 h-16 rounded border">
                                                 @endif
                                             @endif
                                         </div>
                                     @endforeach
+
                                 </div>
 
                                 <!-- ACTION -->
@@ -82,6 +140,7 @@
                                         {{ __('Update') }}
                                     </button>
                                 </div>
+
                             </form>
                         </div>
                     @endforeach
@@ -89,6 +148,7 @@
 
             </div>
         </div>
+
 
     </div>
 

@@ -13,13 +13,14 @@ return new class extends Migration
     {
         Schema::create('settings_fields', function (Blueprint $table) {
             $table->id();
-            $table->string('group');            // general, logo, sms
-            $table->string('slug')->unique();   // sms_api_key
-            $table->string('label');            // API Key
-            $table->string('type');             // text, password, select, file
-            $table->json('options')->nullable(); // ["twilio","ssl"]
+            $table->string('group');
+            $table->string('slug')->unique();
+            $table->string('label');
+            $table->string('type')->default('text');
+            $table->json('options')->nullable();
             $table->integer('sort_order')->default(0);
             $table->boolean('status')->default(true);
+            $table->string('validation_rules')->nullable();
             $table->timestamps();
         });
     }

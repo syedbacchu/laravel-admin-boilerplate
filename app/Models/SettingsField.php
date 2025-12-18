@@ -14,6 +14,7 @@ class SettingsField extends Model
         'options',
         'sort_order',
         'status',
+        'validation_rules'
     ];
 
     protected $casts = [
