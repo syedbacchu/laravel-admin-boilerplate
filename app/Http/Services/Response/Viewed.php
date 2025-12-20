@@ -39,6 +39,11 @@ class Viewed
         'settings' => [
             'index'  => 'admin.settings.index',
         ],
+        'faqCategory' => [
+            'list'  => 'admin.faq_category.index',
+            'create' => 'admin.faq_category.create',
+            'edit'   => 'admin.faq_category.edit',
+        ],
     ];
 
     /**

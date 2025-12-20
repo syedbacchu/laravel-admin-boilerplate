@@ -13,11 +13,12 @@ return new class extends Migration
     {
         Schema::create('faqs', function (Blueprint $table) {
             $table->id();
-            $table->string('type')->nullable();
+            $table->unsignedBigInteger('category_id')->nullable();
             $table->string('question');
-            $table->text('answer')->nullable();;
+            $table->longText('answer');
+            $table->string('attestment')->nullable();
+            $table->unsignedInteger('sort_order')->default(0);
             $table->tinyInteger('status')->default(1);
-            $table->text('attestment')->nullable();
             $table->timestamps();
         });
     }
