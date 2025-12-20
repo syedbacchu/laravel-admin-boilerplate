@@ -43,13 +43,15 @@ Route::get('log', [Sdtech\LogViewerLaravel\Controllers\LogViewerLaravelControlle
 
 
     // App Slider
+    Route::resource('app-slider', AppSliderController::class)->names([
+        'index'   => 'appSlider.list',
+        'create'   => 'appSlider.create',
+        'edit'   => 'appSlider.edit',
+        'store'   => 'appSlider.store',
+        'update'  => 'appSlider.update',
+        'destroy' => 'appSlider.delete',
+    ]);
     Route::group(['prefix' => 'app-slider', 'as' => 'appSlider.'], function () {
-        Route::get('/', [AppSliderController::class, 'index'])->name('list');
-        Route::get('create', [AppSliderController::class, 'create'])->name('create');
-        Route::post('store', [AppSliderController::class, 'store'])->name('store');
-        Route::get('edit/{id}', [AppSliderController::class, 'edit'])->name('edit');
-        Route::post('update', [AppSliderController::class, 'update'])->name('update');
-        Route::get('delete/{id}', [AppSliderController::class, 'destroy'])->name('delete');
         Route::post('publish', [AppSliderController::class, 'publish'])->name('publish');
     });
 
@@ -85,6 +87,7 @@ Route::get('log', [Sdtech\LogViewerLaravel\Controllers\LogViewerLaravelControlle
 
     Route::resource('role', RoleController::class)->names([
         'index'   => 'role.index',
+        'create'   => 'role.index',
         'store'   => 'role.store',
         'update'  => 'role.update',
         'destroy' => 'role.destroy',
