@@ -307,10 +307,10 @@
                     </button>
                     <ul x-cloak x-show="activeDropdown === 'faq'" x-collapse class="sub-menu text-gray-500">
                         <li>
-                            <a href="{{ route('faqCategory.list') }}">{{ __('Faq Category') }}</a>
+                            <a href="{{ route('faqCategory.list') }}">{{ __('FAQ Category') }}</a>
                         </li>
                         <li>
-                            <a href="{{ route('settings.fields.index') }}">{{ __('Settings Fields') }}</a>
+                            <a href="{{ route('faq.list') }}">{{ __('FAQ') }}</a>
                         </li>
                     </ul>
                 </li>

@@ -44,6 +44,11 @@ class Viewed
             'create' => 'admin.faq_category.create',
             'edit'   => 'admin.faq_category.edit',
         ],
+        'faq' => [
+            'list'  => 'admin.faq.index',
+            'create' => 'admin.faq.create',
+            'edit'   => 'admin.faq.edit',
+        ],
     ];
 
     /**

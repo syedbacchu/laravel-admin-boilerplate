@@ -22,6 +22,10 @@ use App\Http\Services\FaqCategory\FaqCategoryRepository;
 use App\Http\Services\FaqCategory\FaqCategoryRepositoryInterface;
 use App\Http\Services\FaqCategory\FaqCategoryService;
 use App\Http\Services\FaqCategory\FaqCategoryServiceInterface;
+use App\Http\Services\Faq\FaqRepository;
+use App\Http\Services\Faq\FaqRepositoryInterface;
+use App\Http\Services\Faq\FaqService;
+use App\Http\Services\Faq\FaqServiceInterface;
 use Illuminate\Support\ServiceProvider;
 
 class ServiceLayerProvider extends ServiceProvider
@@ -46,6 +50,9 @@ class ServiceLayerProvider extends ServiceProvider
 
         $this->app->bind(FaqCategoryRepositoryInterface::class, FaqCategoryRepository::class);
         $this->app->bind(FaqCategoryServiceInterface::class, FaqCategoryService::class);
+
+        $this->app->bind(FaqRepositoryInterface::class, FaqRepository::class);
+        $this->app->bind(FaqServiceInterface::class, FaqService::class);
     }
 
     /**

@@ -4,6 +4,7 @@ use App\Http\Controllers\Admin\App\AppSliderController;
 use App\Http\Controllers\Admin\Audit\AuditSettingController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\Faq\FaqCategoryController;
+use App\Http\Controllers\Admin\Faq\FaqController;
 use App\Http\Controllers\Admin\FileManager\FileManagerController;
 use App\Http\Controllers\Admin\Role\RoleController;
 use App\Http\Controllers\Admin\Settings\CustomFieldController;
@@ -114,4 +115,17 @@ Route::get('log', [Sdtech\LogViewerLaravel\Controllers\LogViewerLaravelControlle
     ]);
     Route::group(['prefix' => 'faq-categories', 'as' => 'faqCategory.'], function () {
         Route::post('publish', [FaqCategoryController::class, 'faqCategoryStatus'])->name('publish');
+    });
+
+    // Faq
+    Route::resource('faq', FaqController::class)->names([
+        'index'   => 'faq.list',
+        'create'   => 'faq.create',
+        'edit'   => 'faq.edit',
+        'store'   => 'faq.store',
+        'update'  => 'faq.update',
+        'destroy' => 'faq.delete',
+    ]);
+    Route::group(['prefix' => 'faq', 'as' => 'faq.'], function () {
+        Route::post('publish', [FaqController::class, 'faqStatus'])->name('publish');
     });
