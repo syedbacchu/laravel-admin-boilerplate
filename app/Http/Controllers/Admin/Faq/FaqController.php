@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Admin\Faq;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Faq\FaqcreateRequest;
+use App\Http\Requests\Faq\FaqCreateRequest;
 use App\Http\Services\Faq\FaqServiceInterface;
 use Illuminate\Http\Request;
 use App\Http\Services\Response\ResponseService;
