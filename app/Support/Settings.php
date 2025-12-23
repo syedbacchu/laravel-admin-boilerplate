@@ -5,6 +5,7 @@ namespace App\Support;
 
 use App\Enums\FileDestinationEnum;
 use App\Models\AdminSettings;
+use App\Models\SettingsField;
 use Illuminate\Support\Facades\Cache;
 use Exception;
 
@@ -96,5 +97,60 @@ class Settings
     public static function clearCache(): void
     {
         Cache::forget(self::$cacheKey);
+    }
+
+    public static function createData($request): array
+    {
+        $data['groups'] = SettingsField::where('status', 1)
+            ->orderBy('group')
+            ->orderBy('sort_order')
+            ->get()
+            ->groupBy('group');
+
+        $data['activeTab'] = $request->get('group') ?? $data['groups']->keys()->first();
+
+        $data['values'] = AdminSettings::pluck('value', 'slug');
+        return sendResponse(true,__('Settings get successfully'), $data);
+    }
+
+    public static function updateData($request, $group): array {
+        try {
+            $fields = SettingsField::where('group', $group)
+                ->where('status', 1)
+                ->get();
+
+            $rules = [];
+
+            foreach ($fields as $field) {
+                if ($field->validation_rules) {
+                    $rules[$field->slug] = $field->validation_rules;
+                }
+            }
+
+            $validated = $request->validate($rules);
+
+            foreach ($fields as $field) {
+
+                // CHECKBOX (array)
+                if ($field->type === 'checkbox') {
+                    $value = json_encode($request->input($field->slug, []));
+                } else {
+                    $value = $request->input($field->slug);
+                }
+
+                AdminSettings::updateOrCreate(
+                    ['slug' => $field->slug],
+                    [
+                        'group' => $group,
+                        'value' => $value,
+                    ]
+                );
+            }
+
+            return sendResponse(true,__('Settings updated successfully'));
+        } catch (\Exception $e) {
+            logStore('updateData ex', $e->getMessage());
+            return sendResponse(false, $e->getMessage());
+        }
     }
 }

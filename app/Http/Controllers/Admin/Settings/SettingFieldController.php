@@ -3,7 +3,11 @@
 namespace App\Http\Controllers\Admin\Settings;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Settings\FieldCreateRequest;
+use App\Http\Requests\Settings\FieldUpdateRequest;
+use App\Http\Services\Response\ResponseService;
 use App\Models\SettingsField;
+use App\Support\SettingFieldManager;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
@@ -11,88 +15,53 @@ class SettingFieldController extends Controller
 {
     public function index()
     {
-        $fields = SettingsField::orderBy('group')
-            ->orderBy('sort_order')
-            ->get()
-            ->groupBy('group');
+        $data['fields'] = SettingFieldManager::fieldList();
+        $data['pageTitle'] = __('Settings Fields');
 
-        return view('admin.settings.fields.index', compact('fields'));
+        return ResponseService::send([
+            'data' => $data,
+        ], view: viewss('settings','fields'));
     }
 
     public function create()
     {
-        return view('admin.settings.fields.create');
+        $data['pageTitle'] = __('Settings Fields');
+        return ResponseService::send([
+            'data' => $data,
+        ], view: viewss('settings','field'));
     }
 
-    public function store(Request $request)
+    public function store(FieldCreateRequest $request)
     {
-        $request->validate([
-            'group' => 'required|string|max:50',
-            'label' => 'required|string|max:100',
-            'slug'  => 'required|string|unique:settings_fields,slug',
-            'type'  => 'required|in:text,password,select,file,number,checkbox,radio,textarea',
-            'options' => 'nullable|string',
-            'validation_rules' => 'nullable|string',
-        ]);
-
-        $data = [
-            'group' => Str::slug($request->group),
-            'label' => $request->label,
-            'slug'  => Str::slug($request->slug, '_'),
-            'type'  => $request->type,
-            'validation_rules' => $request->validation_rules,
-        ];
-
-        if (in_array($request->type, ['select', 'radio','checkbox'])) {
-            $data['options'] = array_map('trim', explode(',', $request->options));
-        } else {
-            $data['options'] = null;
-        }
-        SettingsField::create($data);
-
-        return redirect()
-            ->route('settings.fields.index')
-            ->with('success', 'Setting field created');
+        $response = SettingFieldManager::save($request);
+        return ResponseService::send([
+            'response' => $response,
+        ], successRoute: 'settings.fields.index');
     }
     public function edit(SettingsField $field)
     {
-        return view('admin.settings.fields.edit', compact('field'));
+        $data['pageTitle'] = __('Update Fields');
+        $data['field'] = $field;
+
+        return ResponseService::send([
+            'data' => $data,
+        ], view: viewss('settings','field-edit'));
     }
 
-    public function update(Request $request, SettingsField $field)
+    public function update(FieldUpdateRequest $request, SettingsField $field)
     {
-        $request->validate([
-            'group' => 'required|string|max:50',
-            'label' => 'required|string|max:100',
-            'slug'  => 'required|string|unique:settings_fields,slug,' . $field->id,
-            'type'  => 'required|in:text,password,select,file,number,checkbox,radio,textarea',
-            'options' => 'nullable|string',
-            'validation_rules' => 'nullable|string',
+        $response = SettingFieldManager::updateData($request, $field);
+        return ResponseService::send([
+            'response' => $response,
         ]);
 
-        $data = [
-            'group' => Str::slug($request->group),
-            'label' => $request->label,
-            'slug'  => Str::slug($request->slug, '_'),
-            'type'  => $request->type,
-            'validation_rules' => $request->validation_rules,
-        ];
-
-        if (in_array($request->type, ['select', 'radio','checkbox'])) {
-            $data['options'] = array_map('trim', explode(',', $request->options));
-        } else {
-            $data['options'] = null;
-        }
-        $field->update($data);
-
-        return redirect()->route('settings.fields.index')
-            ->with('success', 'Setting field updated');
     }
 
     public function destroy(SettingsField $field)
     {
-        $field->delete();
-
-        return back()->with('success', 'Setting field deleted');
+        $response = SettingFieldManager::delete($field);
+        return ResponseService::send([
+            'response' => $response,
+        ]);
     }
 }

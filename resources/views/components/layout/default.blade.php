@@ -169,6 +169,23 @@
             }
         });
 
+        function fileManager(existingUrl = '', fieldName = '') {
+            return {
+                fileUrl: existingUrl,
+                filePreview: existingUrl,
+                fieldName: fieldName,
+                callbackName: 'fileSelected_' + fieldName,
+
+                init() {
+                    window.addEventListener(this.callbackName, (e) => {
+                        this.fileUrl = e.detail.url;
+                        this.filePreview = e.detail.url;
+                    });
+                }
+            }
+        }
+
+
     </script>
 
     <x-file-manager-modal />

@@ -90,23 +90,49 @@
             @endforeach
         </div>
 
-
-        {{-- FILE --}}
     @elseif($field->type === 'file')
-        <input
-            type="file"
-            name="custom_fields[{{ $field->id }}]"
-            class="form-input w-full"
-        />
+        <div
+            x-data="fileManager(
+            '{{ $value ? $value : '' }}',
+            'custom_fields_{{ $field->id }}'
+        )"
+            class="space-y-2"
+        >
+            <button
+                type="button"
+                @click="$dispatch('open-file-manager', { callback: callbackName })"
+                class="px-4 py-2 bg-blue-600 text-white text-sm rounded-lg shadow hover:bg-blue-700"
+            >
+                Choose File
+            </button>
 
-        @if($value)
-            <p class="text-sm mt-1">
-                Current file:
-                <img src="{{ asset('storage/'.$value) }}" alt="custom-image" width="100">
-                <a href="{{ asset('storage/'.$value) }}" target="_blank" class="text-blue-600 underline">
-                    View
-                </a>
-            </p>
-        @endif
+            <!-- Hidden input -->
+            <input
+                type="hidden"
+                name="custom_fields[{{ $field->id }}]"
+                :value="fileUrl"
+            >
+
+            <!-- Preview -->
+            <template x-if="filePreview">
+                <div class="mt-2">
+                    <img
+                        x-show="filePreview.match(/\.(jpg|jpeg|png|webp|gif)$/i)"
+                        :src="filePreview"
+                        class="h-24 rounded border object-cover"
+                    >
+
+                    <a
+                        x-show="!filePreview.match(/\.(jpg|jpeg|png|webp|gif)$/i)"
+                        :href="filePreview"
+                        target="_blank"
+                        class="text-blue-600 underline text-sm"
+                    >
+                        View File
+                    </a>
+                </div>
+            </template>
+        </div>
     @endif
+
 </div>

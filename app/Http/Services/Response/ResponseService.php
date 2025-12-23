@@ -44,7 +44,16 @@ class ResponseService
 
         // 🔹 If success=false -> redirect back + dismiss
         if ($success === false) {
-            return redirect()->back()->with('dismiss', $message ?: __('Failed'));
+            if ($route && Route::has($route)) {
+                return redirect()
+                    ->route($route, $routeQuery)
+                    ->withInput()
+                    ->with('dismiss', $message ?: __('Failed'));
+            }
+
+            return redirect()->back()
+                ->withInput()
+                ->with('dismiss', $message ?: __('Failed'));
         }
 
         // 🔹 If success=true + route exists -> redirect to route

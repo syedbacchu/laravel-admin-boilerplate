@@ -11,15 +11,6 @@ class CustomFieldValueService
     public function sync(Model $model, array $values = [])
     {
         foreach ($values as $fieldId => $value) {
-
-            // FILE UPLOAD
-            if ($value instanceof UploadedFile) {
-                $value = $value->store(
-                    'custom-fields/'.$model->getTable(),
-                    'public'
-                );
-            }
-
             // CHECKBOX / MULTI VALUE
             if (is_array($value)) {
                 $value = json_encode($value);

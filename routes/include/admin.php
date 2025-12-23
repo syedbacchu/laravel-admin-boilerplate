@@ -21,26 +21,34 @@ Route::get('log', [Sdtech\LogViewerLaravel\Controllers\LogViewerLaravelControlle
     Route::get('logout', [AuthController::class, 'logout'])->name('logout');
 
     // General Setting
+    Route::resource('fields', SettingFieldController::class)->names([
+        'index'   => 'settings.fields.index',
+        'create'   => 'settings.fields.create',
+        'edit'   => 'settings.fields.edit',
+        'store'   => 'settings.fields.store',
+        'update'  => 'settings.fields.update',
+        'destroy' => 'settings.fields.delete',
+    ]);
     Route::group(['prefix' => 'settings', 'as' => 'settings.'], function () {
         Route::get('/', [SettingsController::class, 'index'])->name('generalSetting');
         Route::post('/settings/{group}', [SettingsController::class, 'update'])->name('update');
 
-        Route::get('fields', [SettingFieldController::class, 'index'])
-            ->name('fields.index');
-
-        Route::get('fields/create', [SettingFieldController::class, 'create'])
-            ->name('fields.create');
-
-        Route::post('fields', [SettingFieldController::class, 'store'])
-            ->name('fields.store');
-        Route::get('fields/{field}/edit', [SettingFieldController::class, 'edit'])
-            ->name('fields.edit');
-
-        Route::put('fields/{field}', [SettingFieldController::class, 'update'])
-            ->name('fields.update');
-
-        Route::delete('fields/{field}', [SettingFieldController::class, 'destroy'])
-            ->name('fields.destroy');
+//        Route::get('fields', [SettingFieldController::class, 'index'])
+//            ->name('fields.index');
+//
+//        Route::get('fields/create', [SettingFieldController::class, 'create'])
+//            ->name('fields.create');
+//
+//        Route::post('fields', [SettingFieldController::class, 'store'])
+//            ->name('fields.store');
+//        Route::get('fields/{field}/edit', [SettingFieldController::class, 'edit'])
+//            ->name('fields.edit');
+//
+//        Route::put('fields/{field}', [SettingFieldController::class, 'update'])
+//            ->name('fields.update');
+//
+//        Route::delete('fields/{field}', [SettingFieldController::class, 'destroy'])
+//            ->name('fields.destroy');
     });
 
 

@@ -118,16 +118,35 @@
                                                 </div>
                                             @endif
 
-                                            {{-- FILE --}}
                                             @if($field->type === 'file')
-                                                <input type="file"
-                                                       name="{{ $field->slug }}"
-                                                       class="form-input w-full">
+                                                <div
+                                                    x-data="fileManager(
+                                                        '{{ old($field->slug, $value) }}',
+                                                        '{{ $field->slug }}'
+                                                    )"
+                                                    class="space-y-2"
+                                                >
 
-                                                @if($value)
-                                                    <img src="{{ asset('storage/'.$value) }}"
-                                                         class="mt-2 h-16 rounded border">
-                                                @endif
+                                                    <!-- Trigger File Manager -->
+                                                    <button
+                                                        type="button"
+                                                        @click="$dispatch('open-file-manager', { callback: callbackName })"
+                                                        class="px-4 py-2 bg-blue-600 text-white text-sm rounded-lg shadow hover:bg-blue-700"
+                                                    >
+                                                        Choose Image
+                                                    </button>
+
+                                                    <!-- Hidden Input (URL will be submitted) -->
+                                                    <input type="hidden"
+                                                           :name="fieldName"
+                                                           x-model="fileUrl">
+
+                                                    <!-- Preview -->
+                                                    <template x-if="filePreview">
+                                                        <img :src="filePreview"
+                                                             class="h-20 mt-2 rounded border object-cover">
+                                                    </template>
+                                                </div>
                                             @endif
                                         </div>
                                     @endforeach
@@ -145,27 +164,8 @@
                         </div>
                     @endforeach
                 </section>
-
             </div>
         </div>
-
-
     </div>
 
-    <!-- JS -->
-    <script>
-        function sliderForm(existingImage = '') {
-            return {
-                bannerImage: existingImage,
-                bannerPreview: existingImage ? existingImage : '',
-
-                init() {
-                    window.addEventListener('bannerSelected', (e) => {
-                        this.bannerImage = e.detail.url;
-                        this.bannerPreview = e.detail.url;
-                    });
-                }
-            }
-        }
-    </script>
 </x-layout.default>

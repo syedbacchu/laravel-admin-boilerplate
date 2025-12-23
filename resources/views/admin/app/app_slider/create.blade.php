@@ -57,30 +57,34 @@
                     </div>
 
                     <div
-                        x-data="sliderForm('{{ $item->photo ?? '' }}')"
+                        x-data="fileManager('{{ $item->photo ?? '' }}', 'photo')"
                         class="space-y-2"
                     >
 
-                        <label class="font-semibold text-gray-700">Banner Image</label>
+                        <label class="font-semibold text-gray-700">
+                            Banner Image
+                        </label>
 
                         <!-- Trigger File Manager -->
                         <button
                             type="button"
-                            x-on:click="$dispatch('open-file-manager', { callback: 'bannerSelected' })"
-                            class="px-4 py-2 bg-blue-600 text-white text-sm rounded-lg shadow hover:bg-blue-700"
+                            @click="$dispatch('open-file-manager', { callback: callbackName })"
+                            class="px-4 py-2 bg-blue-600 text-white text-sm rounded-lg
+                   shadow hover:bg-blue-700"
                         >
                             Choose Image
                         </button>
 
                         <!-- Hidden input -->
-                        <input type="hidden" name="photo" x-model="bannerImage">
+                        <input type="hidden" name="photo" x-model="fileUrl">
 
-                        <!-- Preview (Show only if image exists) -->
-                        <template x-if="bannerPreview">
+                        <!-- Preview -->
+                        <template x-if="filePreview">
                             <div class="mt-3">
                                 <img
-                                    :src="bannerPreview"
-                                    class=" rounded-xl border object-cover shadow-sm" width="200"
+                                    :src="filePreview"
+                                    class="rounded-xl border object-cover shadow-sm"
+                                    width="200"
                                 >
                             </div>
                         </template>
