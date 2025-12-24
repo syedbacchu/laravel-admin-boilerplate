@@ -16,7 +16,7 @@ interface UserServiceInterface extends BaseServiceInterface
     public function statusRole($id,$status): array;
     public function getSinglePermission($id): array;
     public function getPermissionList($request);
-    public function roleCreateData($guard): array;
+    public function createData($request): array;
     public function roleEditData($id): array;
 
 }

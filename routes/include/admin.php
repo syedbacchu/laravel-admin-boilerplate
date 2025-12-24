@@ -29,6 +29,7 @@ Route::get('log', [Sdtech\LogViewerLaravel\Controllers\LogViewerLaravelControlle
         'store'   => 'user.store',
         'update'  => 'user.update',
         'destroy' => 'user.delete',
+        'show' => 'user.show',
     ]);
 
     Route::group(['prefix' => 'users', 'as' => 'user.'], function () {
@@ -42,6 +43,7 @@ Route::get('log', [Sdtech\LogViewerLaravel\Controllers\LogViewerLaravelControlle
         'store'   => 'settings.fields.store',
         'update'  => 'settings.fields.update',
         'destroy' => 'settings.fields.delete',
+        'show' => 'settings.fields.show',
     ]);
     Route::group(['prefix' => 'settings', 'as' => 'settings.'], function () {
         Route::get('/', [SettingsController::class, 'index'])->name('generalSetting');
@@ -57,6 +59,7 @@ Route::get('log', [Sdtech\LogViewerLaravel\Controllers\LogViewerLaravelControlle
         'store'   => 'appSlider.store',
         'update'  => 'appSlider.update',
         'destroy' => 'appSlider.delete',
+        'show' => 'appSlider.show',
     ]);
     Route::group(['prefix' => 'app-slider', 'as' => 'appSlider.'], function () {
         Route::post('publish', [AppSliderController::class, 'publish'])->name('publish');
@@ -98,6 +101,7 @@ Route::get('log', [Sdtech\LogViewerLaravel\Controllers\LogViewerLaravelControlle
         'store'   => 'role.store',
         'update'  => 'role.update',
         'destroy' => 'role.destroy',
+        'show' => 'role.show',
     ]);
     Route::group([ 'as' => 'role.'], function () {
         Route::post('role-publish', [RoleController::class, 'roleStatus'])->name('status');
@@ -117,6 +121,7 @@ Route::get('log', [Sdtech\LogViewerLaravel\Controllers\LogViewerLaravelControlle
         'store'   => 'faqCategory.store',
         'update'  => 'faqCategory.update',
         'destroy' => 'faqCategory.delete',
+        'show' => 'faqCategory.show',
     ]);
     Route::group(['prefix' => 'faq-categories', 'as' => 'faqCategory.'], function () {
         Route::post('publish', [FaqCategoryController::class, 'faqCategoryStatus'])->name('publish');
@@ -130,6 +135,7 @@ Route::get('log', [Sdtech\LogViewerLaravel\Controllers\LogViewerLaravelControlle
         'store'   => 'faq.store',
         'update'  => 'faq.update',
         'destroy' => 'faq.delete',
+        'show' => 'faq.show',
     ]);
     Route::group(['prefix' => 'faq', 'as' => 'faq.'], function () {
         Route::post('publish', [FaqController::class, 'faqStatus'])->name('publish');

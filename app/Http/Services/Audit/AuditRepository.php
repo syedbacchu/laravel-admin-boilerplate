@@ -51,11 +51,6 @@ class AuditRepository extends BaseRepository implements AuditRepositoryInterface
                 'created_at',
             ],
         );
-//        if (!empty($type)) {
-//            return AuditLog::with('user')->where(['model_type' => $type])->latest();
-//        } else {
-//            return AuditLog::latest();
-//        }
     }
 
     public function deleteData($id): mixed

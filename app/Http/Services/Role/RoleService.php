@@ -12,8 +12,6 @@ use Illuminate\Database\Eloquent\Builder;
 
 class RoleService extends BaseService implements RoleServiceInterface
 {
-    use FileUploadTrait;
-
     protected RoleRepositoryInterface $itemRepository;
 
     public function __construct(RoleRepositoryInterface $repository)

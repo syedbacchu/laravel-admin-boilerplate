@@ -17,19 +17,47 @@
 
     <!-- Table -->
     <div class="overflow-x-auto">
-        <table id="auditTable" class="min-w-full border border-gray-200 rounded-xl text-sm text-gray-700">
-            <thead class="bg-gradient-to-r from-gray-50 to-gray-100 border-b border-gray-200">
-                <tr>
-                    <th class="px-4 py-3 text-left font-semibold text-gray-600 uppercase tracking-wide">{{ __('Sl') }}</th>
-                    <th class="px-4 py-3 text-left font-semibold text-gray-600 uppercase tracking-wide">{{ __('User') }}</th>
-                    <th class="px-4 py-3 text-left font-semibold text-gray-600 uppercase tracking-wide">{{ __('Event') }}</th>
-                    <th class="px-4 py-3 text-left font-semibold text-gray-600 uppercase tracking-wide">{{ __('Model') }}</th>
-                    <th class="px-4 py-3 text-left font-semibold text-gray-600 uppercase tracking-wide">{{ __('Ip') }}</th>
-                    <th class="px-4 py-3 text-left font-semibold text-gray-600 uppercase tracking-wide">{{ __('Date') }}</th>
-                    <th class="px-4 py-3 text-left font-semibold text-gray-600 uppercase tracking-wide">{{ __('Action') }}</th>
-                </tr>
-            </thead>
-        </table>
+        <x-common.datatable
+            id="itemsTable"
+            ajax="{{ route('audit.logs') }}"
+            :columns="[
+                    ['data' => 'DT_RowIndex', 'title' => 'Sl', 'orderable' => false,'searchable' => false],
+                    ['data' => 'user', 'name' => 'user', 'title' => 'User'],
+                    ['data' => 'event', 'name' => 'event', 'title' => 'Event'],
+                    ['data' => 'model_type', 'name' => 'model_type', 'title' => 'Model'],
+                    ['data' => 'ip_address', 'name' => 'ip_address', 'title' => 'Ip Address'],
+                    ['data' => 'created_at', 'name' => 'created_at', 'title' => 'Created at'],
+                    [
+                        'data' => 'actions',
+                        'title' => 'Actions',
+                        'orderable' => false,
+                        'searchable' => false
+                    ],
+                ]"
+            :filters="[
+                    [
+                        'type' => 'select',
+                        'name' => 'model_type',
+                        'label' => 'Model',
+                        'options' => [
+                            '' => 'All',
+                            'App\Models\User' => 'User',
+                            'App\Models\AdminSettings' => 'Admin Settings',
+                        ]
+                    ],
+                    [
+                        'type' => 'select',
+                        'name' => 'event',
+                        'label' => 'Event',
+                        'options' => [
+                            '' => 'All',
+                            'created' => 'Created',
+                            'updated' => 'Updated',
+                        ]
+                    ],
+                ]"
+            :enableSearch="false"
+        />
     </div>
 </div>
 
@@ -49,27 +77,27 @@
 <script>
 $(document).ready(function() {
     // ✅ DataTable initialization
-    let table = $('#auditTable').DataTable({
-        processing: true,
-        serverSide: true,
-        ajax: "{{ route('audit.logs') }}",
-        columns: [
-            { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false },
-            { data: 'user', name: 'user' },
-            { data: 'event', name: 'event' },
-            { data: 'model', name: 'model_type' },
-            { data: 'ip_address', name: 'ip_address' },
-            { data: 'created_at', name: 'created_at' },
-            { data: 'actions', name: 'actions', orderable: false, searchable: false },
-        ],
-        pageLength: 10,
-        order: [[0, 'desc']],
-        language: {
-            search: "_INPUT_",
-            searchPlaceholder: "Search ...",
-            paginate: { next: '→', previous: '←' }
-        }
-    });
+    {{--let table = $('#auditTable').DataTable({--}}
+    {{--    processing: true,--}}
+    {{--    serverSide: true,--}}
+    {{--    ajax: "{{ route('audit.logs') }}",--}}
+    {{--    columns: [--}}
+    {{--        { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false },--}}
+    {{--        { data: 'user', name: 'user' },--}}
+    {{--        { data: 'event', name: 'event' },--}}
+    {{--        { data: 'model', name: 'model_type' },--}}
+    {{--        { data: 'ip_address', name: 'ip_address' },--}}
+    {{--        { data: 'created_at', name: 'created_at' },--}}
+    {{--        { data: 'actions', name: 'actions', orderable: false, searchable: false },--}}
+    {{--    ],--}}
+    {{--    pageLength: 10,--}}
+    {{--    order: [[0, 'desc']],--}}
+    {{--    language: {--}}
+    {{--        search: "_INPUT_",--}}
+    {{--        searchPlaceholder: "Search ...",--}}
+    {{--        paginate: { next: '→', previous: '←' }--}}
+    {{--    }--}}
+    {{--});--}}
 
     // ✅ View details button click → open modal
     $(document).on('click', '.view-details', function () {

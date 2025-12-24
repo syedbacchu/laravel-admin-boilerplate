@@ -7,6 +7,8 @@ use App\Enums\UploadFolderEnum;
 use App\Http\Requests\Role\RoleCreateRequest;
 use App\Http\Requests\Slider\SliderCreateRequest;
 use App\Http\Services\BaseService;
+use App\Http\Services\Role\RoleService;
+use App\Http\Services\Role\RoleServiceInterface;
 use App\Traits\FileUploadTrait;
 use Illuminate\Database\Eloquent\Builder;
 
@@ -108,9 +110,11 @@ class UserService extends BaseService implements UserServiceInterface
         }
     }
 
-    public function roleCreateData($guard): array
+    public function createData($request): array
     {
-        $data = $this->itemRepository->getModulePermissions($guard);
+        $roleService = app(RoleServiceInterface::class);
+        $request->merge(['status' => enum(StatusEnum::ACTIVE)]);
+        $data = $roleService->getDataTableData($request);
 
         return $this->sendResponse(true,__('Data get successfully'),$data);
     }

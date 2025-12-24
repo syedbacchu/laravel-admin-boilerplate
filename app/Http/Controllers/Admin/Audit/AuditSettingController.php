@@ -116,7 +116,6 @@ class AuditSettingController extends Controller
 
     protected function getDataTableAuditLog($request): JsonResponse
     {
-
         return DataListManager::dataTableHandle(
             request: $request,
             dataProvider: function ($request) {
@@ -125,50 +124,44 @@ class AuditSettingController extends Controller
             },
             columns: [
                 'created_at' => fn ($item) =>
-                $item->created_at?->diffForHumans(),
+                    $item->created_at?->diffForHumans(),
 
                 'user' => fn ($item) =>
                     $item->user ? $item->user->name : 'System',
 
                 'model_type' => fn ($item) =>
-                class_basename($item->model_type),
-
-                'status' => fn ($item) =>
-                toggle_column(
-                    route('role.permissionStatus'),
-                    $item->id,
-                    $item->status == 1
-                ),
+                    class_basename($item->model_type),
 
                 'actions' => fn ($item) =>
-                action_buttons([
-                    delete_column(route('role.deletePermission', $item->id)),
-                ]),
+                    action_buttons([
+                        view_button($item->id, 'View Details'),
+                        delete_column(route('audit.log.delete', $item->id)),
+                    ]),
             ],
             rawColumns: ['actions','status']
         );
-
-        $query = $this->service->getDataTableData($request->model_type);
-
-        return DataTables::eloquent($query)
-            ->addIndexColumn()
-            ->addColumn('created_at', function ($item) {
-                return $item->created_at;
-            })
-            ->addColumn('user', function ($item) {
-                return $item->user ? $item->user->name : 'System';
-            })
-            ->addColumn('model', function ($item) {
-                return class_basename($item->model_type);
-            })
-            ->addColumn('actions', function ($item) {
-                return action_buttons([
-                    view_button($item->id, 'View Details'),
-                    delete_column(route('audit.log.delete', $item->id)),
-                ]);
-            })
-            ->rawColumns(['actions'])
-            ->make(true);
+//
+//        $query = $this->service->getDataTableData($request->model_type);
+//
+//        return DataTables::eloquent($query)
+//            ->addIndexColumn()
+//            ->addColumn('created_at', function ($item) {
+//                return $item->created_at;
+//            })
+//            ->addColumn('user', function ($item) {
+//                return $item->user ? $item->user->name : 'System';
+//            })
+//            ->addColumn('model', function ($item) {
+//                return class_basename($item->model_type);
+//            })
+//            ->addColumn('actions', function ($item) {
+//                return action_buttons([
+//                    view_button($item->id, 'View Details'),
+//                    delete_column(route('audit.log.delete', $item->id)),
+//                ]);
+//            })
+//            ->rawColumns(['actions'])
+//            ->make(true);
     }
 
     public function show($id)

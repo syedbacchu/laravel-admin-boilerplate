@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin\User;
 
+use App\Enums\StatusEnum;
 use App\Http\Controllers\Controller;
 use App\Http\Services\Response\ResponseService;
 use App\Http\Services\User\UserServiceInterface;
@@ -70,45 +71,18 @@ class UserController extends Controller
         ], view: viewss('user','list'));
     }
 
-    protected function getDataTableDataSet($request): JsonResponse
-    {
-        $request->merge(['list_size' => 'datatable']);
-        $query = $this->service->getListData($request)['data']['data'];
-
-        return DataTables::eloquent($query)
-            ->addColumn('name',  function($item){
-                $html = "";
-                $html .= '<div> <img src="'.$item->image.'" alt="USER">';
-                $html .= '  <p>'.$item->name.'</p></div>';
-                return $html;
-            })
-            ->addColumn('created_at',  function($item){
-                return $item->created_at->diffForHumans();
-            })
-            ->addColumn('status', function ($item) {
-                return toggle_column(
-                    route('user.status'),
-                    $item->id,
-                    $item->status == 1
-                );
-            })
-            ->addColumn('actions', function ($item) {
-                return action_buttons([
-                    edit_column(route('user.edit', $item->id)),
-                    delete_column(route('user.delete', $item->id)),
-                ]);
-            })
-
-            ->rawColumns(['name','status','actions'])
-            ->make(true);
-    }
-
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create(Request $request)
     {
-        //
+        $data['pageTitle'] = __('Create New User');
+        $request->merge(['guard' => 'web']);
+        $data['roles'] = $this->service->createData($request)['data']['data']['data'];
+
+        return ResponseService::send([
+            'data' => $data,
+        ], view: viewss('user','create'));
     }
 
     /**

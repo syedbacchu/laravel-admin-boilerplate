@@ -102,21 +102,5 @@
     </div>
 
 <script>
-
-    function sliderForm(existingImage = '') {
-        return {
-            bannerImage: existingImage,
-            bannerPreview: existingImage ? existingImage : '',
-
-            init() {
-                window.addEventListener('bannerSelected', (e) => {
-                    this.bannerImage = e.detail.url;
-                    this.bannerPreview = e.detail.url;
-                });
-            }
-        }
-    }
-
-
 </script>
 </x-layout.default>

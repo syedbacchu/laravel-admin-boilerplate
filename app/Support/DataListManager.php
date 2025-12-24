@@ -134,8 +134,8 @@ class DataListManager
         /** @var \Illuminate\Database\Eloquent\Builder $query */
         $query = call_user_func($dataProvider, $request);
 
-        $dataTable = DataTables::eloquent($query);
-
+        $dataTable = DataTables::eloquent($query)
+        ->addIndexColumn();
         /** ---------------- Columns ---------------- */
         foreach ($columns as $name => $callback) {
             if ($callback instanceof Closure) {
