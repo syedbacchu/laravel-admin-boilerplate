@@ -8,8 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class FileSystem extends Model
 {
-    use HasFactory;
-    use Auditable;
+    use HasFactory, Auditable;
     protected $fillable = [
         'filename',
         'original_name',

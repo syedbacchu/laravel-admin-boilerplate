@@ -2,9 +2,11 @@
 
 namespace App\Providers;
 
+use App\Support\SidebarMenu;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Blade;
 use App\Http\Services\CustomField\CustomFieldServiceInterface;
@@ -28,6 +30,10 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        View::composer('*', function ($view) {
+            $view->with('sidebarMenus', SidebarMenu::get());
+        });
+
         Blade::directive('customFields', function ($expression = null) {
             return "<?php echo resolve(\\App\\Http\\Services\\CustomField\\CustomFieldServiceInterface::class)->render($expression); ?>";
         });

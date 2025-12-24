@@ -2,15 +2,16 @@
 
 namespace App\Models;
 
+use App\Traits\Auditable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class CustomFieldValue extends Model
 {
+    use Auditable;
     protected $fillable = [
         'custom_field_id', 'model_type', 'model_id', 'value'
     ];
-
 
     public function field()
     {

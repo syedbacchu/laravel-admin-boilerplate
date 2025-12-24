@@ -2,10 +2,12 @@
 
 namespace App\Models;
 
+use App\Traits\Auditable;
 use Illuminate\Database\Eloquent\Model;
 
 class SettingsField extends Model
 {
+    use Auditable;
     protected $fillable = [
         'group',
         'slug',
