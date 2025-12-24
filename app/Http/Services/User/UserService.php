@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Services\Role;
+namespace App\Http\Services\User;
 
 use App\Enums\StatusEnum;
 use App\Enums\UploadFolderEnum;
@@ -10,19 +10,19 @@ use App\Http\Services\BaseService;
 use App\Traits\FileUploadTrait;
 use Illuminate\Database\Eloquent\Builder;
 
-class RoleService extends BaseService implements RoleServiceInterface
+class UserService extends BaseService implements UserServiceInterface
 {
     use FileUploadTrait;
 
-    protected RoleRepositoryInterface $itemRepository;
+    protected UserRepositoryInterface $itemRepository;
 
-    public function __construct(RoleRepositoryInterface $repository)
+    public function __construct(UserRepositoryInterface $repository)
     {
         parent::__construct($repository);
         $this->itemRepository = $repository; // use this specifically
     }
 
-    public function getDataTableData($request): array
+    public function getListData($request): array
     {
         $data = $this->itemRepository->dataList($request);
         return $this->sendResponse(true,__('Data get successfully.'),$data);

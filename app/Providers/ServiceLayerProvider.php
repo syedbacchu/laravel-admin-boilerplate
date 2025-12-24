@@ -26,6 +26,10 @@ use App\Http\Services\Faq\FaqRepository;
 use App\Http\Services\Faq\FaqRepositoryInterface;
 use App\Http\Services\Faq\FaqService;
 use App\Http\Services\Faq\FaqServiceInterface;
+use App\Http\Services\User\UserRepository;
+use App\Http\Services\User\UserRepositoryInterface;
+use App\Http\Services\User\UserService;
+use App\Http\Services\User\UserServiceInterface;
 use Illuminate\Support\ServiceProvider;
 
 class ServiceLayerProvider extends ServiceProvider
@@ -35,7 +39,10 @@ class ServiceLayerProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+
+        $this->app->bind(UserRepositoryInterface::class, UserRepository::class);
+        $this->app->bind(UserServiceInterface::class, UserService::class);
+
         $this->app->bind(SliderRepositoryInterface::class, SliderRepository::class);
         $this->app->bind(SliderServiceInterface::class, SliderService::class);
 

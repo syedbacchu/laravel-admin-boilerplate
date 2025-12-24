@@ -15,9 +15,10 @@ class AuditService extends BaseService implements AuditServiceInterface
         $this->auditRepository = $repository;
     }
 
-    public function getDataTableData($model=null): mixed
+    public function getDataTableData($request): array
     {
-        return $this->auditRepository->getDataTableQuery($model);
+        $data = $this->auditRepository->getDataTableQuery($request);
+        return $this->sendResponse(true, __('Data get successfully.'), $data);
     }
 
     public function deleteData($id): mixed

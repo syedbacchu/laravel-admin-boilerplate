@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin\App;
 
 use App\Http\Controllers\Controller;
 use App\Http\Services\Slider\SliderServiceInterface;
+use App\Support\DataListManager;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -26,7 +27,38 @@ class AppSliderController extends Controller
     {
         $data['pageTitle'] = __('Slider');
         if ($request->ajax()) {
-            return $this->getDataTableSlider();
+            return DataListManager::dataTableHandle(
+                request: $request,
+                dataProvider: function ($request) {
+                    return $this->service
+                        ->getDataTableData($request)['data']['data'];
+                },
+                columns: [
+                    'photo' => function ($item) {
+                        return '
+                        <div class="flex items-center gap-2">
+                          <img class="w-16 h-16 rounded-full" alt="banner" src="'.$item->photo.'">
+                        </div>';
+                    },
+
+                    'created_at' => fn ($item) =>
+                        $item->created_at?->diffForHumans(),
+
+                    'published' => fn ($item) =>
+                        toggle_column(
+                            route('appSlider.publish'),
+                            $item->id,
+                            $item->published == 1
+                        ),
+
+                    'actions' => fn ($item) =>
+                        action_buttons([
+                            edit_column(route('appSlider.edit', $item->id)),
+                            delete_column(route('appSlider.delete', $item->id)),
+                        ]),
+                ],
+                rawColumns: ['photo', 'actions','published']
+            );
         }
 
         return ResponseService::send([
@@ -34,35 +66,6 @@ class AppSliderController extends Controller
         ], view: viewss('slider','list'));
     }
 
-    protected function getDataTableSlider(): JsonResponse
-    {
-        $query = $this->service->getDataTableData(SliderTypeEnum::APP);
-
-        return DataTables::eloquent($query)
-            ->addColumn('photo', function ($item) {
-                if ($item->photo) {
-                    return '<img width="100" alt="banner" src="'.$item->photo.'"></img>';
-                } else {
-                    return 'N/A';
-                }
-            })
-            ->addColumn('published', function ($item) {
-                return toggle_column(
-                    route('appSlider.publish'),
-                    $item->id,
-                    $item->published == 1
-                );
-            })
-
-            ->addColumn('actions', function ($item) {
-                return action_buttons([
-                    edit_column(route('appSlider.edit', $item->id)),
-                    delete_column(route('appSlider.delete', $item->id)),
-                ]);
-            })
-            ->rawColumns(['photo', 'actions','published'])
-            ->make(true);
-    }
 
     public function create()
     {

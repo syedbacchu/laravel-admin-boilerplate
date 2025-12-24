@@ -16,7 +16,7 @@ class Viewed
             'edit'   => 'admin.app.app_slider.edit',
         ],
         'user' => [
-            'index'  => 'admin.user.index',
+            'list'  => 'admin.user.index',
             'create' => 'admin.user.create',
         ],
         'file' => [

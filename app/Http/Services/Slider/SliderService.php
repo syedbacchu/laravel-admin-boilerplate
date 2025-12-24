@@ -8,6 +8,7 @@ use App\Http\Requests\Slider\SliderCreateRequest;
 use App\Http\Services\BaseService;
 use App\Traits\FileUploadTrait;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Http\Request;
 
 class SliderService extends BaseService implements SliderServiceInterface
 {
@@ -21,9 +22,10 @@ class SliderService extends BaseService implements SliderServiceInterface
         $this->sliderRepository = $repository; // use this specifically
     }
 
-    public function getDataTableData($type): Builder
+    public function getDataTableData(Request $request): array
     {
-        return $this->sliderRepository->getDataTableQuery($type); // safe now
+        $data = $this->sliderRepository->dataList($request);
+        return $this->sendResponse(true,__('Data get successfully.'),$data);
     }
 
     public function storeOrUpdateSlider(SliderCreateRequest $request): array

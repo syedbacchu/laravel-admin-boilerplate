@@ -22,62 +22,43 @@
 
         <!-- Table -->
         <div class="overflow-x-auto">
-            <table id="itemsTable" class="min-w-full border border-gray-200 rounded-xl text-sm text-gray-700">
-                <thead class="bg-gradient-to-r from-gray-50 to-gray-100 border-b border-gray-200">
-                    <tr>
-                        <th class="px-4 py-3 text-left font-semibold text-gray-600 uppercase tracking-wide">{{__('Name')}}</th>
-                        <th class="px-4 py-3 text-left font-semibold text-gray-600 uppercase tracking-wide">{{__('Slug')}}</th>
-                        <th class="px-4 py-3 text-left font-semibold text-gray-600 uppercase tracking-wide">{{ __('Guard') }}</th>
-                        <th class="px-4 py-3 text-left font-semibold text-gray-600 uppercase tracking-wide">{{__('Status')}}</th>
-                        <th class="px-4 py-3 text-left font-semibold text-gray-600 uppercase tracking-wide">{{__('Is System')}}</th>
-                        <th class="px-4 py-3 text-center font-semibold text-gray-600 uppercase tracking-wide">{{__('Actions')}}</th>
-                    </tr>
-                </thead>
+            <x-common.datatable
+                id="itemsTable"
+                ajax="{{ route('role.apiRole') }}"
+                :columns="[
+                    ['data' => 'name', 'name' => 'name', 'title' => 'Name'],
+                    ['data' => 'slug', 'name' => 'slug', 'title' => 'Slug'],
+                    ['data' => 'guard', 'name' => 'guard', 'title' => 'Guard'],
+                    ['data' => 'status', 'name' => 'status', 'title' => 'Status'],
+                    ['data' => 'created_at', 'name' => 'created_at', 'title' => 'Created At'],
+                    [
+                        'data' => 'actions',
+                        'title' => 'Actions',
+                        'orderable' => false,
+                        'searchable' => false
+                    ],
+                ]"
+                :filters="[
 
-            </table>
+                    [
+                        'type' => 'select',
+                        'name' => 'status',
+                        'label' => 'Active Status',
+                        'options' => [
+                            '' => 'All',
+                            1 => 'Active',
+                            0 => 'Inactive',
+                        ]
+                    ],
+                ]"
+                :enableSearch="false"
+            />
         </div>
     </div>
 
 
     <script>
-    $(document).ready(function() {
-        $('#itemsTable').DataTable({
-            processing: true,
-            serverSide: true,
-            searching: true,
-            ajax: "{{ route('role.apiRole') }}",
-            columns: [
-                { data: 'name', name: 'name' },
-                { data: 'slug', name: 'slug' },
-                { data: 'guard', name: 'guard' },
-                { data: 'status', name: 'status' },
-                { data: 'is_system', name: 'is_system' },
-                { data: 'actions', name: 'actions', orderable: false, searchable: false }
-            ],
-            layout: {
-                topStart: 'search',
-                bottomEnd: 'paging',
-            },
-            language: {
-                search: "_INPUT_",
-                searchPlaceholder: "Search ...",
-                paginate: {
-                    next: '→',
-                    previous: '←'
-                }
-            },
-            classes: {
-                table: 'min-w-full divide-y divide-gray-200 border border-gray-100 rounded-lg shadow-sm',
-                thead: 'bg-gray-100 text-gray-700 uppercase text-xs font-semibold',
-                tbody: 'divide-y divide-gray-100',
-                tr: 'hover:bg-gray-50 transition-colors duration-150',
-                th: 'px-4 py-3 text-left',
-                td: 'px-4 py-3 text-sm text-gray-700'
-            },
-            pageLength: 10,
-            order: [[0, 'desc']],
-        });
-    });
+
     </script>
 
 

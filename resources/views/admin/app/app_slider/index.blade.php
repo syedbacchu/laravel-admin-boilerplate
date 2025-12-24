@@ -1,8 +1,5 @@
 <x-layout.default>
 @section('title', $pageTitle)
-<link rel="stylesheet" href="{{ asset('assets/common/datatables/jquery.dataTables.min.css') }}">
-<script src="{{ asset('assets/common/jquery-3.7.0.min.js') }}"></script>
-<script src="{{ asset('assets/common/datatables/jquery.dataTables.min.js') }}"></script>
 
     <div class="mt-8 bg-white shadow-xl rounded-2xl p-6 border border-gray-100">
     <!-- Header -->
@@ -22,65 +19,46 @@
 
         <!-- Table -->
         <div class="overflow-x-auto">
-            <table id="sliderTable" class="min-w-full border border-gray-200 rounded-xl text-sm text-gray-700">
-                <thead class="bg-gradient-to-r from-gray-50 to-gray-100 border-b border-gray-200">
-                    <tr>
-                        <th class="px-4 py-3 text-left font-semibold text-gray-600 uppercase tracking-wide">Banner</th>
-                        <th class="px-4 py-3 text-left font-semibold text-gray-600 uppercase tracking-wide">Title</th>
-                        <th class="px-4 py-3 text-left font-semibold text-gray-600 uppercase tracking-wide">Offer</th>
-                        <th class="px-4 py-3 text-left font-semibold text-gray-600 uppercase tracking-wide">Published</th>
-                        <th class="px-4 py-3 text-left font-semibold text-gray-600 uppercase tracking-wide">Link</th>
-                        <th class="px-4 py-3 text-left font-semibold text-gray-600 uppercase tracking-wide">Serial</th>
-                        <th class="px-4 py-3 text-center font-semibold text-gray-600 uppercase tracking-wide">Action</th>
-                    </tr>
-                </thead>
-
-            </table>
+            <x-common.datatable
+                id="itemsTable"
+                ajax="{{ route('appSlider.list') }}"
+                :columns="[
+                    ['data' => 'photo', 'name' => 'photo', 'title' => 'Slide'],
+                    ['data' => 'title', 'name' => 'title', 'title' => 'Title'],
+                    ['data' => 'offer', 'name' => 'offer', 'title' => 'Offer'],
+                    ['data' => 'published', 'name' => 'published', 'title' => 'Status'],
+                    [
+                        'data' => 'actions',
+                        'title' => 'Actions',
+                        'orderable' => false,
+                        'searchable' => false
+                    ],
+                ]"
+                :filters="[
+                    [
+                        'type' => 'select',
+                        'name' => 'type',
+                        'label' => 'Slider Type',
+                        'options' => [
+                            '' => 'All',
+                            '1' => 'App',
+                            '2' => 'Web',
+                        ]
+                    ],
+                    [
+                        'type' => 'select',
+                        'name' => 'published',
+                        'label' => 'Active Status',
+                        'options' => [
+                            '' => 'All',
+                            '1' => 'Active',
+                            '0' => 'Inactive',
+                        ]
+                    ],
+                ]"
+                :enableSearch="false"
+            />
         </div>
     </div>
-
-
-    <script>
-    $(document).ready(function() {
-        $('#sliderTable').DataTable({
-            processing: true,
-            serverSide: true,
-            searching: true,
-            ajax: "{{ route('appSlider.list') }}",
-            columns: [
-                { data: 'photo', name: 'photo', orderable: false, searchable: false },
-                { data: 'title', name: 'title' },
-                { data: 'offer', name: 'offer' },
-                { data: 'published', name: 'published' },
-                { data: 'link', name: 'link' },
-                { data: 'serial', name: 'serial' },
-                { data: 'actions', name: 'actions', orderable: false, searchable: false }
-            ],
-            layout: {
-                topStart: 'search',
-                bottomEnd: 'paging',
-            },
-            language: {
-                search: "_INPUT_",
-                searchPlaceholder: "Search sliders...",
-                paginate: {
-                    next: '→',
-                    previous: '←'
-                }
-            },
-            classes: {
-                table: 'min-w-full divide-y divide-gray-200 border border-gray-100 rounded-lg shadow-sm',
-                thead: 'bg-gray-100 text-gray-700 uppercase text-xs font-semibold',
-                tbody: 'divide-y divide-gray-100',
-                tr: 'hover:bg-gray-50 transition-colors duration-150',
-                th: 'px-4 py-3 text-left',
-                td: 'px-4 py-3 text-sm text-gray-700'
-            },
-            pageLength: 10,
-            order: [[0, 'desc']],
-        });
-    });
-    </script>
-
 
 </x-layout.default>

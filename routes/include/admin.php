@@ -10,6 +10,7 @@ use App\Http\Controllers\Admin\Role\RoleController;
 use App\Http\Controllers\Admin\Settings\CustomFieldController;
 use App\Http\Controllers\Admin\Settings\SettingsController;
 use App\Http\Controllers\Admin\Settings\SettingFieldController;
+use App\Http\Controllers\Admin\User\UserController;
 use App\Http\Controllers\Auth\AuthController;
 use Illuminate\Support\Facades\Route;
 
@@ -20,6 +21,19 @@ Route::get('log', [Sdtech\LogViewerLaravel\Controllers\LogViewerLaravelControlle
     Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
     Route::get('logout', [AuthController::class, 'logout'])->name('logout');
 
+    // user management
+    Route::resource('users', UserController::class)->names([
+        'index'   => 'user.list',
+        'create'   => 'user.create',
+        'edit'   => 'user.edit',
+        'store'   => 'user.store',
+        'update'  => 'user.update',
+        'destroy' => 'user.delete',
+    ]);
+
+    Route::group(['prefix' => 'users', 'as' => 'user.'], function () {
+        Route::post('user-status', [UserController::class, 'status'])->name('status');
+    });
     // General Setting
     Route::resource('fields', SettingFieldController::class)->names([
         'index'   => 'settings.fields.index',
@@ -32,23 +46,6 @@ Route::get('log', [Sdtech\LogViewerLaravel\Controllers\LogViewerLaravelControlle
     Route::group(['prefix' => 'settings', 'as' => 'settings.'], function () {
         Route::get('/', [SettingsController::class, 'index'])->name('generalSetting');
         Route::post('/settings/{group}', [SettingsController::class, 'update'])->name('update');
-
-//        Route::get('fields', [SettingFieldController::class, 'index'])
-//            ->name('fields.index');
-//
-//        Route::get('fields/create', [SettingFieldController::class, 'create'])
-//            ->name('fields.create');
-//
-//        Route::post('fields', [SettingFieldController::class, 'store'])
-//            ->name('fields.store');
-//        Route::get('fields/{field}/edit', [SettingFieldController::class, 'edit'])
-//            ->name('fields.edit');
-//
-//        Route::put('fields/{field}', [SettingFieldController::class, 'update'])
-//            ->name('fields.update');
-//
-//        Route::delete('fields/{field}', [SettingFieldController::class, 'destroy'])
-//            ->name('fields.destroy');
     });
 
 
@@ -97,7 +94,7 @@ Route::get('log', [Sdtech\LogViewerLaravel\Controllers\LogViewerLaravelControlle
 
     Route::resource('role', RoleController::class)->names([
         'index'   => 'role.index',
-        'create'   => 'role.index',
+        'create'   => 'role.create',
         'store'   => 'role.store',
         'update'  => 'role.update',
         'destroy' => 'role.destroy',

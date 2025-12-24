@@ -7,6 +7,7 @@ use App\Http\Requests\Role\RoleCreateRequest;
 use App\Http\Services\Response\ResponseService;
 use App\Http\Services\Role\RoleServiceInterface;
 use App\Models\Permission;
+use App\Support\DataListManager;
 use App\Support\SyncPermission;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
@@ -29,7 +30,32 @@ class RoleController extends Controller
         $data['pageTitle'] = __('Web Based Role');
         $data['type'] = 'web';
         if ($request->ajax()) {
-            return $this->getDataTableDataSet($request,$data['type']);
+            $request->merge(['guard' => 'web']);
+            return DataListManager::dataTableHandle(
+                request: $request,
+                dataProvider: function ($request) {
+                    return $this->service
+                        ->getDataTableData($request)['data']['data'];
+                },
+                columns: [
+                    'created_at' => fn ($item) =>
+                    $item->created_at?->diffForHumans(),
+
+                    'status' => fn ($item) =>
+                    toggle_column(
+                        route('role.status'),
+                        $item->id,
+                        $item->status == 1
+                    ),
+
+                    'actions' => fn ($item) =>
+                    action_buttons([
+                        edit_column(route('role.edit', $item->id)),
+                        delete_column(route('role.destroy', $item->id)),
+                    ]),
+                ],
+                rawColumns: ['actions','status']
+            );
         }
 
         return ResponseService::send([
@@ -103,30 +129,6 @@ class RoleController extends Controller
         //
     }
 
-    protected function getDataTableDataSet($request,$guard): JsonResponse
-    {
-        $request->merge(['guard' => $guard, 'list_size' => 'datatable']);
-        $query = $this->service->getDataTableData($request)['data']['data'];
-
-        return DataTables::eloquent($query)
-
-            ->addColumn('status', function ($item) {
-                return toggle_column(
-                    route('role.status'),
-                    $item->id,
-                    $item->status == 1
-                );
-            })
-            ->addColumn('actions', function ($item) {
-                return action_buttons([
-                    edit_column(route('role.edit', $item->id)),
-                    delete_column(route('role.destroy', $item->id)),
-                ]);
-            })
-
-            ->rawColumns(['status','actions'])
-            ->make(true);
-    }
 
     public function roleStatus(Request $request): JsonResponse {
         try {
@@ -173,30 +175,33 @@ class RoleController extends Controller
 
     protected function getPermissionTableDataSet(Request $request, $guard)
     {
-        $request->merge(['guard' => $guard,'list_size' => 'datatable']);
-        $query = $this->service->getPermissionList($request)['data']['data'];
+            $request->merge([
+                'guard' => $guard
+            ]);
+            return DataListManager::dataTableHandle(
+                request: $request,
+                dataProvider: function ($request) {
+                    return $this->service
+                        ->getPermissionList($request)['data']['data'];
+                },
+                columns: [
+                    'created_at' => fn ($item) =>
+                    $item->created_at?->diffForHumans(),
 
-        // Safety check
-        if (!$query instanceof \Illuminate\Database\Eloquent\Builder) {
-            throw new \Exception('Datatable expects Eloquent Builder only');
-        }
-        return DataTables::eloquent($query)
+                    'status' => fn ($item) =>
+                    toggle_column(
+                        route('role.permissionStatus'),
+                        $item->id,
+                        $item->status == 1
+                    ),
 
-            ->addColumn('status', function ($item) {
-                return toggle_column(
-                    route('role.permissionStatus'),
-                    $item->id,
-                    $item->status == 1
-                );
-            })
-
-            ->addColumn('actions', function ($item) {
-                return action_buttons([
-                    delete_column(route('role.deletePermission', $item->id)),
-                ]);
-            })
-            ->rawColumns(['actions','status'])
-            ->make(true);
+                    'actions' => fn ($item) =>
+                    action_buttons([
+                        delete_column(route('role.deletePermission', $item->id)),
+                    ]),
+                ],
+                rawColumns: ['actions','status']
+            );
     }
 
     public function permissionPublish(Request $request): JsonResponse {
@@ -221,7 +226,34 @@ class RoleController extends Controller
         $data['pageTitle'] = __('Api Based Role');
         $data['type'] = 'api';
         if ($request->ajax()) {
-            return $this->getDataTableDataSet($request,$data['type']);
+            $request->merge([
+                'guard' => 'api'
+            ]);
+            return DataListManager::dataTableHandle(
+                request: $request,
+                dataProvider: function ($request) {
+                    return $this->service
+                        ->getDataTableData($request)['data']['data'];
+                },
+                columns: [
+                    'created_at' => fn ($item) =>
+                    $item->created_at?->diffForHumans(),
+
+                    'status' => fn ($item) =>
+                    toggle_column(
+                        route('role.status'),
+                        $item->id,
+                        $item->status == 1
+                    ),
+
+                    'actions' => fn ($item) =>
+                    action_buttons([
+                        edit_column(route('role.edit', $item->id)),
+                        delete_column(route('role.destroy', $item->id)),
+                    ]),
+                ],
+                rawColumns: ['actions','status']
+            );
         }
 
         return ResponseService::send([

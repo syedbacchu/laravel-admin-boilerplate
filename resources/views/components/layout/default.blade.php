@@ -188,6 +188,8 @@
 
     </script>
 
+    {{-- Page specific / component scripts --}}
+    @stack('scripts')
     <x-file-manager-modal />
 
 </body>

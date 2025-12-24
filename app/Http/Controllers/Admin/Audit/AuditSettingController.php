@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin\Audit;
 use App\Http\Controllers\Controller;
 use App\Http\Services\Audit\AuditServiceInterface;
 use App\Models\AuditLog;
+use App\Support\DataListManager;
 use Illuminate\View\View;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
@@ -16,7 +17,6 @@ use Yajra\DataTables\Facades\DataTables;
 
 class AuditSettingController extends Controller
 {
-
     protected AuditServiceInterface $service;
 
     public function __construct(AuditServiceInterface $service)
@@ -116,6 +116,38 @@ class AuditSettingController extends Controller
 
     protected function getDataTableAuditLog($request): JsonResponse
     {
+
+        return DataListManager::dataTableHandle(
+            request: $request,
+            dataProvider: function ($request) {
+                return $this->service
+                    ->getDataTableData($request)['data']['data'];
+            },
+            columns: [
+                'created_at' => fn ($item) =>
+                $item->created_at?->diffForHumans(),
+
+                'user' => fn ($item) =>
+                    $item->user ? $item->user->name : 'System',
+
+                'model_type' => fn ($item) =>
+                class_basename($item->model_type),
+
+                'status' => fn ($item) =>
+                toggle_column(
+                    route('role.permissionStatus'),
+                    $item->id,
+                    $item->status == 1
+                ),
+
+                'actions' => fn ($item) =>
+                action_buttons([
+                    delete_column(route('role.deletePermission', $item->id)),
+                ]),
+            ],
+            rawColumns: ['actions','status']
+        );
+
         $query = $this->service->getDataTableData($request->model_type);
 
         return DataTables::eloquent($query)

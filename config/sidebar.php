@@ -9,7 +9,24 @@ return [
         'icon' => 'dashboard',
         'permission' => null,
     ],
-
+    [
+        'key' => 'users',
+        'label' => 'User Management',
+        'icon' => 'user',
+        'permission' => null,
+        'children' => [
+            [
+                'label' => 'User List',
+                'route' => 'user.list',
+                'permission' => null,
+            ],
+            [
+                'label' => 'User Create',
+                'route' => 'user.create',
+                'permission' => null,
+            ],
+        ],
+    ],
     [
         'key' => 'app',
         'label' => 'App Setup',
@@ -47,6 +64,25 @@ return [
             [
                 'label' => 'Api Permissions',
                 'route' => 'role.apiPermission',
+                'permission' => null,
+            ],
+        ],
+    ],
+
+    [
+        'key' => 'faq',
+        'label' => 'FAQ',
+        'icon' => 'faq',
+        'permission' => null,
+        'children' => [
+            [
+                'label' => 'Category',
+                'route' => 'faqCategory.list',
+                'permission' => null,
+            ],
+            [
+                'label' => 'FAQ',
+                'route' => 'faq.list',
                 'permission' => null,
             ],
         ],
@@ -95,5 +131,12 @@ return [
                 'permission' => null,
             ],
         ],
+    ],
+    [
+        'key' => 'logs',
+        'label' => 'Error Logs',
+        'route' => 'errorLog',
+        'icon' => 'logs',
+        'permission' => null,
     ],
 ];
