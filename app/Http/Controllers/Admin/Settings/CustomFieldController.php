@@ -41,4 +41,8 @@ class CustomFieldController extends Controller
         $response = $this->service->storeOrUpdateItem($request);
         return $response;
     }
+    public function destroy($id) {
+        $response = $this->service->deleteItem($id);
+        return $response;
+    }
 }

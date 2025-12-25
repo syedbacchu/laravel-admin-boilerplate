@@ -76,6 +76,7 @@
                                    class="bg-white text-gray-900 text-xs font-semibold px-4 py-1.5 rounded-lg shadow">
                                     {{__('View')}}
                                 </a>
+                                {!! delete_column(route('fileManager.delete', $item->id)) !!}
                             </div>
 
                         </div>

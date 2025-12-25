@@ -225,6 +225,10 @@
     data-id="${field.id}"
     data-module="${module}"
     data-key="${key}">Edit</button>
+<button class="text-red-600 delete-btn"
+            data-id="${field.id}"
+            data-module="${module}"
+            data-key="${key}">Delete</button>
 </td>
 </tr>`;
                     });
@@ -281,6 +285,31 @@
         }
 
 
+        document.addEventListener('click', function(e) {
+            if (e.target && e.target.classList.contains('delete-btn')) {
+                const id = e.target.getAttribute('data-id');
+                const module = e.target.getAttribute('data-module');
+                const key = e.target.getAttribute('data-key');
+
+                if (!confirm('Are you sure you want to delete this field?')) return;
+
+                fetch(`/admin/custom-fields/delete/${id}`, { method: 'GET' })
+                    .then(res => res.json())
+                    .then(res => {
+                        if(res.success) {
+                            Swal.fire("Deleted!", res.message ?? "Deleted successfully.", "success");
+                            // reload the table
+                            loadFields(module, key);
+                        } else {
+                            alert('Delete failed: ' + (res.message || 'Unknown error'));
+                        }
+                    })
+                    .catch(err => {
+                        console.error(err);
+                        Swal.fire("Error!", "Delete failed.", "error");
+                    });
+            }
+        });
 
 
     </script>

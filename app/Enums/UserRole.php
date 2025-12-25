@@ -42,4 +42,25 @@ enum UserRole: int
             $this->isAdmin($role) ||
             $this->isUser($role);
     }
+
+    public static function getRoleModuleArray(): array
+    {
+        return [
+            self::SUPER_ADMIN_ROLE->value => 'Super Admin',
+            self::ADMIN_ROLE->value => 'Admin',
+            self::USER_ROLE->value => 'User',
+        ];
+    }
+
+    public static function getRoleArray(): array
+    {
+        return [
+            self::ADMIN_ROLE->value => 'Admin',
+            self::USER_ROLE->value => 'User',
+        ];
+    }
+    public static function label(int $role): string
+    {
+        return self::getRoleModuleArray()[$role] ?? 'Unknown';
+    }
 }

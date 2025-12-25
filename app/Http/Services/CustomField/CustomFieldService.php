@@ -127,7 +127,7 @@ class CustomFieldService extends BaseService implements CustomFieldServiceInterf
         $item = $this->customRepository->find($id);
         if ($item) {
             $this->delete($item->id);
-            return $this->sendResponse(true,__('Slider deleted successfully'));
+            return $this->sendResponse(true,__('Data deleted successfully'));
         } else {
             return $this->sendResponse(false,__('Data not found'));
         }

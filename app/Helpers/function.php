@@ -310,3 +310,9 @@ function incrementSlug($slug, $table, $column_name = 'slug')
 
     return $slug;
 }
+
+function userImage($image=null)
+{
+    $default = asset('assets/images/avatar.png');
+    return $image ? $image : $default;
+}

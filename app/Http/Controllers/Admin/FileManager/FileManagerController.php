@@ -50,9 +50,9 @@ class FileManagerController extends Controller
 
 
     public function destroy($id): RedirectResponse {
-
+        $response = FileManager::deleteFile($id);
         return ResponseService::send([
-            'response' => [],
+            'response' => $response,
         ]);
     }
 

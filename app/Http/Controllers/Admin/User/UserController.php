@@ -3,12 +3,15 @@
 namespace App\Http\Controllers\Admin\User;
 
 use App\Enums\StatusEnum;
+use App\Enums\UserRole;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\User\UserCreateRequest;
 use App\Http\Services\Response\ResponseService;
 use App\Http\Services\User\UserServiceInterface;
 use App\Support\DataListManager;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Yajra\DataTables\Facades\DataTables;
 
 class UserController extends Controller
@@ -26,6 +29,11 @@ class UserController extends Controller
     {
         $data['pageTitle'] = __('User List');
         if ($request->ajax()) {
+            $notIn = [
+                'id' => [Auth::id()],
+                'role_module' => [enum(UserRole::SUPER_ADMIN_ROLE)]
+            ];
+            $request->merge(['notIn' => $notIn]);
             return DataListManager::dataTableHandle(
                 request: $request,
                 dataProvider: function ($request) {
@@ -36,17 +44,20 @@ class UserController extends Controller
                     'name' => function ($item) {
                         return '
                         <div class="flex items-center gap-2">
-                            <img src="'.$item->image.'" class="w-8 h-8 rounded-full">
-                            <p>'.$item->name.'</p>
+                            <img src="'.userImage($item->image).'" class="w-8 h-8 rounded-full">
+                            <p>'.$item->name.'<br>
+                            <small>'.$item->username.'</small>
+                            </p>
+
                         </div>';
                     },
 
                     'created_at' => fn ($item) =>
                     $item->created_at?->diffForHumans(),
                     'role_module' => fn ($item) =>
-                        'Admin',
+                    UserRole::label($item->role_module),
                     'phone' => fn ($item) =>
-                    $item->mobile . '<br>' .$item->username,
+                    $item->phone . '<br>' .$item->email,
 
                     'status' => fn ($item) =>
                     toggle_column(
@@ -76,9 +87,9 @@ class UserController extends Controller
      */
     public function create(Request $request)
     {
-        $data['pageTitle'] = __('Create New User');
         $request->merge(['guard' => 'web']);
-        $data['roles'] = $this->service->createData($request)['data']['data']['data'];
+        $data = $this->service->createData($request)['data'];
+        $data['pageTitle'] = __('Create New User');
 
         return ResponseService::send([
             'data' => $data,
@@ -88,9 +99,12 @@ class UserController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(UserCreateRequest $request)
     {
-        //
+        $response = $this->service->storeOrUpdateData($request);
+        return ResponseService::send([
+            'response' => $response,
+        ], successRoute: 'user.list');
     }
 
     /**
@@ -104,9 +118,15 @@ class UserController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit(Request $request,string $id)
     {
-        //
+        $request->merge(['guard' => 'web', 'id' => $id]);
+        $data = $this->service->createData($request)['data'];
+        $data['pageTitle'] = __('Update User');
+
+        return ResponseService::send([
+            'data' => $data,
+        ], view: viewss('user','create'));
     }
 
     /**
@@ -122,6 +142,19 @@ class UserController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $response = $this->service->deleteData($id);
+        return ResponseService::send([
+            'response' => $response,
+        ]);
+    }
+
+    public function status(Request $request): JsonResponse {
+        try {
+            $response = $this->service->statusUpdate($request->id,$request->status);
+            return response()->json($response);
+        } catch (\Exception $e) {
+            logStore('user Status',$e->getMessage());
+            return response()->json(['success'=>false,'message'=>somethingWrong()]);
+        }
     }
 }

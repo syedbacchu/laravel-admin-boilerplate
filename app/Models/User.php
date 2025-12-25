@@ -59,8 +59,6 @@ class User extends Authenticatable
         'whatsapp_link',
         'telegram_link',
         'device_token',
-        'avatar',
-        'avatar_original',
         'referral_code',
         'referred_by',
         'email_verified_at',
@@ -77,22 +75,6 @@ class User extends Authenticatable
         'password',
         'remember_token',
     ];
-
-    protected $appends = ['avatar_url'];
-
-
-    public function getAvatarAttribute($value)
-    {
-        if (empty($value)) return '';
-
-        return ($value);
-    }
-
-
-    public function getAvatarUrlAttribute()
-    {
-        return $this->avatar_original ? ($this->avatar_original) : null;
-    }
 
     public function role()
     {

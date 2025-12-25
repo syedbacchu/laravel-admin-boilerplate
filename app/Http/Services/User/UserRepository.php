@@ -37,6 +37,7 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
                 'users.email',
                 'roles.name as role_name',
             ],
+            notIn:isset($request->notIn) ? $request->notIn : [],
             joinCallback: function ($query) {
                 $query->leftJoin('roles', 'roles.id', '=', 'users.role_id');
             }
@@ -83,6 +84,7 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
                 'users.status',
                 'users.created_at',
             ],
+            notIn:isset($request->notIn) ? $request->notIn : [],
         );
     }
 

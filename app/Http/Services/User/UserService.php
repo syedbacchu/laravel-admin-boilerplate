@@ -3,14 +3,13 @@
 namespace App\Http\Services\User;
 
 use App\Enums\StatusEnum;
-use App\Enums\UploadFolderEnum;
-use App\Http\Requests\Role\RoleCreateRequest;
-use App\Http\Requests\Slider\SliderCreateRequest;
+use App\Http\Requests\User\UserCreateRequest;
 use App\Http\Services\BaseService;
-use App\Http\Services\Role\RoleService;
+use App\Http\Services\Response\DataService;
 use App\Http\Services\Role\RoleServiceInterface;
+use App\Support\Helpers;
 use App\Traits\FileUploadTrait;
-use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\Auth;
 
 class UserService extends BaseService implements UserServiceInterface
 {
@@ -30,29 +29,28 @@ class UserService extends BaseService implements UserServiceInterface
         return $this->sendResponse(true,__('Data get successfully.'),$data);
     }
 
-    public function storeOrUpdateData(RoleCreateRequest $request): array
+    public function storeOrUpdateData(UserCreateRequest $request): array
     {
         $item = "";
-        $data = [
-            'name' => $request->name,
-            'guard' => $request->guard
-        ];
+        $data = DataService::userCreateData($request);
         $message = "";
         if ($request->edit_id) {
             $item = $this->itemRepository->find($request->edit_id);
             if ($item) {
                 $this->itemRepository->update($item->id,$data);
-                $item->permissions()->sync($request->permissions);
                 $item = $this->itemRepository->find($item->id);
-                $message = __('Role updated successfully');
+                $message = __('User updated successfully');
             } else {
                 return $this->sendResponse(false,__('Data not found'));
             }
         } else {
-            $data['slug'] = make_unique_slug($request->name, 'roles');
+            if(isset($request->type) && $request->type == "admin"){
+                $data['added_by'] = Auth::user()->id();
+            }
+            $data['referral_code'] = uniqid().date('');
+            $data['username'] = Helpers::generateUniqueUsername($request->name);
             $item = $this->itemRepository->create($data);
-            $item->permissions()->sync($request->permissions);
-            $message = __('Role created successfully');
+            $message = __('User created successfully');
         }
 
         return $this->sendResponse(true,$message,$item);
@@ -99,7 +97,7 @@ class UserService extends BaseService implements UserServiceInterface
         return $this->sendResponse(true,__('Data get successfully'),$this->itemRepository->getPermission($id) );
     }
 
-    public function statusRole($id,$status): array
+    public function statusUpdate($id,$status): array
     {
         $item = $this->itemRepository->find($id);
         if ($item) {
@@ -114,7 +112,10 @@ class UserService extends BaseService implements UserServiceInterface
     {
         $roleService = app(RoleServiceInterface::class);
         $request->merge(['status' => enum(StatusEnum::ACTIVE)]);
-        $data = $roleService->getDataTableData($request);
+        $data['roles'] = $roleService->getDataTableData($request)['data']['data'];
+        if($request->id) {
+            $data['item'] = $this->itemRepository->find($request->id);
+        }
 
         return $this->sendResponse(true,__('Data get successfully'),$data);
     }

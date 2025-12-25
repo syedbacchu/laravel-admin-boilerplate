@@ -71,55 +71,43 @@ class FileManager
 
     public static function list($request): array
     {
-        $totalPages = 0;
-        $totalCount = 0;
-        $settingPerPage = 10;
-        $page = isset($request->page) ? intval($request->page) : 1;
-        $perPage = isset($request->per_page) ? intval($request->per_page) : $settingPerPage;
-        $orderBy = isset($request->orderBy) ? $request->orderBy : 'desc';
-        $column = isset($request->orderColumn) ? $request->orderColumn : 'id';
-        $search = $request->get('search', null);
-        $userId = $request->get('userId', null);
+        return DataListManager::list(
+            request: $request,
+            query: FileSystem::query(),
 
-        $query = FileSystem::query();
+            searchable: [
+                'filename',
+                'original_name',
+            ],
 
-        $query->select('*');
-        if ($search) {
-            $query->where(function ($q) use ($search) {
-                $q->where('filename', 'like', '%' . $search . '%')
-                    ->orWhere('original_name', 'like', '%' . $search . '%');
-            });
-        }
+            filters: [
+                'uploaded_by' => [
+                    'uploaded_by' => $request->user_id
+                ]
+            ],
 
-        if ($userId) {
-            $query->where('uploaded_by', $userId);
-        }
+            select: [
+            ],
+            notIn:isset($request->notIn) ? $request->notIn : [],
+        );
 
-        $countQuery = clone $query;
-        $totalCount = $countQuery->count();
-        $totalPages = ceil($totalCount / $perPage);
+    }
 
-        if (isset($request->list_size) && $request->list_size === 'web') {
-            $items = $query->orderBy($column, $orderBy)->paginate($settingPerPage);
-        } elseif (isset($request->list_size) && $request->list_size === 'all') {
-            $items = $query->orderBy($column, $orderBy)->get();
-        } elseif (isset($request->list_size) && $request->list_size === 'ajax') {
-            $items = $query->orderBy($column, $orderBy);
+    public static function deleteFile(string $id,$type='id') {
+        if ($type == 'id') {
+            $file = FileSystem::find($id);
         } else {
-            $items = $query->skip(($page - 1) * $perPage)
-                ->take($perPage)
-                ->orderBy($column, $orderBy)
-                ->get();
+            $file = FileSystem::where('full_url',$id)->first();
         }
 
-        $data = [
-            'total_count' => $totalCount,
-            'total_page' => $totalPages,
-            'per_page' => $perPage,
-            'current_page' => $page,
-            'data' => $items,
-        ];
-
-        return $data;
+        if ($file) {
+            $path = explode('/',$file->path);
+            $self = new self();
+            $self->service->unlinkFile('storage/'.$path[0],$path[1]);
+            $file->delete();
+            return sendResponse(true, __('File deleted successfully.'));
+        } else {
+            return sendResponse(false, __('File not found'));
+        }
     }
 }

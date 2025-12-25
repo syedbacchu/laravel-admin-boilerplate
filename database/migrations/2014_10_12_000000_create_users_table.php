@@ -55,8 +55,7 @@ return new class extends Migration
             $table->string('whatsapp_link')->nullable();
             $table->string('telegram_link')->nullable();
             $table->text('device_token')->nullable();
-            $table->string('avatar')->nullable();
-            $table->string('avatar_original')->nullable();
+            $table->string('device_type')->nullable();
             $table->string('referral_code')->nullable();
             $table->unsignedBigInteger('referred_by')->nullable();
             $table->timestamp('email_verified_at')->nullable();

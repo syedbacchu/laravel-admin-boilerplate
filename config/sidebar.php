@@ -87,7 +87,13 @@ return [
             ],
         ],
     ],
-
+    [
+        'key' => 'file_manager',
+        'label' => 'File Manager',
+        'route' => 'fileManager.list',
+        'icon' => 'file-manager',
+        'permission' => null,
+    ],
     [
         'key' => 'custom_fields',
         'label' => 'Custom Fields',

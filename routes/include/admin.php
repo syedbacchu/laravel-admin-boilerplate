@@ -22,17 +22,19 @@ Route::get('log', [Sdtech\LogViewerLaravel\Controllers\LogViewerLaravelControlle
     Route::get('logout', [AuthController::class, 'logout'])->name('logout');
 
     // user management
-    Route::resource('users', UserController::class)->names([
+    Route::resource('users', UserController::class)
+        ->except(['destroy'])
+        ->names([
         'index'   => 'user.list',
         'create'   => 'user.create',
         'edit'   => 'user.edit',
         'store'   => 'user.store',
         'update'  => 'user.update',
-        'destroy' => 'user.delete',
         'show' => 'user.show',
     ]);
 
     Route::group(['prefix' => 'users', 'as' => 'user.'], function () {
+        Route::get('user-delete/{id}', [UserController::class, 'destroy'])->name('delete');
         Route::post('user-status', [UserController::class, 'status'])->name('status');
     });
     // General Setting
@@ -52,16 +54,18 @@ Route::get('log', [Sdtech\LogViewerLaravel\Controllers\LogViewerLaravelControlle
 
 
     // App Slider
-    Route::resource('app-slider', AppSliderController::class)->names([
+    Route::resource('app-slider', AppSliderController::class)
+        ->except(['destroy'])
+        ->names([
         'index'   => 'appSlider.list',
         'create'   => 'appSlider.create',
         'edit'   => 'appSlider.edit',
         'store'   => 'appSlider.store',
         'update'  => 'appSlider.update',
-        'destroy' => 'appSlider.delete',
         'show' => 'appSlider.show',
     ]);
     Route::group(['prefix' => 'app-slider', 'as' => 'appSlider.'], function () {
+        Route::get('app-slider-delete/{id}', [AppSliderController::class, 'destroy'])->name('delete');
         Route::post('publish', [AppSliderController::class, 'publish'])->name('publish');
     });
 
@@ -93,17 +97,22 @@ Route::get('log', [Sdtech\LogViewerLaravel\Controllers\LogViewerLaravelControlle
         Route::get('list', [CustomFieldController::class, 'listByModule'])->name('list')->middleware('skip.permission');
         Route::post('store', [CustomFieldController::class, 'store'])->name('store');
         Route::post('update', [CustomFieldController::class, 'update'])->name('update');
+        Route::get('delete/{id}', [CustomFieldController::class, 'destroy'])->name('delete');
     });
 
-    Route::resource('role', RoleController::class)->names([
+    Route::resource('role', RoleController::class)
+        ->except(['destroy'])
+        ->names([
         'index'   => 'role.index',
         'create'   => 'role.create',
+        'edit'   => 'role.edit',
         'store'   => 'role.store',
         'update'  => 'role.update',
-        'destroy' => 'role.destroy',
         'show' => 'role.show',
     ]);
+
     Route::group([ 'as' => 'role.'], function () {
+        Route::get('role-delete/{id}', [RoleController::class, 'delete'])->name('destroy');
         Route::post('role-publish', [RoleController::class, 'roleStatus'])->name('status');
         Route::get('role-sync-permission', [RoleController::class, 'syncPermission'])->name('syncPermission');
         Route::get('web-permission', [RoleController::class, 'webPermission'])->name('webPermission');

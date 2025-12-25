@@ -37,4 +37,20 @@ enum StatusEnum: int
             self::TEMPORARY_DEACTIVE => 'red',
         };
     }
+
+    public static function getActiveArray(): array
+    {
+        return [
+            self::ACTIVE->value => 'Active',
+            self::PENDING->value => 'Inactive',
+        ];
+    }
+
+    public static function getYesArray(): array
+    {
+        return [
+            self::ACTIVE->value => 'Yes',
+            self::PENDING->value => 'No',
+        ];
+    }
 }

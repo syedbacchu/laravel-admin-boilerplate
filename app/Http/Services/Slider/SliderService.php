@@ -70,7 +70,6 @@ class SliderService extends BaseService implements SliderServiceInterface
     {
         $item = $this->sliderRepository->find($id);
         if ($item) {
-            $this->deleteFile($item->raw_photo,UploadFolderEnum::GENERAL->value);
             $this->delete($item->id);
             return $this->sendResponse(true,__('Slider deleted successfully'));
         } else {

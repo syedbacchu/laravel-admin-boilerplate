@@ -16,6 +16,7 @@ class DataListManager
         array $searchable = [],
         array $filters = [],
         array $select = [],
+        array $notIn = [],
         ?Closure $joinCallback = null,
         array $config = []
     ): array {
@@ -24,13 +25,19 @@ class DataListManager
         $page     = (int) $request->get('page', 1);
         $perPage  = (int) $request->get('per_page', $settingPerPage);
         $orderBy  = $request->get('orderBy', 'desc');
-        $column   = $request->get('orderColumn', 'id');
+        $orderColumn   = $request->get('orderColumn', 'id');
         $search   = $request->get('search');
         $listSize = $request->get('list_size');
 
         /** ---------------- JOIN ---------------- */
         if ($joinCallback) {
             $joinCallback($query);
+        }
+        /** ---------------- NOT IN ---------------- */
+        foreach ($notIn as $column => $values) {
+            if (!empty($values) && is_array($values)) {
+                $query->whereNotIn($column, $values);
+            }
         }
 
         /** ---------------- SELECT ---------------- */
@@ -100,14 +107,14 @@ class DataListManager
 
         /** ---------------- DATA ---------------- */
         if ($listSize === 'web') {
-            $items = $query->orderBy($column, $orderBy)
+            $items = $query->orderBy($orderColumn, $orderBy)
                 ->paginate($settingPerPage);
         } elseif ($listSize === 'all') {
-            $items = $query->orderBy($column, $orderBy)->get();
+            $items = $query->orderBy($orderColumn, $orderBy)->get();
         } elseif ($listSize === 'datatable') {
-            $items = $query->orderBy($column, $orderBy);
+            $items = $query->orderBy($orderColumn, $orderBy);
         } else {
-            $items = $query->orderBy($column, $orderBy)
+            $items = $query->orderBy($orderColumn, $orderBy)
                 ->skip(($page - 1) * $perPage)
                 ->take($perPage)
                 ->get();
