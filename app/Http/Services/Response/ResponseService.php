@@ -29,6 +29,9 @@ class ResponseService
         $success = $res['success'] ?? null;
         $message = $res['message'] ?? '';
         $data = $res['data'] ?? [];
+        if($payload['data']) {
+            $data['data'] = $payload['data'];
+        }
         $status = $res['status'] ?? 200;
         $error = $res['error_message'] ?? '';
 
@@ -37,10 +40,7 @@ class ResponseService
             return self::makeApiResponse($res);
         }
 
-        // 🔹 If view provided -> render view
-        if ($view) {
-            return view($view, $data);
-        }
+
 
         // 🔹 If success=false -> redirect back + dismiss
         if ($success === false) {
@@ -54,6 +54,10 @@ class ResponseService
             return redirect()->back()
                 ->withInput()
                 ->with('dismiss', $message ?: __('Failed'));
+        }
+        // 🔹 If view provided -> render view
+        if ($view) {
+            return view($view, $data);
         }
 
         // 🔹 If success=true + route exists -> redirect to route

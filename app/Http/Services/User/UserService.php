@@ -66,35 +66,23 @@ class UserService extends BaseService implements UserServiceInterface
             return $this->sendResponse(false,__('Data not found'));
         }
     }
+    public function singleData($request): array {
+        $value = $request->input('id')
+            ?? $request->input('username')
+            ?? $request->input('email')
+            ?? $request->input('phone');
 
-    public function permissionDelete($id): array
-    {
-        $item = $this->itemRepository->getPermission($id);
-        if ($item) {
-            $this->itemRepository->deletePermission($item->id);
-            return $this->sendResponse(true,__('Data deleted successfully'));
-        } else {
-            return $this->sendResponse(false,__('Data not found'));
+        if (!$value) {
+            return $this->sendResponse(false, __('Invalid request parameter'));
         }
-    }
 
-     public function publishPermission($id,$status): array
-     {
-        $item = $this->itemRepository->getPermission($id);
-        if ($item) {
-            $this->itemRepository->updatePermission($item->id,['status' => $status]);
-            return $this->sendResponse(true,__('Status updated successfully'));
-        } else {
-            return $this->sendResponse(false,__('Data not found'));
+        $data = $this->itemRepository->getUserByAny($value);
+
+        if (!$data) {
+            return $this->sendResponse(false, __('User not found'));
         }
-     }
 
-    public function getPermissionList($request) {
-        $responseData = $this->itemRepository->permissionList($request);
-        return $this->sendResponse(true,__('Data get successfully'),$responseData );
-    }
-    public function getSinglePermission($id): array {
-        return $this->sendResponse(true,__('Data get successfully'),$this->itemRepository->getPermission($id) );
+        return $this->sendResponse(true, __('Data get successfully'), $data);
     }
 
     public function statusUpdate($id,$status): array
@@ -118,15 +106,5 @@ class UserService extends BaseService implements UserServiceInterface
         }
 
         return $this->sendResponse(true,__('Data get successfully'),$data);
-    }
-
-    public function roleEditData($id): array {
-        $data['item'] = $this->itemRepository->find($id);
-        if ($data['item']) {
-            $data['permissions'] = $this->itemRepository->getModulePermissions($data['item']->guard);
-            return $this->sendResponse(true,__('Data get successfully'), $data);
-        } else {
-            return $this->sendResponse(false,__('Data not found'));
-        }
     }
 }

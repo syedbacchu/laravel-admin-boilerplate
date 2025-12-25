@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('name',100)->nullable();
             $table->string('username',100)->unique()->nullable();
             $table->string('email',180)->unique()->nullable();
-            $table->string('phone',20)->nullable();
+            $table->string('phone',20)->unique()->nullable();
             $table->string('phone_code',20)->default('88');
             $table->string('password')->nullable();
             $table->tinyInteger('role_module')->default(3)->comment("1= super admin, 2 = admin, 3 = user");

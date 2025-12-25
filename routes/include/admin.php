@@ -19,6 +19,7 @@ Route::get('log', [Sdtech\LogViewerLaravel\Controllers\LogViewerLaravelControlle
 
     // Dashboard
     Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
+    Route::get('profile', [UserController::class, 'profile'])->name('profile');
     Route::get('logout', [AuthController::class, 'logout'])->name('logout');
 
     // user management

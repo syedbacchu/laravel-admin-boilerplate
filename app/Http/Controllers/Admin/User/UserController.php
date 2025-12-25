@@ -157,4 +157,15 @@ class UserController extends Controller
             return response()->json(['success'=>false,'message'=>somethingWrong()]);
         }
     }
+
+    public function profile(Request $request) {
+        $request->merge(['id' => Auth::id()]);
+        $response = $this->service->singleData($request);
+        $response['pageTitle'] = __('Profile');
+        return ResponseService::send([
+            'data' => $response, 'response' => $response
+        ],
+            view: viewss('user', 'profile')
+        );
+    }
 }
