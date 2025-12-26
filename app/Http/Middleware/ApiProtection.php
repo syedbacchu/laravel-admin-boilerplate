@@ -16,14 +16,14 @@ class ApiProtection
     public function handle(Request $request, Closure $next): Response
     {
         logStore($request->fullUrl(). ' req data =>' , $request->all());
-        // logStore($request->fullUrl().' req header =>', $request->header());
+         logStore($request->fullUrl().' req header =>', $request->header());
         $lang = $request->header('lang') ?? 'en';
         app()->setLocale($lang);
 
         $allowedOrigins = explode(',', env('CORS_ALLOW_ORIGIN', ''));
         $origin = $request->header('Origin');
 
-        $apiKey = env('USER_API_SECRET_KEY', 'AB1183A8D3D1F487BA8E3D97EE6B1E81ED3C3DA5F284FAE7618976469452');
+        $apiKey = env('USER_API_SECRET_KEY', 'SETMYSCORE2026AB1183A8D3D1F487BA8E3D97EE6B1E81ED3C3DA5F284FAE7618976469452');
 
         $allowedIPs = explode(',', env('ALLOWED_IPS', ''));
 

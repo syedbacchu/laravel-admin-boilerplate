@@ -189,4 +189,8 @@ class AdminAuthService
         $request->session()->invalidate();
         $request->session()->regenerateToken();
     }
+
+    public static function createUserAccessToken(User $user, string $username): string {
+        return $user->createToken($username)->accessToken;
+    }
 }

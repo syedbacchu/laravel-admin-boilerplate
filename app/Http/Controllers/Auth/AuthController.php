@@ -159,24 +159,22 @@ class AuthController extends Controller
         return ResponseService::send($response);
     }
 
-    public function apiLogin(AdminLoginRequest $request): RedirectResponse
+    public function apiLogin(AdminLoginRequest $request): JsonResponse
     {
         try {
             $request->ensureIsNotRateLimited();
-            $request->merge(['auth_type' => 'admin']);
+            $request->merge(['auth_type' => 'user']);
             $this->authService->authenticate($request);
-            $request->session()->regenerate();
-            $user = Auth::user();
-
+            $data['user'] = Auth::user();
+            $data['access_token'] = AdminAuthService::createUserAccessToken($data['user'], $data['user']->username);
             return ResponseService::send([
                 'response' => [
                     'success' => true,
-                    'message' => "Welcome back, {$user->name}!",
-                    'data' => $user,
+                    'message' => "Welcome back, {$data['user']->name}!",
+                    'data' => $data,
                     'status' => 200,
                     'error_message' => "",
-                ],
-            ], successRoute: 'dashboard');
+                ]]);
 
         } catch (\Illuminate\Validation\ValidationException $e) {
             return ResponseService::send([
