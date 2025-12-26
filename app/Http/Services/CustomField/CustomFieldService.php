@@ -35,9 +35,7 @@ class CustomFieldService extends BaseService implements CustomFieldServiceInterf
             return ''; // nothing to render
         }
 
-        logStore('render -> '. $model.'-----------'. $modelType);
         $fields = $this->fieldsWithValues($model, $modelType);
-        logStore('render $fields -> '. $fields);
         if ($fields->isEmpty()) {
             return '';
         }
@@ -49,8 +47,6 @@ class CustomFieldService extends BaseService implements CustomFieldServiceInterf
     {
         $module = $modelType ?? ModelResolver::resolveFromRoute();
         $context = FormContextResolver::resolve();
-        logStore('autoFields $module -> '. $module);
-        logStore('autoFields $context -> '. $context);
         if (!$module) {
             return collect();
         }

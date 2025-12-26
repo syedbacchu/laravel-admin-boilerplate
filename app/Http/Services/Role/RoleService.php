@@ -7,6 +7,7 @@ use App\Enums\UploadFolderEnum;
 use App\Http\Requests\Role\RoleCreateRequest;
 use App\Http\Requests\Slider\SliderCreateRequest;
 use App\Http\Services\BaseService;
+use App\Support\SyncPermission;
 use App\Traits\FileUploadTrait;
 use Illuminate\Database\Eloquent\Builder;
 
@@ -40,6 +41,7 @@ class RoleService extends BaseService implements RoleServiceInterface
                 $this->itemRepository->update($item->id,$data);
                 $item->permissions()->sync($request->permissions);
                 $item = $this->itemRepository->find($item->id);
+                SyncPermission::roleCacheClear($item);
                 $message = __('Role updated successfully');
             } else {
                 return $this->sendResponse(false,__('Data not found'));

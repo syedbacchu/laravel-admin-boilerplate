@@ -17,10 +17,16 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('log', [Sdtech\LogViewerLaravel\Controllers\LogViewerLaravelController::class, 'index'])->name('errorLog');
 
+Route::group(['middleware' => ['skip.permission','no.permission.sync']], function () {
     // Dashboard
     Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
     Route::get('profile', [UserController::class, 'profile'])->name('profile');
+    Route::get('edit-profile', [UserController::class, 'editProfile'])->name('editProfile');
+    Route::post('update-profile', [UserController::class, 'updateProfile'])->name('updateProfile');
+    Route::post('update-password', [UserController::class, 'updatePassword'])->name('updatePassword');
     Route::get('logout', [AuthController::class, 'logout'])->name('logout');
+});
+
 
     // user management
     Route::resource('users', UserController::class)
@@ -83,11 +89,11 @@ Route::get('log', [Sdtech\LogViewerLaravel\Controllers\LogViewerLaravelControlle
 
     // File Manager
     Route::group(['prefix' => 'file-manager', 'as' => 'fileManager.'], function () {
-        Route::get('list', [FileManagerController::class, 'list'])->name('all');
-        Route::get('/', [FileManagerController::class, 'index'])->name('list');
-        Route::get('list-partial', [FileManagerController::class, 'listPartial'])->name('partial');
+        Route::get('list', [FileManagerController::class, 'list'])->name('all')->middleware('skip.permission','no.permission.sync');
+        Route::get('/', [FileManagerController::class, 'index'])->name('list')->middleware('skip.permission','no.permission.sync');
+        Route::get('list-partial', [FileManagerController::class, 'listPartial'])->name('partial')->middleware('skip.permission','no.permission.sync');
         Route::get('create', [FileManagerController::class, 'create'])->name('create');
-        Route::post('store-file', [FileManagerController::class, 'storeFile'])->name('storeFile');
+        Route::post('store-file', [FileManagerController::class, 'storeFile'])->name('storeFile')->middleware('skip.permission','no.permission.sync');
         Route::post('store', [FileManagerController::class, 'store'])->name('store');
         Route::get('delete/{id}', [FileManagerController::class, 'destroy'])->name('delete');
     });

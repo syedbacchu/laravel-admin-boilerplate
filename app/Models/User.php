@@ -81,11 +81,32 @@ class User extends Authenticatable
         return $this->belongsTo(Role::class);
     }
 
+    public function permissions()
+    {
+        // If user has a role, get its permissions; else return empty relation
+        return $this->role()
+            ->with('permissions')
+            ->get()
+            ->pluck('permissions')
+            ->flatten()
+            ->unique('id');
+    }
+    public function cachedPermissions(): array
+    {
+        return cache()->remember(
+            'user_permissions_' . $this->id,
+            3600,
+            function () {
+                if (!$this->role) {
+                    return [];
+                }
+                return $this->role->permissions->pluck('slug')->toArray();
+            }
+        );
+    }
     public function hasPermission(string $permission): bool
     {
-        return $this->role
-            ?->permissions
-            ->contains('slug', $permission) ?? false;
+        return in_array($permission, $this->cachedPermissions());
     }
 
 }

@@ -7,7 +7,7 @@ return [
         'label' => 'Dashboard',
         'route' => 'dashboard',
         'icon' => 'dashboard',
-        'permission' => null,
+        'permission' => 'dashboard',
     ],
     [
         'key' => 'users',
@@ -18,12 +18,12 @@ return [
             [
                 'label' => 'User List',
                 'route' => 'user.list',
-                'permission' => null,
+                'permission' => 'user.list',
             ],
             [
                 'label' => 'User Create',
                 'route' => 'user.create',
-                'permission' => null,
+                'permission' => 'user.create',
             ],
         ],
     ],
@@ -36,7 +36,12 @@ return [
             [
                 'label' => 'Slider',
                 'route' => 'appSlider.list',
-                'permission' => null,
+                'permission' => 'appSlider.list',
+            ],
+            [
+                'label' => 'Slider Create',
+                'route' => 'appSlider.create',
+                'permission' => 'appSlider.create',
             ],
         ],
     ],
@@ -49,22 +54,22 @@ return [
             [
                 'label' => 'Web Role',
                 'route' => 'role.index',
-                'permission' => null,
+                'permission' => 'role.index',
             ],
             [
                 'label' => 'Web Permissions',
                 'route' => 'role.webPermission',
-                'permission' => null,
+                'permission' => 'role.webPermission',
             ],
             [
                 'label' => 'Api Role',
                 'route' => 'role.apiRole',
-                'permission' => null,
+                'permission' => 'role.apiRole',
             ],
             [
                 'label' => 'Api Permissions',
                 'route' => 'role.apiPermission',
-                'permission' => null,
+                'permission' => 'role.apiPermission',
             ],
         ],
     ],
@@ -78,12 +83,12 @@ return [
             [
                 'label' => 'Category',
                 'route' => 'faqCategory.list',
-                'permission' => null,
+                'permission' => 'faqCategory.list',
             ],
             [
                 'label' => 'FAQ',
                 'route' => 'faq.list',
-                'permission' => null,
+                'permission' => 'faq.list',
             ],
         ],
     ],
@@ -92,14 +97,14 @@ return [
         'label' => 'File Manager',
         'route' => 'fileManager.list',
         'icon' => 'file-manager',
-        'permission' => null,
+        'permission' => 'fileManager.list',
     ],
     [
         'key' => 'custom_fields',
         'label' => 'Custom Fields',
         'route' => 'customField.index',
         'icon' => 'custom-fields',
-        'permission' => null,
+        'permission' => 'customField.index',
     ],
 
     [
@@ -111,12 +116,12 @@ return [
             [
                 'label' => 'General Settings',
                 'route' => 'settings.generalSetting',
-                'permission' => null,
+                'permission' => 'settings.generalSetting',
             ],
             [
                 'label' => 'Settings Fields',
                 'route' => 'settings.fields.index',
-                'permission' => null,
+                'permission' => 'settings.fields.index',
             ],
         ],
     ],
@@ -129,12 +134,12 @@ return [
             [
                 'label' => 'Logs',
                 'route' => 'audit.logs',
-                'permission' => null,
+                'permission' => 'audit.logs',
             ],
             [
                 'label' => 'Settings',
                 'route' => 'audit.settings',
-                'permission' => null,
+                'permission' => 'audit.settings',
             ],
         ],
     ],
@@ -143,6 +148,6 @@ return [
         'label' => 'Error Logs',
         'route' => 'errorLog',
         'icon' => 'logs',
-        'permission' => null,
+        'permission' => 'errorLog',
     ],
 ];

@@ -19,6 +19,7 @@ class Viewed
             'list'  => 'admin.user.index',
             'create' => 'admin.user.create',
             'profile' => 'admin.profile.index',
+            'edit' => 'admin.profile.settings',
         ],
         'file' => [
             'list_data'  => 'admin.file_manager.list',

@@ -14,7 +14,7 @@
                 <div class="panel">
                     <div class="flex items-center justify-between mb-5">
                         <h5 class="font-semibold text-lg dark:text-white-light">{{ $data['pageTitle'] }}</h5>
-                        <a href="/users/user-account-settings"
+                        <a href="{{ route('editProfile') }}"
                            class="ltr:ml-auto rtl:mr-auto btn btn-primary p-2 rounded-full">
 
                             <svg width="24" height="24" viewBox="0 0 24 24" fill="none"

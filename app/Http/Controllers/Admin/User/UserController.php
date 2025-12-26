@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Admin\User;
 use App\Enums\StatusEnum;
 use App\Enums\UserRole;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\User\UpdatePasswordRequest;
+use App\Http\Requests\User\UpdateProfileRequest;
 use App\Http\Requests\User\UserCreateRequest;
 use App\Http\Services\Response\ResponseService;
 use App\Http\Services\User\UserServiceInterface;
@@ -168,4 +170,33 @@ class UserController extends Controller
             view: viewss('user', 'profile')
         );
     }
+
+    public function editProfile(Request $request) {
+        $request->merge(['id' => Auth::id()]);
+        $response = $this->service->singleData($request);
+        $response['pageTitle'] = __('Update Profile');
+        return ResponseService::send([
+            'data' => $response, 'response' => $response
+        ],
+            view: viewss('user', 'edit')
+        );
+    }
+
+    public function updateProfile(UpdateProfileRequest $request)
+    {
+        $request->merge(['user_id' => Auth::id()]);
+        $response = $this->service->updateProfileProcess($request);
+        return ResponseService::send([
+            'response' => $response,
+        ]);
+    }
+
+    public function updatePassword(UpdatePasswordRequest $request)
+    {
+        $response = $this->service->updatePasswordProcess($request);
+        return ResponseService::send([
+            'response' => $response,
+        ]);
+    }
+
 }

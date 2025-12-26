@@ -29,7 +29,7 @@ class ResponseService
         $success = $res['success'] ?? null;
         $message = $res['message'] ?? '';
         $data = $res['data'] ?? [];
-        if($payload['data']) {
+        if(isset($payload['data'])) {
             $data['data'] = $payload['data'];
         }
         $status = $res['status'] ?? 200;

@@ -16,10 +16,17 @@ class PermissionMiddleware
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if (auth()->user()->role_module == enum(UserRole::SUPER_ADMIN_ROLE)) {
+        $user = auth()->user();
+
+        if (!$user) {
+            return redirect()->route('login');
+        }
+        if ($user->role_module == enum(UserRole::SUPER_ADMIN_ROLE)) {
             return $next($request);
         }
-        if ($request->attributes->get('skip_permission') === true) {
+        if ($request->route()?->middleware()
+            && in_array('skip.permission', $request->route()->middleware())
+        ) {
             return $next($request);
         }
         $permission = $request->route()?->getName();
@@ -28,7 +35,7 @@ class PermissionMiddleware
             return $next($request);
         }
 
-        if (!auth()->user()?->hasPermission($permission)) {
+        if (!$user->hasPermission($permission)) {
             abort(403, 'Permission denied');
         }
 

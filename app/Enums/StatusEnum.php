@@ -53,4 +53,11 @@ enum StatusEnum: int
             self::PENDING->value => 'No',
         ];
     }
+    public static function getDeactiveArray(): array
+    {
+        return [
+            self::ACTIVE->value => 'Active',
+            self::PENDING->value => 'Deactive',
+        ];
+    }
 }

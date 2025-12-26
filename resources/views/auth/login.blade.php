@@ -32,7 +32,7 @@
                 </p>
 
                 <!-- 🔹 Login Form -->
-                <form class="space-y-5" method="POST" action="{{ route('login') }}">
+                <form class="space-y-5" method="POST" action="{{ route('loginProcess') }}">
                     @csrf
                     <div>
                         <label for="login">{{ __('Email / Username / Phone') }}</label>

@@ -8,6 +8,7 @@ use App\Http\Requests\Auth\ForgotPasswordRequest;
 use App\Http\Requests\Auth\ResetPasswordRequest;
 use App\Http\Services\Auth\AdminAuthService;
 use App\Http\Services\Response\ResponseService;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -149,5 +150,10 @@ class AuthController extends Controller
 
         return redirect()->route('login')
             ->with('success', __('You have been logged out successfully.'));
+    }
+
+    public function test(Request $request): JsonResponse
+    {
+
     }
 }
