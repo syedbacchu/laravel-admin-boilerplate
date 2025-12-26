@@ -2,6 +2,7 @@
 
 namespace App\Http\Services\Auth;
 
+use App\Enums\StatusEnum;
 use App\Enums\UserRole;
 use App\Enums\VerificationCodeTypeEnum;
 use App\Http\Requests\Auth\ForgotPasswordRequest;
@@ -39,15 +40,18 @@ class AdminAuthService
                 'login' => [__("Too many login attempts. Try again in ") . ceil($seconds / 60) . __(" minutes.")],
             ]);
         }
-
-        $user = User::query()
-            ->where(function ($q) use ($loginInput) {
-                $q->where('email', $loginInput)
-                    ->orWhere('username', $loginInput)
-                    ->orWhere('phone', $loginInput);
-            })
-            ->whereIn('role_module', [UserRole::SUPER_ADMIN_ROLE, UserRole::ADMIN_ROLE])
-            ->first();
+        $query = User::query();
+        $query->where(function ($q) use ($loginInput) {
+            $q->where('email', $loginInput)
+                ->orWhere('username', $loginInput)
+                ->orWhere('phone', $loginInput);
+        });
+        if ($request->auth_type == 'admin') {
+            $query->whereIn('role_module', [UserRole::SUPER_ADMIN_ROLE, UserRole::ADMIN_ROLE]);
+        } else {
+            $query->whereIn('role_module', [UserRole::USER_ROLE]);
+        }
+        $user = $query->first();
 
         if (!$user || !Hash::check($password, $user->password)) {
             RateLimiter::hit($key, 60 * 20);
@@ -64,12 +68,17 @@ class AdminAuthService
         }
 
         RateLimiter::clear($key);
-
-        if (!$user->email_verified_at) {
+        if ($user->status != enum(StatusEnum::ACTIVE)) {
             throw ValidationException::withMessages([
-                'login' => [__('Please verify your email address before logging in.')],
+                'login' => ['Account is not active. Please contact administrator.'],
             ]);
         }
+
+//        if (!$user->email_verified_at) {
+//            throw ValidationException::withMessages([
+//                'login' => [__('Please verify your email address before logging in.')],
+//            ]);
+//        }
 
         Auth::login($user, $remember);
 

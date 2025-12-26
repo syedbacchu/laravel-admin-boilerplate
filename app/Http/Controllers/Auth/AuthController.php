@@ -44,6 +44,7 @@ class AuthController extends Controller
         try {
             try {
                 $request->ensureIsNotRateLimited();
+                $request->merge(['auth_type' => 'admin']);
                 $this->authService->authenticate($request);
                 $request->session()->regenerate();
                 $user = Auth::user();
@@ -154,6 +155,40 @@ class AuthController extends Controller
 
     public function test(Request $request): JsonResponse
     {
+        $response = sendResponse(true,__('Api connection success'));
+        return ResponseService::send($response);
+    }
 
+    public function apiLogin(AdminLoginRequest $request): RedirectResponse
+    {
+        try {
+            $request->ensureIsNotRateLimited();
+            $request->merge(['auth_type' => 'admin']);
+            $this->authService->authenticate($request);
+            $request->session()->regenerate();
+            $user = Auth::user();
+
+            return ResponseService::send([
+                'response' => [
+                    'success' => true,
+                    'message' => "Welcome back, {$user->name}!",
+                    'data' => $user,
+                    'status' => 200,
+                    'error_message' => "",
+                ],
+            ], successRoute: 'dashboard');
+
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return ResponseService::send([
+                'response' => [
+                    'success' => false,
+                    'message' => $e->getMessage(),
+                    'data' => [],
+                    'status' => 422,
+                    'error_message' => $e->getMessage(),
+                ],
+            ]);
+
+        }
     }
 }

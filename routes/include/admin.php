@@ -89,11 +89,11 @@ Route::group(['middleware' => ['skip.permission','no.permission.sync']], functio
 
     // File Manager
     Route::group(['prefix' => 'file-manager', 'as' => 'fileManager.'], function () {
-        Route::get('list', [FileManagerController::class, 'list'])->name('all')->middleware('skip.permission','no.permission.sync');
-        Route::get('/', [FileManagerController::class, 'index'])->name('list')->middleware('skip.permission','no.permission.sync');
-        Route::get('list-partial', [FileManagerController::class, 'listPartial'])->name('partial')->middleware('skip.permission','no.permission.sync');
+        Route::get('list', [FileManagerController::class, 'list'])->name('all')->middleware(['skip.permission','no.permission.sync']);
+        Route::get('/', [FileManagerController::class, 'index'])->name('list')->middleware(['skip.permission','no.permission.sync']);
+        Route::get('list-partial', [FileManagerController::class, 'listPartial'])->name('partial')->middleware(['skip.permission','no.permission.sync']);
         Route::get('create', [FileManagerController::class, 'create'])->name('create');
-        Route::post('store-file', [FileManagerController::class, 'storeFile'])->name('storeFile')->middleware('skip.permission','no.permission.sync');
+        Route::post('store-file', [FileManagerController::class, 'storeFile'])->name('storeFile')->middleware(['skip.permission','no.permission.sync']);
         Route::post('store', [FileManagerController::class, 'store'])->name('store');
         Route::get('delete/{id}', [FileManagerController::class, 'destroy'])->name('delete');
     });

@@ -16,4 +16,5 @@ use App\Http\Controllers\Auth\AuthController;
 
 Route::group(['prefix' => 'auth', 'as' => 'apiAuth.'], function () {
     Route::get('test-connection', [AuthController::class, 'test'])->name('test');
+    Route::post('login', [AuthController::class, 'apiLogin'])->name('login');
 });
