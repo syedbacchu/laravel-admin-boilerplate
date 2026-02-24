@@ -24,6 +24,7 @@
                             {!! defaultInputIcon() !!}
                             <input type="text"
                                    name="label"
+                                   data-slug-source
                                    class="form-input w-full"
                                    value="{{ old('label') }}"
                                    placeholder="SMS Provider">
@@ -37,6 +38,7 @@
                             {!! defaultInputIcon() !!}
                             <input type="text"
                                    name="slug"
+                                   data-slug-target
                                    class="form-input w-full"
                                    value="{{ old('slug') }}"
                                    placeholder="sms_provider">

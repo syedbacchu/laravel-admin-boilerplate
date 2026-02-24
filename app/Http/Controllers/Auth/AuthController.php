@@ -31,6 +31,9 @@ class AuthController extends Controller
     public function showLogin(): View
     {
         $data['pageTitle'] = __('Admin Login');
+        if (Auth::user()) {
+            return redirect()->route('dashboard');
+        }
         return ResponseService::send([
             'data' => $data,
         ], view: viewss('auth', 'login'));

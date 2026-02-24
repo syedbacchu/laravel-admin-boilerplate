@@ -52,6 +52,18 @@ class Viewed
             'list'  => 'admin.faq.index',
             'create' => 'admin.faq.create',
         ],
+        'postCategory' => [
+            'list' => 'admin.post.category.index',
+            'create' => 'admin.post.category.create',
+        ],
+        'tag' => [
+            'list' => 'admin.post.tag.index',
+            'create' => 'admin.post.tag.create',
+        ],
+        'post' => [
+            'list' => 'admin.post.post.index',
+            'create' => 'admin.post.post.create',
+        ],
     ];
 
     /**

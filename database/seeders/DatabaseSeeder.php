@@ -18,6 +18,8 @@ class DatabaseSeeder extends Seeder
             AdminSeeder::class,
             SettingFieldSeeder::class,
             AdminSettingSeeder::class,
+            PostCategorySeeder::class,
+            TagSeeder::class,
         ]);
     }
 }

@@ -18,6 +18,18 @@ use App\Http\Services\Slider\SliderRepository;
 use App\Http\Services\Slider\SliderRepositoryInterface;
 use App\Http\Services\Slider\SliderService;
 use App\Http\Services\Slider\SliderServiceInterface;
+use App\Http\Services\PostCategory\PostCategoryRepository;
+use App\Http\Services\PostCategory\PostCategoryRepositoryInterface;
+use App\Http\Services\PostCategory\PostCategoryService;
+use App\Http\Services\PostCategory\PostCategoryServiceInterface;
+use App\Http\Services\Tag\TagRepository;
+use App\Http\Services\Tag\TagRepositoryInterface;
+use App\Http\Services\Tag\TagService;
+use App\Http\Services\Tag\TagServiceInterface;
+use App\Http\Services\Post\PostRepository;
+use App\Http\Services\Post\PostRepositoryInterface;
+use App\Http\Services\Post\PostService;
+use App\Http\Services\Post\PostServiceInterface;
 use App\Http\Services\FaqCategory\FaqCategoryRepository;
 use App\Http\Services\FaqCategory\FaqCategoryRepositoryInterface;
 use App\Http\Services\FaqCategory\FaqCategoryService;
@@ -60,6 +72,15 @@ class ServiceLayerProvider extends ServiceProvider
 
         $this->app->bind(FaqRepositoryInterface::class, FaqRepository::class);
         $this->app->bind(FaqServiceInterface::class, FaqService::class);
+
+        $this->app->bind(PostCategoryRepositoryInterface::class, PostCategoryRepository::class);
+        $this->app->bind(PostCategoryServiceInterface::class, PostCategoryService::class);
+
+        $this->app->bind(TagRepositoryInterface::class, TagRepository::class);
+        $this->app->bind(TagServiceInterface::class, TagService::class);
+
+        $this->app->bind(PostRepositoryInterface::class, PostRepository::class);
+        $this->app->bind(PostServiceInterface::class, PostService::class);
     }
 
     /**

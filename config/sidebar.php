@@ -93,6 +93,44 @@ return [
         ],
     ],
     [
+        'key' => 'blog',
+        'label' => 'Blog',
+        'icon' => 'faq',
+        'permission' => null,
+        'children' => [
+            [
+                'label' => 'Post Category',
+                'route' => 'postCategory.list',
+                'permission' => 'postCategory.list',
+            ],
+            [
+                'label' => 'Create Category',
+                'route' => 'postCategory.create',
+                'permission' => 'postCategory.create',
+            ],
+            [
+                'label' => 'Tag List',
+                'route' => 'tag.list',
+                'permission' => 'tag.list',
+            ],
+            [
+                'label' => 'Create Tag',
+                'route' => 'tag.create',
+                'permission' => 'tag.create',
+            ],
+            [
+                'label' => 'Post List',
+                'route' => 'post.list',
+                'permission' => 'post.list',
+            ],
+            [
+                'label' => 'Create Post',
+                'route' => 'post.create',
+                'permission' => 'post.create',
+            ],
+        ],
+    ],
+    [
         'key' => 'file_manager',
         'label' => 'File Manager',
         'route' => 'fileManager.list',

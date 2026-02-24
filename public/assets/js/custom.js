@@ -41,6 +41,76 @@
     };
     initPerfectScrollbar();
 
+    const slugify = (text) => {
+        return (text || '')
+            .toString()
+            .toLowerCase()
+            .trim()
+            .replace(/[^\w\s-]/g, '')
+            .replace(/[\s_-]+/g, '-')
+            .replace(/^-+|-+$/g, '');
+    };
+
+    const bindSlugPair = (source, target) => {
+        if (!source || !target || target.dataset.slugBound === '1') {
+            return;
+        }
+
+        target.dataset.slugBound = '1';
+        if (target.value.trim() !== '') {
+            target.dataset.manual = '1';
+        }
+
+        const updateSlug = () => {
+            if (target.dataset.manual === '1') {
+                return;
+            }
+            target.value = slugify(source.value);
+        };
+
+        source.addEventListener('input', updateSlug);
+        target.addEventListener('input', () => {
+            target.dataset.manual = target.value.trim() !== '' ? '1' : '0';
+        });
+
+        if (!target.value.trim() && source.value.trim()) {
+            updateSlug();
+        }
+    };
+
+    const initAutoSlug = (scope = document) => {
+        const forms = scope.querySelectorAll('form');
+
+        forms.forEach((form) => {
+            const explicitTargets = form.querySelectorAll('[data-slug-target]');
+
+            if (explicitTargets.length) {
+                explicitTargets.forEach((target) => {
+                    const sourceSelector = target.getAttribute('data-slug-source-selector');
+                    let source = null;
+
+                    if (sourceSelector) {
+                        source = form.querySelector(sourceSelector);
+                    } else {
+                        source = form.querySelector('[data-slug-source]');
+                    }
+
+                    bindSlugPair(source, target);
+                });
+
+                return;
+            }
+
+            const defaultSource = form.querySelector('[name="name"], #name, [name="label"]');
+            const defaultTarget = form.querySelector('[name="slug"], #slug');
+            bindSlugPair(defaultSource, defaultTarget);
+        });
+    };
+
+    window.generateSlug = slugify;
+    window.initAutoSlug = initAutoSlug;
+    document.addEventListener('DOMContentLoaded', () => initAutoSlug());
+
     document.addEventListener('alpine:init', () => {
         Alpine.data('collapse', () => ({
             collapse: false,

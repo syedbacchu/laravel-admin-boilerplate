@@ -10,6 +10,9 @@ use App\Http\Controllers\Admin\Role\RoleController;
 use App\Http\Controllers\Admin\Settings\CustomFieldController;
 use App\Http\Controllers\Admin\Settings\SettingsController;
 use App\Http\Controllers\Admin\Settings\SettingFieldController;
+use App\Http\Controllers\Admin\Post\PostCategoryController;
+use App\Http\Controllers\Admin\Post\PostController;
+use App\Http\Controllers\Admin\Post\TagController;
 use App\Http\Controllers\Admin\User\UserController;
 use App\Http\Controllers\Auth\AuthController;
 use Illuminate\Support\Facades\Route;
@@ -39,11 +42,11 @@ Route::group(['middleware' => ['skip.permission','no.permission.sync']], functio
         'update'  => 'user.update',
         'show' => 'user.show',
     ]);
-
     Route::group(['prefix' => 'users', 'as' => 'user.'], function () {
         Route::get('user-delete/{id}', [UserController::class, 'destroy'])->name('delete');
         Route::post('user-status', [UserController::class, 'status'])->name('status');
     });
+
     // General Setting
     Route::resource('fields', SettingFieldController::class)->names([
         'index'   => 'settings.fields.index',
@@ -141,6 +144,53 @@ Route::group(['middleware' => ['skip.permission','no.permission.sync']], functio
     ]);
     Route::group(['prefix' => 'faq-categories', 'as' => 'faqCategory.'], function () {
         Route::post('publish', [FaqCategoryController::class, 'faqCategoryStatus'])->name('publish');
+    });
+
+    // Post Categories
+    Route::resource('post-categories', PostCategoryController::class)
+    ->except(['destroy'])
+    ->names([
+        'index'   => 'postCategory.list',
+        'create'   => 'postCategory.create',
+        'edit'   => 'postCategory.edit',
+        'store'   => 'postCategory.store',
+        'update'  => 'postCategory.update',
+        'show' => 'postCategory.show',
+    ]);
+    Route::group(['prefix' => 'post-categories', 'as' => 'postCategory.'], function () {
+        Route::get('post-category-delete/{id}', [PostCategoryController::class, 'destroy'])->name('delete');
+        Route::post('publish', [PostCategoryController::class, 'postCategoryStatus'])->name('publish');
+    });
+
+    // Tags
+    Route::resource('tags', TagController::class)
+    ->except(['destroy'])
+    ->names([
+        'index'   => 'tag.list',
+        'create'   => 'tag.create',
+        'edit'   => 'tag.edit',
+        'store'   => 'tag.store',
+        'update'  => 'tag.update',
+        'show' => 'tag.show',
+    ]);
+    Route::group(['prefix' => 'tags', 'as' => 'tag.'], function () {
+        Route::get('tag-delete/{id}', [TagController::class, 'destroy'])->name('delete');
+    });
+
+    // Posts
+    Route::resource('posts', PostController::class)
+    ->except(['destroy'])
+    ->names([
+        'index'   => 'post.list',
+        'create'   => 'post.create',
+        'edit'   => 'post.edit',
+        'store'   => 'post.store',
+        'update'  => 'post.update',
+        'show' => 'post.show',
+    ]);
+    Route::group(['prefix' => 'posts', 'as' => 'post.'], function () {
+        Route::get('post-delete/{id}', [PostController::class, 'destroy'])->name('delete');
+        Route::post('publish', [PostController::class, 'postStatus'])->name('publish');
     });
 
     // Faq

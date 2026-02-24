@@ -28,6 +28,7 @@
                         {!! defaultInputIcon() !!}
                     <input type="text"
                            name="label"
+                           data-slug-source
                            class="form-input w-full"
                            value="{{ old('label', $field->label) }}">
                     </div>
@@ -40,6 +41,7 @@
                         {!! defaultInputIcon() !!}
                     <input type="text"
                            name="slug"
+                           data-slug-target
                            class="form-input w-full"
                            value="{{ old('slug', $field->slug) }}">
                     </div>

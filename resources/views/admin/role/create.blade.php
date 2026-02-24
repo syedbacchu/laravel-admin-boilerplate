@@ -29,14 +29,14 @@
 
                         <div class="flex">
                             {!! defaultInputIcon() !!}
-                            <input id="name" name="name" type="text" @if(isset($item)) value="{{ $item->name }}" @else value="{{ old('name') }}" @endif class="form-input ltr:rounded-l-none rtl:rounded-r-none" />
+                            <input id="name" name="name" type="text" data-slug-source @if(isset($item)) value="{{ $item->name }}" @else value="{{ old('name') }}" @endif class="form-input ltr:rounded-l-none rtl:rounded-r-none" />
                         </div>
                     </div>
                     <div class="mb-2">
                         <label for="subtitle" class="">{{ __('Slug') }}</label>
                         <div class="flex">
                             {!! defaultInputIcon() !!}
-                            <input id="slug" name="slug" type="text" @if(isset($item)) value="{{ $item->slug }}" @else value="{{ old('slug') }}" @endif class="form-input ltr:rounded-l-none rtl:rounded-r-none" />
+                            <input id="slug" name="slug" type="text" data-slug-target @if(isset($item)) value="{{ $item->slug }}" @else value="{{ old('slug') }}" @endif class="form-input ltr:rounded-l-none rtl:rounded-r-none" />
                         </div>
                     </div>
 
@@ -83,46 +83,4 @@
         </div>
     </div>
 
-<script>
-
-    function sliderForm(existingImage = '') {
-        return {
-            bannerImage: existingImage,
-            bannerPreview: existingImage ? existingImage : '',
-
-            init() {
-                window.addEventListener('bannerSelected', (e) => {
-                    this.bannerImage = e.detail.url;
-                    this.bannerPreview = e.detail.url;
-                });
-            }
-        }
-    }
-
-    document.addEventListener('DOMContentLoaded', function () {
-        const nameInput = document.getElementById('name');
-        const slugInput = document.getElementById('slug');
-
-        nameInput.addEventListener('input', function () {
-            // only auto-fill if slug is empty or creating
-            if (!slugInput.dataset.manual) {
-                slugInput.value = generateSlug(this.value);
-            }
-        });
-
-        slugInput.addEventListener('input', function () {
-            slugInput.dataset.manual = true;
-        });
-
-        function generateSlug(text) {
-            return text
-                .toLowerCase()
-                .trim()
-                .replace(/[^\w\s-]/g, '')   // remove special chars
-                .replace(/[\s_-]+/g, '-')   // spaces to dash
-                .replace(/^-+|-+$/g, '');   // trim dash
-        }
-    });
-
-</script>
 </x-layout.default>

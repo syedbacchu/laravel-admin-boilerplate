@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\AuthController;
+use App\Http\Controllers\Api\Post\BlogController;
 use App\Http\Controllers\Api\User\ProfileController;
 /*
 |--------------------------------------------------------------------------
@@ -18,6 +19,11 @@ use App\Http\Controllers\Api\User\ProfileController;
 Route::group(['prefix' => 'auth', 'as' => 'apiAuth.'], function () {
     Route::get('test-connection', [AuthController::class, 'test'])->name('test');
     Route::post('login', [AuthController::class, 'apiLogin'])->name('login');
+});
+
+Route::group(['prefix' => 'blogs', 'as' => 'apiBlog.'], function () {
+    Route::get('/', [BlogController::class, 'index'])->name('list');
+    Route::get('{identifier}', [BlogController::class, 'show'])->name('details');
 });
 
 Route::group(['middleware' => ['auth:api'],'prefix' => 'user', 'as' => 'apiUser.', ], function () {
