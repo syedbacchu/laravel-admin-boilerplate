@@ -17,6 +17,7 @@ class BlogListResource extends JsonResource
             'thumbnail_img' => $this->thumbnail_img,
             'featured_img' => $this->featured_img,
             'status' => $this->status,
+            'is_comment_allow' => (bool) $this->is_comment_allow,
             'published_at' => optional($this->published_at)->toDateTimeString(),
             'author' => $this->author ? [
                 'id' => $this->author->id,

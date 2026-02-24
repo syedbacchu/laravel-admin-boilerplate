@@ -11,6 +11,7 @@ use App\Http\Controllers\Admin\Settings\CustomFieldController;
 use App\Http\Controllers\Admin\Settings\SettingsController;
 use App\Http\Controllers\Admin\Settings\SettingFieldController;
 use App\Http\Controllers\Admin\Post\PostCategoryController;
+use App\Http\Controllers\Admin\Post\PostCommentController;
 use App\Http\Controllers\Admin\Post\PostController;
 use App\Http\Controllers\Admin\Post\TagController;
 use App\Http\Controllers\Admin\User\UserController;
@@ -191,6 +192,16 @@ Route::group(['middleware' => ['skip.permission','no.permission.sync']], functio
     Route::group(['prefix' => 'posts', 'as' => 'post.'], function () {
         Route::get('post-delete/{id}', [PostController::class, 'destroy'])->name('delete');
         Route::post('publish', [PostController::class, 'postStatus'])->name('publish');
+    });
+
+    // Post Comments
+    Route::group(['prefix' => 'post-comments', 'as' => 'postComment.'], function () {
+        Route::get('/', [PostCommentController::class, 'index'])->name('list');
+        Route::get('reply/{id}', [PostCommentController::class, 'reply'])->name('reply');
+        Route::post('reply/{id}', [PostCommentController::class, 'storeReply'])->name('replyStore');
+        Route::get('approve/{id}', [PostCommentController::class, 'approve'])->name('approve');
+        Route::get('decline/{id}', [PostCommentController::class, 'decline'])->name('decline');
+        Route::get('delete/{id}', [PostCommentController::class, 'destroy'])->name('delete');
     });
 
     // Faq

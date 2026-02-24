@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\AuthController;
+use App\Http\Controllers\Api\Post\BlogCommentController;
 use App\Http\Controllers\Api\Post\BlogController;
 use App\Http\Controllers\Api\User\ProfileController;
 /*
@@ -23,6 +24,8 @@ Route::group(['prefix' => 'auth', 'as' => 'apiAuth.'], function () {
 
 Route::group(['prefix' => 'blogs', 'as' => 'apiBlog.'], function () {
     Route::get('/', [BlogController::class, 'index'])->name('list');
+    Route::get('{identifier}/comments', [BlogCommentController::class, 'index'])->name('comments');
+    Route::post('{identifier}/comments', [BlogCommentController::class, 'store'])->name('commentStore');
     Route::get('{identifier}', [BlogController::class, 'show'])->name('details');
 });
 

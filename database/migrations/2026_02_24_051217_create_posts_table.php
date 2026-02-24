@@ -22,6 +22,7 @@ return new class extends Migration
             $table->string('thumbnail_img')->nullable();
             $table->string('featured_img')->nullable();
             $table->tinyInteger('visibility')->default(1);
+            $table->tinyInteger('is_comment_allow')->default(1);
             $table->tinyInteger('is_featured')->default(0);
             $table->integer('featured_order')->default(0);
             $table->string('status')->default('draft'); // draft, published, scheduled

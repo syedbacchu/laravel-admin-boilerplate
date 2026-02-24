@@ -20,6 +20,7 @@ class Post extends Model
         'thumbnail_img',
         'featured_img',
         'visibility',
+        'is_comment_allow',
         'is_featured',
         'featured_order',
         'status',
@@ -43,6 +44,9 @@ class Post extends Model
         'published_at' => 'datetime',
         'event_date' => 'datetime',
         'event_end_date' => 'datetime',
+        'visibility' => 'boolean',
+        'is_featured' => 'boolean',
+        'is_comment_allow' => 'boolean',
     ];
 
     public function author()
@@ -68,5 +72,10 @@ class Post extends Model
             'post_id',
             'tag_id'
         )->withTimestamps();
+    }
+
+    public function comments()
+    {
+        return $this->hasMany(PostComment::class, 'post_id');
     }
 }

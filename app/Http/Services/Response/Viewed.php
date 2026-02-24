@@ -64,6 +64,10 @@ class Viewed
             'list' => 'admin.post.post.index',
             'create' => 'admin.post.post.create',
         ],
+        'postComment' => [
+            'list' => 'admin.post.comment.index',
+            'reply' => 'admin.post.comment.reply',
+        ],
     ];
 
     /**

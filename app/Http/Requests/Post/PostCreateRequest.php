@@ -25,6 +25,7 @@ class PostCreateRequest extends FormRequest
             'thumbnail_img' => ['nullable', 'string'],
             'featured_img' => ['nullable', 'string'],
             'visibility' => ['nullable', 'boolean'],
+            'is_comment_allow' => ['nullable', 'boolean'],
             'is_featured' => ['nullable', 'boolean'],
             'featured_order' => ['nullable', 'integer'],
             'status' => ['required', Rule::in(['draft', 'published', 'scheduled'])],

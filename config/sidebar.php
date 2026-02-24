@@ -128,6 +128,11 @@ return [
                 'route' => 'post.create',
                 'permission' => 'post.create',
             ],
+            [
+                'label' => 'Comments',
+                'route' => 'postComment.list',
+                'permission' => 'postComment.list',
+            ],
         ],
     ],
     [

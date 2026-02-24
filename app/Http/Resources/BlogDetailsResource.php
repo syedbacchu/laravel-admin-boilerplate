@@ -19,6 +19,7 @@ class BlogDetailsResource extends JsonResource
             'featured_img' => $this->featured_img,
             'status' => $this->status,
             'visibility' => (int) $this->visibility,
+            'is_comment_allow' => (bool) $this->is_comment_allow,
             'is_featured' => (int) $this->is_featured,
             'featured_order' => (int) $this->featured_order,
             'published_at' => optional($this->published_at)->toDateTimeString(),

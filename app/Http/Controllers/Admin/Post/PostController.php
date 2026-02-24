@@ -41,11 +41,18 @@ class PostController extends Controller
                         $item->status === 'published'
                     ),
 
-                    'actions' => fn ($item) =>
-                    action_buttons([
-                        edit_column(route('post.edit', $item->id)),
-                        delete_column(route('post.delete', $item->id)),
-                    ]),
+                    'actions' => function ($item) {
+                        $buttons = [
+                            edit_column(route('post.edit', $item->id)),
+                            delete_column(route('post.delete', $item->id)),
+                        ];
+
+                        if (canAccess('postComment.list')) {
+                            $buttons[] = '<a href="'.route('postComment.list', ['post_id' => $item->id]).'" class="inline-flex items-center px-3 py-1.5 text-sm font-semibold text-indigo-600 hover:text-white hover:bg-indigo-600 border border-indigo-600 rounded-lg transition duration-200">Comments</a>';
+                        }
+
+                        return action_buttons($buttons);
+                    },
                 ],
                 rawColumns: ['status_toggle', 'actions']
             );

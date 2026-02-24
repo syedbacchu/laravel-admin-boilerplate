@@ -144,12 +144,19 @@
                             />
                         </div>
 
-                        <div class="grid grid-cols-2 gap-3">
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
                             <div>
                                 <label class="text-xs uppercase font-semibold text-gray-500">{{ __('Visibility') }}</label>
                                 <select name="visibility" class="form-select mt-1 w-full">
                                     <option value="1" @selected(($item->visibility ?? old('visibility', 1)) == 1)>Public</option>
                                     <option value="0" @selected(($item->visibility ?? old('visibility')) == 0)>Private</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="text-xs uppercase font-semibold text-gray-500">{{ __('Allow Comments') }}</label>
+                                <select name="is_comment_allow" class="form-select mt-1 w-full">
+                                    <option value="1" @selected(($item->is_comment_allow ?? old('is_comment_allow', 1)) == 1)>Yes</option>
+                                    <option value="0" @selected(($item->is_comment_allow ?? old('is_comment_allow')) == 0)>No</option>
                                 </select>
                             </div>
                             <div>

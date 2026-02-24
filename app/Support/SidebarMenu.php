@@ -15,7 +15,8 @@ class SidebarMenu
         }
 
         $roleId = $user->role_id ?? 'no_role';
-        $cacheKey = 'sidebar_menu_role_' . $roleId;
+        $sidebarConfigVersion = md5(json_encode(config('sidebar')));
+        $cacheKey = 'sidebar_menu_role_' . $roleId . '_' . $sidebarConfigVersion;
 
         return cache()->remember($cacheKey, 3600, function () {
             $menus = config('sidebar');

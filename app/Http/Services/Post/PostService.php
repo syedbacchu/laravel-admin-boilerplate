@@ -33,6 +33,7 @@ class PostService extends BaseService implements PostServiceInterface
             'thumbnail_img' => $request->thumbnail_img,
             'featured_img' => $request->featured_img,
             'visibility' => $request->visibility ?? 1,
+            'is_comment_allow' => $request->is_comment_allow ?? 1,
             'is_featured' => $request->is_featured ?? 0,
             'featured_order' => $request->featured_order ?? 0,
             'status' => $request->status ?? 'draft',

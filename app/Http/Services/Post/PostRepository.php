@@ -50,6 +50,8 @@ class PostRepository extends BaseRepository implements PostRepositoryInterface
                 'featured_img',
                 'post_type',
                 'status',
+                'visibility',
+                'is_comment_allow',
                 'published_at',
                 'created_at',
             ],
