@@ -136,6 +136,34 @@ return [
         ],
     ],
     [
+        'key' => 'service',
+        'label' => 'Services',
+        'icon' => 'faq',
+        'permission' => null,
+        'children' => [
+            [
+                'label' => 'Service Categories',
+                'route' => 'serviceCategory.list',
+                'permission' => 'serviceCategory.list',
+            ],
+            [
+                'label' => 'Create Category',
+                'route' => 'serviceCategory.create',
+                'permission' => 'serviceCategory.create',
+            ],
+            [
+                'label' => 'Services',
+                'route' => 'service.list',
+                'permission' => 'service.list',
+            ],
+            [
+                'label' => 'Create Service',
+                'route' => 'service.create',
+                'permission' => 'service.create',
+            ],
+        ],
+    ],
+    [
         'key' => 'file_manager',
         'label' => 'File Manager',
         'route' => 'fileManager.list',

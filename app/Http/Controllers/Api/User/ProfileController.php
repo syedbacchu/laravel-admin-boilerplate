@@ -19,6 +19,14 @@ class ProfileController extends Controller
         $this->service = $service;
     }
 
+    public function me(Request $request):JsonResponse
+    {
+        $data['user'] = ProfileResource::make($request->user());
+        $response = sendResponse(true,__('User me'),$data);
+
+        return ResponseService::send($response);
+    }
+
     public function profile(Request $request):JsonResponse
     {
         $data = ProfileResource::make($request->user());

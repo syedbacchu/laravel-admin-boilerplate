@@ -68,6 +68,14 @@ class Viewed
             'list' => 'admin.post.comment.index',
             'reply' => 'admin.post.comment.reply',
         ],
+        'serviceCategory' => [
+            'list' => 'admin.service_category.index',
+            'create' => 'admin.service_category.create',
+        ],
+        'service' => [
+            'list' => 'admin.service.index',
+            'create' => 'admin.service.create',
+        ],
     ];
 
     /**

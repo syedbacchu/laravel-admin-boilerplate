@@ -5,6 +5,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Api\Post\BlogCommentController;
 use App\Http\Controllers\Api\Post\BlogController;
+use App\Http\Controllers\Api\Service\ServiceCategoryController;
+use App\Http\Controllers\Api\Service\ServiceController;
 use App\Http\Controllers\Api\User\ProfileController;
 /*
 |--------------------------------------------------------------------------
@@ -29,6 +31,17 @@ Route::group(['prefix' => 'blogs', 'as' => 'apiBlog.'], function () {
     Route::get('{identifier}', [BlogController::class, 'show'])->name('details');
 });
 
+Route::group(['prefix' => 'services', 'as' => 'apiService.'], function () {
+    Route::get('/', [ServiceController::class, 'index'])->name('list');
+    Route::get('{identifier}', [ServiceController::class, 'show'])->name('details');
+});
+
+Route::group(['prefix' => 'service-categories', 'as' => 'apiServiceCategory.'], function () {
+    Route::get('/', [ServiceCategoryController::class, 'index'])->name('list');
+    Route::get('{slug}', [ServiceCategoryController::class, 'show'])->name('details');
+});
+
 Route::group(['middleware' => ['auth:api'],'prefix' => 'user', 'as' => 'apiUser.', ], function () {
+    Route::get('me', [ProfileController::class, 'me'])->name('me');
     Route::get('profile', [ProfileController::class, 'profile'])->name('profile');
 });

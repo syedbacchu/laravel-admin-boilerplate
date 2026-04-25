@@ -8,7 +8,7 @@
                 <!-- Image Preview (16:9 ratio) -->
                 <div class="w-full aspect-video bg-gray-100 overflow-hidden">
                     <img
-                        src="{{ asset($item->full_url) }}"
+                        src="{{ $item->full_url }}"
                         alt="{{ $item->alt_text }}"
                         class="w-full h-full object-cover group-hover:scale-105 transition duration-500"
                     >
@@ -40,13 +40,13 @@
                     class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100
                            flex flex-col items-center justify-center gap-3 transition-all duration-300">
 
-                    <a href="{{ asset($item->path) }}" target="_blank"
+                    <a href="{{ $item->full_url }}" target="_blank"
                        class="bg-white text-gray-900 text-xs font-semibold px-4 py-1.5 rounded-lg shadow">
                         {{__('View')}}
                     </a>
 
                     <button
-                        onclick="selectFile('{{ $item->id }}', '{{ asset($item->full_url) }}')"
+                        onclick="selectFile('{{ $item->id }}', '{{ $item->full_url }}')"
                         class="bg-blue-600 text-white text-xs font-semibold px-4 py-1.5 rounded-lg shadow hover:bg-blue-700">
                         {{__('Select')}}
                     </button>

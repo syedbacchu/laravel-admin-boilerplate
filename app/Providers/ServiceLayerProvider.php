@@ -42,6 +42,14 @@ use App\Http\Services\Faq\FaqRepository;
 use App\Http\Services\Faq\FaqRepositoryInterface;
 use App\Http\Services\Faq\FaqService;
 use App\Http\Services\Faq\FaqServiceInterface;
+use App\Http\Services\ServiceCategory\ServiceCategoryRepository;
+use App\Http\Services\ServiceCategory\ServiceCategoryRepositoryInterface;
+use App\Http\Services\ServiceCategory\ServiceCategoryService;
+use App\Http\Services\ServiceCategory\ServiceCategoryServiceInterface;
+use App\Http\Services\Service\ServiceRepository;
+use App\Http\Services\Service\ServiceRepositoryInterface;
+use App\Http\Services\Service\ServiceService;
+use App\Http\Services\Service\ServiceServiceInterface;
 use App\Http\Services\User\UserRepository;
 use App\Http\Services\User\UserRepositoryInterface;
 use App\Http\Services\User\UserService;
@@ -88,6 +96,12 @@ class ServiceLayerProvider extends ServiceProvider
 
         $this->app->bind(PostCommentRepositoryInterface::class, PostCommentRepository::class);
         $this->app->bind(PostCommentServiceInterface::class, PostCommentService::class);
+
+        $this->app->bind(ServiceCategoryRepositoryInterface::class, ServiceCategoryRepository::class);
+        $this->app->bind(ServiceCategoryServiceInterface::class, ServiceCategoryService::class);
+
+        $this->app->bind(ServiceRepositoryInterface::class, ServiceRepository::class);
+        $this->app->bind(ServiceServiceInterface::class, ServiceService::class);
     }
 
     /**

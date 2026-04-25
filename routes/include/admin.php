@@ -14,6 +14,8 @@ use App\Http\Controllers\Admin\Post\PostCategoryController;
 use App\Http\Controllers\Admin\Post\PostCommentController;
 use App\Http\Controllers\Admin\Post\PostController;
 use App\Http\Controllers\Admin\Post\TagController;
+use App\Http\Controllers\Admin\Service\ServiceCategoryController;
+use App\Http\Controllers\Admin\Service\ServiceController;
 use App\Http\Controllers\Admin\User\UserController;
 use App\Http\Controllers\Auth\AuthController;
 use Illuminate\Support\Facades\Route;
@@ -216,4 +218,36 @@ Route::group(['middleware' => ['skip.permission','no.permission.sync']], functio
     ]);
     Route::group(['prefix' => 'faq', 'as' => 'faq.'], function () {
         Route::post('publish', [FaqController::class, 'faqStatus'])->name('publish');
+    });
+
+    // Service Categories
+    Route::resource('service-categories', ServiceCategoryController::class)
+    ->except(['destroy'])
+    ->names([
+        'index'   => 'serviceCategory.list',
+        'create'   => 'serviceCategory.create',
+        'edit'   => 'serviceCategory.edit',
+        'store'   => 'serviceCategory.store',
+        'update'  => 'serviceCategory.update',
+        'show' => 'serviceCategory.show',
+    ]);
+    Route::group(['prefix' => 'service-categories', 'as' => 'serviceCategory.'], function () {
+        Route::get('service-category-delete/{id}', [ServiceCategoryController::class, 'destroy'])->name('delete');
+        Route::post('publish', [ServiceCategoryController::class, 'serviceCategoryStatus'])->name('publish');
+    });
+
+    // Services
+    Route::resource('services', ServiceController::class)
+    ->except(['destroy'])
+    ->names([
+        'index'   => 'service.list',
+        'create'   => 'service.create',
+        'edit'   => 'service.edit',
+        'store'   => 'service.store',
+        'update'  => 'service.update',
+        'show' => 'service.show',
+    ]);
+    Route::group(['prefix' => 'services', 'as' => 'service.'], function () {
+        Route::get('service-delete/{id}', [ServiceController::class, 'destroy'])->name('delete');
+        Route::post('publish', [ServiceController::class, 'serviceStatus'])->name('publish');
     });
