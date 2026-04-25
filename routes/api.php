@@ -38,7 +38,7 @@ Route::group(['prefix' => 'services', 'as' => 'apiService.'], function () {
 
 Route::group(['prefix' => 'service-categories', 'as' => 'apiServiceCategory.'], function () {
     Route::get('/', [ServiceCategoryController::class, 'index'])->name('list');
-    Route::get('{slug}', [ServiceCategoryController::class, 'show'])->name('details');
+    Route::get('{identifier}', [ServiceCategoryController::class, 'show'])->name('details');
 });
 
 Route::group(['middleware' => ['auth:api'],'prefix' => 'user', 'as' => 'apiUser.', ], function () {

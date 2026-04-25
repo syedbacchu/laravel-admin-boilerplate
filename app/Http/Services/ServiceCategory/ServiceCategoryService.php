@@ -5,6 +5,7 @@ namespace App\Http\Services\ServiceCategory;
 use App\Http\Requests\Service\ServiceCategoryCreateRequest;
 use App\Http\Services\BaseService;
 use App\Models\ServiceCategory;
+use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
 class ServiceCategoryService extends BaseService implements ServiceCategoryServiceInterface
@@ -96,6 +97,24 @@ class ServiceCategoryService extends BaseService implements ServiceCategoryServi
     public function serviceCategoryCreateData($request): array
     {
         return $this->sendResponse(true, '', []);
+    }
+
+    public function getPublicServiceCategoryList(Request $request): array
+    {
+        $request->merge(['status' => $request->status ?? 1]);
+        $data = $this->serviceCategoryRepository->serviceCategoryList($request);
+        return $this->sendResponse(true, __('Data get successfully.'), $data);
+    }
+
+    public function getPublicServiceCategoryDetails(string $identifier): array
+    {
+        $item = $this->serviceCategoryRepository->findPublicServiceCategoryByIdentifier($identifier);
+
+        if (!$item) {
+            return $this->sendResponse(false, __('Service category not found'), [], 404, __('Service category not found'));
+        }
+
+        return $this->sendResponse(true, __('Service category details'), $item->load(['services:id,title,slug,thumbnail,category_id']));
     }
 
     protected function generateUniqueSlug(string $value, ?int $ignoreId = null): string

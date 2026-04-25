@@ -57,4 +57,18 @@ class ServiceCategoryRepository extends BaseRepository implements ServiceCategor
             ],
         );
     }
+
+    public function findPublicServiceCategoryByIdentifier(string $identifier): ?ServiceCategory
+    {
+        return ServiceCategory::query()
+            ->where('status', 1)
+            ->where(function ($query) use ($identifier) {
+                $query->where('slug', $identifier);
+
+                if (is_numeric($identifier)) {
+                    $query->orWhere('id', (int) $identifier);
+                }
+            })
+            ->first();
+    }
 }

@@ -14,4 +14,6 @@ interface ServiceCategoryServiceInterface extends BaseServiceInterface
     public function getDataTableData(Request $request): array;
     public function serviceCategoryEditData($id): array;
     public function serviceCategoryCreateData(Request $request): array;
+    public function getPublicServiceCategoryList(Request $request): array;
+    public function getPublicServiceCategoryDetails(string $identifier): array;
 }
