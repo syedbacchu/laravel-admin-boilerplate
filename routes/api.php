@@ -9,6 +9,8 @@ use App\Http\Controllers\Api\Service\ServiceCategoryController;
 use App\Http\Controllers\Api\Service\ServiceController;
 use App\Http\Controllers\Api\Feature\FeatureCategoryController;
 use App\Http\Controllers\Api\Feature\FeatureController;
+use App\Http\Controllers\Api\Project\ProjectCategoryController;
+use App\Http\Controllers\Api\Project\ProjectController;
 use App\Http\Controllers\Api\User\ProfileController;
 /*
 |--------------------------------------------------------------------------
@@ -51,6 +53,16 @@ Route::group(['prefix' => 'features', 'as' => 'apiFeature.'], function () {
 Route::group(['prefix' => 'feature-categories', 'as' => 'apiFeatureCategory.'], function () {
     Route::get('/', [FeatureCategoryController::class, 'index'])->name('list');
     Route::get('{identifier}', [FeatureCategoryController::class, 'show'])->name('details');
+});
+
+Route::group(['prefix' => 'projects', 'as' => 'apiProject.'], function () {
+    Route::get('/', [ProjectController::class, 'index'])->name('list');
+    Route::get('{identifier}', [ProjectController::class, 'show'])->name('details');
+});
+
+Route::group(['prefix' => 'project-categories', 'as' => 'apiProjectCategory.'], function () {
+    Route::get('/', [ProjectCategoryController::class, 'index'])->name('list');
+    Route::get('{identifier}', [ProjectCategoryController::class, 'show'])->name('details');
 });
 
 Route::group(['middleware' => ['auth:api'],'prefix' => 'user', 'as' => 'apiUser.', ], function () {

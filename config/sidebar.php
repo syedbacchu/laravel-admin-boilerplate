@@ -192,6 +192,34 @@ return [
         ],
     ],
     [
+        'key' => 'project',
+        'label' => 'Projects',
+        'icon' => 'faq',
+        'permission' => null,
+        'children' => [
+            [
+                'label' => 'Project Categories',
+                'route' => 'projectCategory.list',
+                'permission' => 'projectCategory.list',
+            ],
+            [
+                'label' => 'Create Category',
+                'route' => 'projectCategory.create',
+                'permission' => 'projectCategory.create',
+            ],
+            [
+                'label' => 'Projects',
+                'route' => 'project.list',
+                'permission' => 'project.list',
+            ],
+            [
+                'label' => 'Create Project',
+                'route' => 'project.create',
+                'permission' => 'project.create',
+            ],
+        ],
+    ],
+    [
         'key' => 'file_manager',
         'label' => 'File Manager',
         'route' => 'fileManager.list',

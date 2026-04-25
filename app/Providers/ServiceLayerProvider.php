@@ -58,6 +58,14 @@ use App\Http\Services\Feature\FeatureRepository;
 use App\Http\Services\Feature\FeatureRepositoryInterface;
 use App\Http\Services\Feature\FeatureService;
 use App\Http\Services\Feature\FeatureServiceInterface;
+use App\Http\Services\ProjectCategory\ProjectCategoryRepository;
+use App\Http\Services\ProjectCategory\ProjectCategoryRepositoryInterface;
+use App\Http\Services\ProjectCategory\ProjectCategoryService;
+use App\Http\Services\ProjectCategory\ProjectCategoryServiceInterface;
+use App\Http\Services\Project\ProjectRepository;
+use App\Http\Services\Project\ProjectRepositoryInterface;
+use App\Http\Services\Project\ProjectService;
+use App\Http\Services\Project\ProjectServiceInterface;
 use App\Http\Services\User\UserRepository;
 use App\Http\Services\User\UserRepositoryInterface;
 use App\Http\Services\User\UserService;
@@ -116,6 +124,12 @@ class ServiceLayerProvider extends ServiceProvider
 
         $this->app->bind(FeatureRepositoryInterface::class, FeatureRepository::class);
         $this->app->bind(FeatureServiceInterface::class, FeatureService::class);
+
+        $this->app->bind(ProjectCategoryRepositoryInterface::class, ProjectCategoryRepository::class);
+        $this->app->bind(ProjectCategoryServiceInterface::class, ProjectCategoryService::class);
+
+        $this->app->bind(ProjectRepositoryInterface::class, ProjectRepository::class);
+        $this->app->bind(ProjectServiceInterface::class, ProjectService::class);
     }
 
     /**

@@ -18,6 +18,8 @@ use App\Http\Controllers\Admin\Service\ServiceCategoryController;
 use App\Http\Controllers\Admin\Service\ServiceController;
 use App\Http\Controllers\Admin\Feature\FeatureCategoryController;
 use App\Http\Controllers\Admin\Feature\FeatureController;
+use App\Http\Controllers\Admin\Project\ProjectCategoryController;
+use App\Http\Controllers\Admin\Project\ProjectController;
 use App\Http\Controllers\Admin\User\UserController;
 use App\Http\Controllers\Auth\AuthController;
 use Illuminate\Support\Facades\Route;
@@ -284,4 +286,36 @@ Route::group(['middleware' => ['skip.permission','no.permission.sync']], functio
     Route::group(['prefix' => 'features', 'as' => 'feature.'], function () {
         Route::get('feature-delete/{id}', [FeatureController::class, 'destroy'])->name('delete');
         Route::post('publish', [FeatureController::class, 'featureStatus'])->name('publish');
+    });
+
+    // Project Categories
+    Route::resource('project-categories', \App\Http\Controllers\Admin\Project\ProjectCategoryController::class)
+    ->except(['destroy'])
+    ->names([
+        'index'   => 'projectCategory.list',
+        'create'   => 'projectCategory.create',
+        'edit'   => 'projectCategory.edit',
+        'store'   => 'projectCategory.store',
+        'update'  => 'projectCategory.update',
+        'show' => 'projectCategory.show',
+    ]);
+    Route::group(['prefix' => 'project-categories', 'as' => 'projectCategory.'], function () {
+        Route::get('project-category-delete/{id}', [\App\Http\Controllers\Admin\Project\ProjectCategoryController::class, 'destroy'])->name('delete');
+        Route::post('publish', [\App\Http\Controllers\Admin\Project\ProjectCategoryController::class, 'projectCategoryStatus'])->name('publish');
+    });
+
+    // Projects
+    Route::resource('projects', \App\Http\Controllers\Admin\Project\ProjectController::class)
+    ->except(['destroy'])
+    ->names([
+        'index'   => 'project.list',
+        'create'   => 'project.create',
+        'edit'   => 'project.edit',
+        'store'   => 'project.store',
+        'update'  => 'project.update',
+        'show' => 'project.show',
+    ]);
+    Route::group(['prefix' => 'projects', 'as' => 'project.'], function () {
+        Route::get('project-delete/{id}', [\App\Http\Controllers\Admin\Project\ProjectController::class, 'destroy'])->name('delete');
+        Route::post('publish', [\App\Http\Controllers\Admin\Project\ProjectController::class, 'projectStatus'])->name('publish');
     });
