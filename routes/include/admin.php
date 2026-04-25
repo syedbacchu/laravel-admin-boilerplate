@@ -16,6 +16,8 @@ use App\Http\Controllers\Admin\Post\PostController;
 use App\Http\Controllers\Admin\Post\TagController;
 use App\Http\Controllers\Admin\Service\ServiceCategoryController;
 use App\Http\Controllers\Admin\Service\ServiceController;
+use App\Http\Controllers\Admin\Feature\FeatureCategoryController;
+use App\Http\Controllers\Admin\Feature\FeatureController;
 use App\Http\Controllers\Admin\User\UserController;
 use App\Http\Controllers\Auth\AuthController;
 use Illuminate\Support\Facades\Route;
@@ -250,4 +252,36 @@ Route::group(['middleware' => ['skip.permission','no.permission.sync']], functio
     Route::group(['prefix' => 'services', 'as' => 'service.'], function () {
         Route::get('service-delete/{id}', [ServiceController::class, 'destroy'])->name('delete');
         Route::post('publish', [ServiceController::class, 'serviceStatus'])->name('publish');
+    });
+
+    // Feature Categories
+    Route::resource('feature-categories', FeatureCategoryController::class)
+    ->except(['destroy'])
+    ->names([
+        'index'   => 'featureCategory.list',
+        'create'   => 'featureCategory.create',
+        'edit'   => 'featureCategory.edit',
+        'store'   => 'featureCategory.store',
+        'update'  => 'featureCategory.update',
+        'show' => 'featureCategory.show',
+    ]);
+    Route::group(['prefix' => 'feature-categories', 'as' => 'featureCategory.'], function () {
+        Route::get('feature-category-delete/{id}', [FeatureCategoryController::class, 'destroy'])->name('delete');
+        Route::post('publish', [FeatureCategoryController::class, 'featureCategoryStatus'])->name('publish');
+    });
+
+    // Features
+    Route::resource('features', FeatureController::class)
+    ->except(['destroy'])
+    ->names([
+        'index'   => 'feature.list',
+        'create'   => 'feature.create',
+        'edit'   => 'feature.edit',
+        'store'   => 'feature.store',
+        'update'  => 'feature.update',
+        'show' => 'feature.show',
+    ]);
+    Route::group(['prefix' => 'features', 'as' => 'feature.'], function () {
+        Route::get('feature-delete/{id}', [FeatureController::class, 'destroy'])->name('delete');
+        Route::post('publish', [FeatureController::class, 'featureStatus'])->name('publish');
     });

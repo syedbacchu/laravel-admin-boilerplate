@@ -164,6 +164,34 @@ return [
         ],
     ],
     [
+        'key' => 'feature',
+        'label' => 'Features',
+        'icon' => 'faq',
+        'permission' => null,
+        'children' => [
+            [
+                'label' => 'Feature Categories',
+                'route' => 'featureCategory.list',
+                'permission' => 'featureCategory.list',
+            ],
+            [
+                'label' => 'Create Category',
+                'route' => 'featureCategory.create',
+                'permission' => 'featureCategory.create',
+            ],
+            [
+                'label' => 'Features',
+                'route' => 'feature.list',
+                'permission' => 'feature.list',
+            ],
+            [
+                'label' => 'Create Feature',
+                'route' => 'feature.create',
+                'permission' => 'feature.create',
+            ],
+        ],
+    ],
+    [
         'key' => 'file_manager',
         'label' => 'File Manager',
         'route' => 'fileManager.list',

@@ -76,6 +76,14 @@ class Viewed
             'list' => 'admin.service.index',
             'create' => 'admin.service.create',
         ],
+        'featureCategory' => [
+            'list' => 'admin.feature_category.index',
+            'create' => 'admin.feature_category.create',
+        ],
+        'feature' => [
+            'list' => 'admin.feature.index',
+            'create' => 'admin.feature.create',
+        ],
     ];
 
     /**

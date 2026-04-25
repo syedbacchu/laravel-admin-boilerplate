@@ -50,6 +50,14 @@ use App\Http\Services\Service\ServiceRepository;
 use App\Http\Services\Service\ServiceRepositoryInterface;
 use App\Http\Services\Service\ServiceService;
 use App\Http\Services\Service\ServiceServiceInterface;
+use App\Http\Services\FeatureCategory\FeatureCategoryRepository;
+use App\Http\Services\FeatureCategory\FeatureCategoryRepositoryInterface;
+use App\Http\Services\FeatureCategory\FeatureCategoryService;
+use App\Http\Services\FeatureCategory\FeatureCategoryServiceInterface;
+use App\Http\Services\Feature\FeatureRepository;
+use App\Http\Services\Feature\FeatureRepositoryInterface;
+use App\Http\Services\Feature\FeatureService;
+use App\Http\Services\Feature\FeatureServiceInterface;
 use App\Http\Services\User\UserRepository;
 use App\Http\Services\User\UserRepositoryInterface;
 use App\Http\Services\User\UserService;
@@ -102,6 +110,12 @@ class ServiceLayerProvider extends ServiceProvider
 
         $this->app->bind(ServiceRepositoryInterface::class, ServiceRepository::class);
         $this->app->bind(ServiceServiceInterface::class, ServiceService::class);
+
+        $this->app->bind(FeatureCategoryRepositoryInterface::class, FeatureCategoryRepository::class);
+        $this->app->bind(FeatureCategoryServiceInterface::class, FeatureCategoryService::class);
+
+        $this->app->bind(FeatureRepositoryInterface::class, FeatureRepository::class);
+        $this->app->bind(FeatureServiceInterface::class, FeatureService::class);
     }
 
     /**
