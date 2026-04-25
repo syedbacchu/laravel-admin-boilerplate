@@ -73,6 +73,12 @@
                             <textarea name="description" rows="6" class="form-textarea mt-1 w-full">{{ $item->description ?? old('description') }}</textarea>
                         </div>
                     </div>
+                    {{-- Custom Fields --}}
+                    @if(isset($item))
+                        @customFields($item)
+                    @else
+                        @customFields(\App\Models\Service::class)
+                    @endif
                 </div>
             </div>
 
