@@ -70,6 +70,12 @@ use App\Http\Services\User\UserRepository;
 use App\Http\Services\User\UserRepositoryInterface;
 use App\Http\Services\User\UserService;
 use App\Http\Services\User\UserServiceInterface;
+
+use App\Http\Services\Testimonial\TestimonialRepository;
+use App\Http\Services\Testimonial\TestimonialRepositoryInterface;
+use App\Http\Services\Testimonial\TestimonialService;
+use App\Http\Services\Testimonial\TestimonialServiceInterface;
+
 use Illuminate\Support\ServiceProvider;
 
 class ServiceLayerProvider extends ServiceProvider
@@ -130,6 +136,9 @@ class ServiceLayerProvider extends ServiceProvider
 
         $this->app->bind(ProjectRepositoryInterface::class, ProjectRepository::class);
         $this->app->bind(ProjectServiceInterface::class, ProjectService::class);
+
+        $this->app->bind(TestimonialRepositoryInterface::class, TestimonialRepository::class);
+        $this->app->bind(TestimonialServiceInterface::class, TestimonialService::class);
     }
 
     /**

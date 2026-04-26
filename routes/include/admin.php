@@ -20,6 +20,7 @@ use App\Http\Controllers\Admin\Feature\FeatureCategoryController;
 use App\Http\Controllers\Admin\Feature\FeatureController;
 use App\Http\Controllers\Admin\Project\ProjectCategoryController;
 use App\Http\Controllers\Admin\Project\ProjectController;
+use App\Http\Controllers\Admin\Testimonial\TestimonialController;
 use App\Http\Controllers\Admin\User\UserController;
 use App\Http\Controllers\Auth\AuthController;
 use Illuminate\Support\Facades\Route;
@@ -318,4 +319,21 @@ Route::group(['middleware' => ['skip.permission','no.permission.sync']], functio
     Route::group(['prefix' => 'projects', 'as' => 'project.'], function () {
         Route::get('project-delete/{id}', [\App\Http\Controllers\Admin\Project\ProjectController::class, 'destroy'])->name('delete');
         Route::post('publish', [\App\Http\Controllers\Admin\Project\ProjectController::class, 'projectStatus'])->name('publish');
+    });
+
+
+     // Testimonial
+    Route::resource('testimonials', TestimonialController::class)
+    ->except(['destroy'])
+    ->names([
+        'index'   => 'testimonial.list',
+        'create'   => 'testimonial.create',
+        'edit'   => 'testimonial.edit',
+        'store'   => 'testimonial.store',
+        'update'  => 'testimonial.update',
+        'show' => 'testimonial.show',
+    ]);
+    Route::group(['prefix' => 'testimonials', 'as' => 'testimonial.'], function () {
+        Route::get('testimonial-delete/{id}', [TestimonialController::class, 'destroy'])->name('delete');
+        Route::post('publish', [TestimonialController::class, 'testimonialStatus'])->name('publish');
     });

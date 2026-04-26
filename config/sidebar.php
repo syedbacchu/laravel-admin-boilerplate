@@ -164,6 +164,25 @@ return [
         ],
     ],
     [
+        'key' => 'testimonial',
+        'label' => 'Testimonials',
+        'icon' => 'faq',
+        'permission' => null,
+        'children' => [
+            
+            [
+                'label' => 'Create Testimonials',
+                'route' => 'testimonial.create',
+                'permission' => 'testimonial.create',
+            ],
+            [
+                'label' => 'Testimonials List',
+                'route' => 'testimonial.list',
+                'permission' => 'testimonial.list',
+            ],
+        ],
+    ],
+    [
         'key' => 'feature',
         'label' => 'Features',
         'icon' => 'faq',
