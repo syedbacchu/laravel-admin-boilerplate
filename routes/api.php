@@ -30,6 +30,7 @@ Route::group(['prefix' => 'auth', 'as' => 'apiAuth.'], function () {
 
 Route::group(['prefix' => 'blogs', 'as' => 'apiBlog.'], function () {
     Route::get('/', [BlogController::class, 'index'])->name('list');
+    Route::get('summary', [BlogController::class, 'summary'])->name('summary');
     Route::get('{identifier}/comments', [BlogCommentController::class, 'index'])->name('comments');
     Route::post('{identifier}/comments', [BlogCommentController::class, 'store'])->name('commentStore');
     Route::get('{identifier}', [BlogController::class, 'show'])->name('details');
