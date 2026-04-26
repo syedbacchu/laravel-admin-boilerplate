@@ -11,6 +11,7 @@ use App\Http\Controllers\Api\Feature\FeatureCategoryController;
 use App\Http\Controllers\Api\Feature\FeatureController;
 use App\Http\Controllers\Api\Project\ProjectCategoryController;
 use App\Http\Controllers\Api\Project\ProjectController;
+use App\Http\Controllers\Api\Testimonials\TestimonialsController;
 use App\Http\Controllers\Api\User\ProfileController;
 /*
 |--------------------------------------------------------------------------
@@ -68,4 +69,9 @@ Route::group(['prefix' => 'project-categories', 'as' => 'apiProjectCategory.'], 
 Route::group(['middleware' => ['auth:api'],'prefix' => 'user', 'as' => 'apiUser.', ], function () {
     Route::get('me', [ProfileController::class, 'me'])->name('me');
     Route::get('profile', [ProfileController::class, 'profile'])->name('profile');
+});
+
+Route::group(['prefix' => 'testimonials', 'as' => 'apiTestimonial.'], function () {
+    Route::get('/', [TestimonialsController::class, 'index'])->name('list');
+    Route::get('{identifier}', [TestimonialsController::class, 'show'])->name('details');
 });
