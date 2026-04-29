@@ -14,15 +14,14 @@ return new class extends Migration
         Schema::create('sliders', function (Blueprint $table) {
             $table->id();
             $table->string('photo')->nullable();
-            $table->string('position')->nullable();
-            $table->text('title')->nullable();
-            $table->text('subtitle')->nullable();
+            $table->string('title')->nullable();
+            $table->string('subtitle')->nullable();
             $table->string('tagline')->nullable();
-            $table->tinyInteger('published')->default(1);
+            $table->tinyInteger('status')->default(1);
             $table->string('link')->nullable();
             $table->string('mobile_banner')->nullable();
             $table->tinyInteger('type')->default(1);
-            $table->tinyInteger('serial')->default(0);
+            $table->integer('serial')->nullable();
             $table->string('video_link')->nullable();
             $table->string('page')->nullable();
             $table->tinyInteger('site_type')->default(1);

@@ -25,7 +25,7 @@ class AppSliderController extends Controller
 
     public function index(Request $request): View|JsonResponse
     {
-        $data['pageTitle'] = __('Slider');
+        $data['pageTitle'] = __('App Slider');
         if ($request->ajax()) {
             return DataListManager::dataTableHandle(
                 request: $request,
@@ -44,11 +44,11 @@ class AppSliderController extends Controller
                     'created_at' => fn ($item) =>
                         $item->created_at?->diffForHumans(),
 
-                    'published' => fn ($item) =>
+                    'status' => fn ($item) =>
                         toggle_column(
                             route('appSlider.publish'),
                             $item->id,
-                            $item->published == 1
+                            $item->status == 1
                         ),
 
                     'actions' => fn ($item) =>
@@ -57,7 +57,7 @@ class AppSliderController extends Controller
                             delete_column(route('appSlider.delete', $item->id)),
                         ]),
                 ],
-                rawColumns: ['photo', 'actions','published']
+                rawColumns: ['photo', 'actions','status']
             );
         }
 
@@ -66,6 +66,48 @@ class AppSliderController extends Controller
         ], view: viewss('slider','list'));
     }
 
+    public function sliderList(Request $request): View|JsonResponse
+    {
+        $data['pageTitle'] = __('Web Slider');
+        if ($request->ajax()) {
+            return DataListManager::dataTableHandle(
+                request: $request,
+                dataProvider: function ($request) {
+                    return $this->service
+                        ->getDataTableData($request)['data']['data'];
+                },
+                columns: [
+                    'photo' => function ($item) {
+                        return '
+                        <div class="flex items-center gap-2">
+                          <img class="w-16 h-16 rounded-full" alt="banner" src="'.$item->photo.'">
+                        </div>';
+                    },
+
+                    'created_at' => fn ($item) =>
+                    $item->created_at?->diffForHumans(),
+
+                    'status' => fn ($item) =>
+                    toggle_column(
+                        route('appSlider.publish'),
+                        $item->id,
+                        $item->status == 1
+                    ),
+
+                    'actions' => fn ($item) =>
+                    action_buttons([
+                        edit_column(route('slider.edit', $item->id)),
+                        delete_column(route('appSlider.delete', $item->id)),
+                    ]),
+                ],
+                rawColumns: ['photo', 'actions','status']
+            );
+        }
+
+        return ResponseService::send([
+            'data' => $data,
+        ], view: viewss('slider','list'));
+    }
 
     public function create()
     {

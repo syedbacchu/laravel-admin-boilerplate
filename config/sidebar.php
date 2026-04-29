@@ -28,20 +28,20 @@ return [
         ],
     ],
     [
-        'key' => 'app',
-        'label' => 'App Setup',
+        'key' => 'slider',
+        'label' => 'Slider',
         'icon' => 'app',
         'permission' => null,
         'children' => [
             [
-                'label' => 'Slider',
+                'label' => 'App Slider',
                 'route' => 'appSlider.list',
                 'permission' => 'appSlider.list',
             ],
             [
-                'label' => 'Slider Create',
-                'route' => 'appSlider.create',
-                'permission' => 'appSlider.create',
+                'label' => 'Web Slider',
+                'route' => 'slider.list',
+                'permission' => 'slider.list',
             ],
         ],
     ],
@@ -169,7 +169,7 @@ return [
         'icon' => 'faq',
         'permission' => null,
         'children' => [
-            
+
             [
                 'label' => 'Create Testimonials',
                 'route' => 'testimonial.create',
@@ -188,7 +188,7 @@ return [
         'icon' => 'faq',
         'permission' => null,
         'children' => [
-            
+
             [
                 'label' => 'Create Stats',
                 'route' => 'stat.create',

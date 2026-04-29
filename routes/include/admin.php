@@ -88,6 +88,14 @@ Route::group(['middleware' => ['skip.permission','no.permission.sync']], functio
         Route::post('publish', [AppSliderController::class, 'publish'])->name('publish');
     });
 
+    Route::resource('slider', AppSliderController::class)
+        ->except(['destroy'])
+        ->names([
+            'sliderList'   => 'slider.list',
+            'createSlider'   => 'slider.create',
+            'editSlider'   => 'slider.edit',
+        ]);
+
 
     // audit
     Route::group(['prefix' => 'audit', 'as' => 'audit.'], function () {

@@ -89,7 +89,7 @@ class SliderService extends BaseService implements SliderServiceInterface
      {
         $item = $this->sliderRepository->find($id);
         if ($item) {
-            $this->update($item->id,['published' => $status]);
+            $this->update($item->id,['status' => $status]);
             return $this->sendResponse(true,__('Status updated successfully'));
         } else {
             return $this->sendResponse(false,__('Data not found'));

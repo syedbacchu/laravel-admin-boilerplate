@@ -28,8 +28,8 @@ class SliderRepository extends BaseRepository implements SliderRepositoryInterfa
             ],
 
             filters: [
-                'published' => [
-                    'column' => 'published'
+                'status' => [
+                    'column' => 'status'
                 ],
                 'type' => [
                     'column' => 'type'
@@ -39,11 +39,11 @@ class SliderRepository extends BaseRepository implements SliderRepositoryInterfa
             select: [
                 'id',
                 'photo',
-                'position',
+                'site_type',
                 'title',
                 'subtitle',
                 'tagline',
-                'published',
+                'status',
                 'link',
                 'type',
                 'serial',

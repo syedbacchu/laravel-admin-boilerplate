@@ -24,10 +24,10 @@ class SliderCreateRequest extends BaseFormRequest
         $rule = [
             'type' => 'required|in:1,2',
             'title' => 'nullable|max:255',
+            'mobile_banner' => 'nullable',
             'subtitle' => 'nullable|max:255',
             'tagline' => 'nullable|max:255',
             'link' => 'nullable|max:255',
-            'position' => 'nullable|max:100',
             'page' => 'nullable|max:100',
             'video_link' => 'nullable|url',
             'site_type' => 'nullable',
