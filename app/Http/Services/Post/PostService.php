@@ -145,9 +145,18 @@ class PostService extends BaseService implements PostServiceInterface
         }
 
         Post::query()->whereKey($item->id)->increment('total_hit');
-        $item->refresh();
+        $item->refresh()->load(['author:id,name', 'categories:id,name,slug', 'tags:id,name,slug']);
+        $item->setRelation('similarBlogs', $this->postRepository->getSimilarPublicBlogs($item, 6));
 
         return $this->sendResponse(true, __('Blog details'), $item);
+    }
+
+    public function getPublicBlogSummary(): array
+    {
+        return $this->sendResponse(true, __('Blog summary'), [
+            'latest_blogs' => $this->postRepository->getLatestPublicBlogs(6),
+            'categories' => $this->postRepository->getPublicBlogCategoriesWithCount(),
+        ]);
     }
 
     protected function generateUniqueSlug(string $value, ?int $ignoreId = null): string
