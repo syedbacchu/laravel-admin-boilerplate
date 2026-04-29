@@ -12,6 +12,7 @@ use App\Http\Controllers\Api\Feature\FeatureController;
 use App\Http\Controllers\Api\Project\ProjectCategoryController;
 use App\Http\Controllers\Api\Project\ProjectController;
 use App\Http\Controllers\Api\Slider\SliderController;
+use App\Http\Controllers\Api\Stat\StatsController;
 use App\Http\Controllers\Api\Testimonials\TestimonialsController;
 use App\Http\Controllers\Api\User\ProfileController;
 /*
@@ -81,4 +82,9 @@ Route::group(['prefix' => 'testimonials', 'as' => 'apiTestimonial.'], function (
 Route::group(['prefix' => 'sliders', 'as' => 'apiSlider.'], function () {
     Route::get('/', [SliderController::class, 'index'])->name('list');
     Route::get('{identifier}', [SliderController::class, 'show'])->name('details');
+});
+
+Route::group(['prefix' => 'stat', 'as' => 'apiStat.'], function () {
+    Route::get('/', [StatsController::class, 'index'])->name('list');
+    Route::get('{identifier}', [StatsController::class, 'show'])->name('details');
 });

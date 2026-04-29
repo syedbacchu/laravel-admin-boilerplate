@@ -96,6 +96,10 @@ class Viewed
             'list' => 'admin.testimonial.index',
             'create' => 'admin.testimonial.create',
         ],
+        'stat' => [
+            'list' => 'admin.stat.index',
+            'create' => 'admin.stat.create',
+        ],
     ];
 
     /**

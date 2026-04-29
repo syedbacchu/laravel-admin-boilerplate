@@ -76,6 +76,11 @@ use App\Http\Services\Testimonial\TestimonialRepositoryInterface;
 use App\Http\Services\Testimonial\TestimonialService;
 use App\Http\Services\Testimonial\TestimonialServiceInterface;
 
+use App\Http\Services\Stat\StatRepository;
+use App\Http\Services\Stat\StatRepositoryInterface;
+use App\Http\Services\Stat\StatService;
+use App\Http\Services\Stat\StatServiceInterface;
+
 use Illuminate\Support\ServiceProvider;
 
 class ServiceLayerProvider extends ServiceProvider
@@ -139,6 +144,9 @@ class ServiceLayerProvider extends ServiceProvider
 
         $this->app->bind(TestimonialRepositoryInterface::class, TestimonialRepository::class);
         $this->app->bind(TestimonialServiceInterface::class, TestimonialService::class);
+
+        $this->app->bind(StatRepositoryInterface::class, StatRepository::class);
+        $this->app->bind(StatServiceInterface::class, StatService::class);
     }
 
     /**

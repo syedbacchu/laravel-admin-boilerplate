@@ -20,6 +20,7 @@ use App\Http\Controllers\Admin\Feature\FeatureCategoryController;
 use App\Http\Controllers\Admin\Feature\FeatureController;
 use App\Http\Controllers\Admin\Project\ProjectCategoryController;
 use App\Http\Controllers\Admin\Project\ProjectController;
+use App\Http\Controllers\Admin\Stat\StatController;
 use App\Http\Controllers\Admin\Testimonial\TestimonialController;
 use App\Http\Controllers\Admin\User\UserController;
 use App\Http\Controllers\Auth\AuthController;
@@ -336,4 +337,20 @@ Route::group(['middleware' => ['skip.permission','no.permission.sync']], functio
     Route::group(['prefix' => 'testimonials', 'as' => 'testimonial.'], function () {
         Route::get('testimonial-delete/{id}', [TestimonialController::class, 'destroy'])->name('delete');
         Route::post('publish', [TestimonialController::class, 'testimonialStatus'])->name('publish');
+    });
+
+      // Stat
+    Route::resource('stats', StatController::class)
+    ->except(['destroy'])
+    ->names([
+        'index'   => 'stat.list',
+        'create'   => 'stat.create',
+        'edit'   => 'stat.edit',
+        'store'   => 'stat.store',
+        'update'  => 'stat.update',
+        'show' => 'stat.show',
+    ]);
+    Route::group(['prefix' => 'stats', 'as' => 'stat.'], function () {
+        Route::get('stat-delete/{id}', [StatController::class, 'destroy'])->name('delete');
+        Route::post('publish', [StatController::class, 'statStatus'])->name('publish');
     });

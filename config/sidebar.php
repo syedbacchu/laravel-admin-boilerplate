@@ -183,6 +183,25 @@ return [
         ],
     ],
     [
+        'key' => 'stat',
+        'label' => 'Stats',
+        'icon' => 'faq',
+        'permission' => null,
+        'children' => [
+            
+            [
+                'label' => 'Create Stats',
+                'route' => 'stat.create',
+                'permission' => 'stat.create',
+            ],
+            [
+                'label' => 'Stats List',
+                'route' => 'stat.list',
+                'permission' => 'stat.list',
+            ],
+        ],
+    ],
+    [
         'key' => 'feature',
         'label' => 'Features',
         'icon' => 'faq',
