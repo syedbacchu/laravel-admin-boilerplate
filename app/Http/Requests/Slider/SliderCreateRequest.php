@@ -25,8 +25,12 @@ class SliderCreateRequest extends BaseFormRequest
             'type' => 'required|in:1,2',
             'title' => 'nullable|max:255',
             'subtitle' => 'nullable|max:255',
-            'offer' => 'nullable|max:255',
+            'tagline' => 'nullable|max:255',
             'link' => 'nullable|max:255',
+            'position' => 'nullable|max:100',
+            'page' => 'nullable|max:100',
+            'video_link' => 'nullable|url',
+            'site_type' => 'nullable',
             'serial' => 'nullable|integer',
         ];
         if (empty($this->edit_id)) {

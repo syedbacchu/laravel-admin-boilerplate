@@ -17,13 +17,17 @@ return new class extends Migration
             $table->string('position')->nullable();
             $table->text('title')->nullable();
             $table->text('subtitle')->nullable();
-            $table->text('offer')->nullable();
+            $table->string('tagline')->nullable();
             $table->tinyInteger('published')->default(1);
             $table->string('link')->nullable();
             $table->string('mobile_banner')->nullable();
             $table->tinyInteger('type')->default(1);
             $table->tinyInteger('serial')->default(0);
             $table->string('video_link')->nullable();
+            $table->string('page')->nullable();
+            $table->tinyInteger('site_type')->default(1);
+            $table->json('cta_button')->nullable();
+            $table->json('stat')->nullable();
             $table->timestamps();
         });
     }

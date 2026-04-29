@@ -11,6 +11,7 @@ use App\Http\Controllers\Api\Feature\FeatureCategoryController;
 use App\Http\Controllers\Api\Feature\FeatureController;
 use App\Http\Controllers\Api\Project\ProjectCategoryController;
 use App\Http\Controllers\Api\Project\ProjectController;
+use App\Http\Controllers\Api\Slider\SliderController;
 use App\Http\Controllers\Api\Testimonials\TestimonialsController;
 use App\Http\Controllers\Api\User\ProfileController;
 /*
@@ -75,4 +76,9 @@ Route::group(['middleware' => ['auth:api'],'prefix' => 'user', 'as' => 'apiUser.
 Route::group(['prefix' => 'testimonials', 'as' => 'apiTestimonial.'], function () {
     Route::get('/', [TestimonialsController::class, 'index'])->name('list');
     Route::get('{identifier}', [TestimonialsController::class, 'show'])->name('details');
+});
+
+Route::group(['prefix' => 'sliders', 'as' => 'apiSlider.'], function () {
+    Route::get('/', [SliderController::class, 'index'])->name('list');
+    Route::get('{identifier}', [SliderController::class, 'show'])->name('details');
 });

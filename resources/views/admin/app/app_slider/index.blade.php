@@ -25,7 +25,7 @@
                 :columns="[
                     ['data' => 'photo', 'name' => 'photo', 'title' => 'Slide'],
                     ['data' => 'title', 'name' => 'title', 'title' => 'Title'],
-                    ['data' => 'offer', 'name' => 'offer', 'title' => 'Offer'],
+                    ['data' => 'tagline', 'name' => 'tagline', 'title' => 'Tagline'],
                     ['data' => 'published', 'name' => 'published', 'title' => 'Status'],
                     [
                         'data' => 'actions',
@@ -34,7 +34,7 @@
                         'searchable' => false
                     ],
                 ]"
-                :filters="[
+                {{-- :filters="[
                     [
                         'type' => 'select',
                         'name' => 'type',
@@ -55,7 +55,7 @@
                             '0' => 'Inactive',
                         ]
                     ],
-                ]"
+                ]" --}}
                 :enableSearch="false"
             />
         </div>

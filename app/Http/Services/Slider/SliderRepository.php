@@ -24,7 +24,7 @@ class SliderRepository extends BaseRepository implements SliderRepositoryInterfa
 
             searchable: [
                 'title',
-                'offer',
+                'tagline',
             ],
 
             filters: [
@@ -42,7 +42,7 @@ class SliderRepository extends BaseRepository implements SliderRepositoryInterfa
                 'position',
                 'title',
                 'subtitle',
-                'offer',
+                'tagline',
                 'published',
                 'link',
                 'type',
@@ -56,5 +56,13 @@ class SliderRepository extends BaseRepository implements SliderRepositoryInterfa
         return $this->create($data);
     }
 
-
+    public function findPublicByIdentifier(string $identifier): ?Slider
+    {
+        return Slider::query()
+            ->where('published', 1)
+            ->where(function ($query) use ($identifier) {
+                $query->where('id', $identifier);
+            })
+            ->first();
+    }
 }

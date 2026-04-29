@@ -35,10 +35,18 @@ class SliderService extends BaseService implements SliderServiceInterface
             'type' => $request->type,
             'title' => $request->title,
             'subtitle' => $request->subtitle,
-            'offer' => $request->offer,
+            'tagline' => $request->tagline,
             'link' => $request->link,
-            'serial' => isset($request->serial) ? $request->serial : 0 ,
-            'published' => $request->published ? $request->published : StatusEnum::ACTIVE
+            'position' => $request->position,
+            'page' => $request->page,
+            'video_link' => $request->video_link,
+            'site_type' => $request->site_type ?? 1,
+            'serial' => $request->serial ?? 0,
+            'published' => $request->published ?? StatusEnum::ACTIVE,
+            'mobile_banner' => $request->mobile_banner ?? null,
+            // JSON fields
+            'cta_button' => $request->cta_button ?? null,
+            'stat' => $request->stat ?? null,
         ];
         $message = "";
         if ($request->edit_id) {
@@ -87,4 +95,23 @@ class SliderService extends BaseService implements SliderServiceInterface
             return $this->sendResponse(false,__('Data not found'));
         }
      }
+
+     public function getPublicList(Request $request): array
+    {
+        $request->merge(['status' => $request->status ?? 1]);
+        $data = $this->sliderRepository->dataList($request);
+        return $this->sendResponse(true, __('Data get successfully.'), $data);
+    }
+
+    public function getPublicDetails(string $identifier): array
+    {
+        $item = $this->sliderRepository->findPublicByIdentifier($identifier);
+
+        if (!$item) {
+            return $this->sendResponse(false, __('Slider not found'), [], 404, __('Slider not found'));
+        }
+
+        return $this->sendResponse(true, __('Slider details'), $item);
+    }
+
 }

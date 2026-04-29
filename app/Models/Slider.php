@@ -16,13 +16,22 @@ class Slider extends Model
         'position',
         'title',
         'subtitle',
-        'offer',
+        'tagline',
         'published',
         'link',
         'mobile_banner',
         'type',
         'serial',
-        'video_link'
+        'video_link',
+        'page',
+        'site_type',
+        'cta_button',
+        'stat',
+    ];
+
+    protected $casts = [
+        'cta_button' => 'array',
+        'stat' => 'array',
     ];
 
 //    public function getRawPhotoAttribute()
