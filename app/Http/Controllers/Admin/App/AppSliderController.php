@@ -30,6 +30,7 @@ class AppSliderController extends Controller
             return DataListManager::dataTableHandle(
                 request: $request,
                 dataProvider: function ($request) {
+                    $request->merge(['type' => SliderTypeEnum::APP->value]);
                     return $this->service
                         ->getDataTableData($request)['data']['data'];
                 },
@@ -73,6 +74,7 @@ class AppSliderController extends Controller
             return DataListManager::dataTableHandle(
                 request: $request,
                 dataProvider: function ($request) {
+                    $request->merge(['type' => SliderTypeEnum::WEB->value]);
                     return $this->service
                         ->getDataTableData($request)['data']['data'];
                 },
@@ -106,7 +108,7 @@ class AppSliderController extends Controller
 
         return ResponseService::send([
             'data' => $data,
-        ], view: viewss('slider','list'));
+        ], view: viewss('web-slider','list'));
     }
 
     public function create()
@@ -114,6 +116,19 @@ class AppSliderController extends Controller
         $data['pageTitle'] = __('Create App Slider');
         $data['type'] = SliderTypeEnum::APP;
         $data['function_type'] = 'create';
+        $data['formRoute'] = 'appSlider.store';
+
+        return ResponseService::send([
+            'data' => $data,
+        ], view: viewss('slider','create'));
+    }
+
+    public function sliderCreate(): View
+    {
+        $data['pageTitle'] = __('Create Web Slider');
+        $data['type'] = SliderTypeEnum::WEB;
+        $data['function_type'] = 'create';
+        $data['formRoute'] = 'slider.store';
 
         return ResponseService::send([
             'data' => $data,
@@ -127,16 +142,43 @@ class AppSliderController extends Controller
         ], successRoute: 'appSlider.list');
     }
 
+    public function sliderStore(SliderCreateRequest $request): RedirectResponse
+    {
+        $response = $this->service->storeOrUpdateSlider($request);
+
+        return ResponseService::send([
+            'response' => $response,
+        ], successRoute: 'slider.list');
+    }
+
     public function edit($id)
     {
         $data['pageTitle'] = __('Update App Slider');
         $data['type'] = SliderTypeEnum::APP;
         $data['function_type'] = 'update';
+        $data['formRoute'] = 'appSlider.store';
         $data['item'] = $this->service->getById($id);
 
         if (!$data['item'] ) {
             return ResponseService::send();
         }
+        return ResponseService::send([
+            'data' => $data,
+        ], view: viewss('slider','create'));
+    }
+
+    public function sliderEdit($id)
+    {
+        $data['pageTitle'] = __('Update Web Slider');
+        $data['type'] = SliderTypeEnum::WEB;
+        $data['function_type'] = 'update';
+        $data['formRoute'] = 'slider.store';
+        $data['item'] = $this->service->getById($id);
+
+        if (!$data['item']) {
+            return ResponseService::send();
+        }
+
         return ResponseService::send([
             'data' => $data,
         ], view: viewss('slider','create'));

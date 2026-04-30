@@ -13,7 +13,10 @@ class Viewed
         'slider' => [
             'list'  => 'admin.app.app_slider.index',
             'create' => 'admin.app.app_slider.create',
-            'edit'   => 'admin.app.app_slider.edit',
+        ],
+        'web-slider' => [
+            'list'  => 'admin.app.web_slider.index',
+            'create' => 'admin.app.web_slider.create',
         ],
         'user' => [
             'list'  => 'admin.user.index',

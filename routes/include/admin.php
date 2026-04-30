@@ -88,13 +88,13 @@ Route::group(['middleware' => ['skip.permission','no.permission.sync']], functio
         Route::post('publish', [AppSliderController::class, 'publish'])->name('publish');
     });
 
-    Route::resource('slider', AppSliderController::class)
-        ->except(['destroy'])
-        ->names([
-            'sliderList'   => 'slider.list',
-            'createSlider'   => 'slider.create',
-            'editSlider'   => 'slider.edit',
-        ]);
+    Route::group(['prefix' => 'slider', 'as' => 'slider.'], function () {
+        Route::get('/', [AppSliderController::class, 'sliderList'])->name('list');
+        Route::get('create', [AppSliderController::class, 'sliderCreate'])->name('create');
+        Route::post('store', [AppSliderController::class, 'sliderStore'])->name('store');
+        Route::get('edit/{id}', [AppSliderController::class, 'sliderEdit'])->name('edit');
+
+    });
 
 
     // audit
