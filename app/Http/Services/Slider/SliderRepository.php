@@ -34,6 +34,9 @@ class SliderRepository extends BaseRepository implements SliderRepositoryInterfa
                 'type' => [
                     'column' => 'type'
                 ],
+                'site_type' => [
+                    'column' => 'site_type'
+                ],
             ],
 
             select: [
@@ -59,7 +62,7 @@ class SliderRepository extends BaseRepository implements SliderRepositoryInterfa
     public function findPublicByIdentifier(string $identifier): ?Slider
     {
         return Slider::query()
-            ->where('published', 1)
+            ->where('status', 1)
             ->where(function ($query) use ($identifier) {
                 $query->where('id', $identifier);
             })

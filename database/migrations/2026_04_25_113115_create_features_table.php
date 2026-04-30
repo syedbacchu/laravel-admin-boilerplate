@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('slug')->unique();
             $table->text('short_description')->nullable();
             $table->text('description')->nullable();
-            $table->string('icon')->nullable();
+            $table->string('thumbnail')->nullable();
             $table->string('image')->nullable();
             $table->string('link')->nullable();
             $table->foreignId('category_id')->nullable()->constrained('feature_categories')->nullOnDelete();
@@ -26,6 +26,7 @@ return new class extends Migration
             $table->tinyInteger('status')->default(1);
             $table->foreignId('added_by')->nullable()->constrained('users')->nullOnDelete();
             $table->foreignId('updated_by')->nullable()->constrained('users')->nullOnDelete();
+            $table->tinyInteger('site_type')->default(1);
             $table->string('meta_title')->nullable();
             $table->string('meta_keywords')->nullable();
             $table->text('meta_description')->nullable();

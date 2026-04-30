@@ -98,7 +98,7 @@ class SliderService extends BaseService implements SliderServiceInterface
 
      public function getPublicList(Request $request): array
     {
-        $request->merge(['status' => $request->status ?? 1]);
+        $request->merge(['status' => $request->status ?? StatusEnum::ACTIVE->value]);
         $data = $this->sliderRepository->dataList($request);
         return $this->sendResponse(true, __('Data get successfully.'), $data);
     }

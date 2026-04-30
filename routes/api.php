@@ -79,7 +79,7 @@ Route::group(['prefix' => 'testimonials', 'as' => 'apiTestimonial.'], function (
     Route::get('{identifier}', [TestimonialsController::class, 'show'])->name('details');
 });
 
-Route::group(['prefix' => 'sliders', 'as' => 'apiSlider.'], function () {
+Route::group(['prefix' => 'sliders', 'as' => 'slider.'], function () {
     Route::get('/', [SliderController::class, 'index'])->name('list');
     Route::get('{identifier}', [SliderController::class, 'show'])->name('details');
 });
