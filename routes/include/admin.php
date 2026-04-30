@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\App\AppSliderController;
+use App\Http\Controllers\Admin\Attribute\AttributeController;
 use App\Http\Controllers\Admin\Audit\AuditSettingController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\Faq\FaqCategoryController;
@@ -379,4 +380,20 @@ Route::group(['middleware' => ['skip.permission','no.permission.sync']], functio
     Route::group(['prefix' => 'teams', 'as' => 'team.'], function () {
         Route::get('team-delete/{id}', [TeamController::class, 'destroy'])->name('delete');
         Route::post('publish', [TeamController::class, 'teamStatus'])->name('publish');
+    });
+
+    // Attribute
+    Route::resource('attributes', AttributeController::class)
+    ->except(['destroy'])
+    ->names([
+        'index'   => 'attribute.list',
+        'create'   => 'attribute.create',
+        'edit'   => 'attribute.edit',
+        'store'   => 'attribute.store',
+        'update'  => 'attribute.update',
+        'show' => 'attribute.show',
+    ]);
+    Route::group(['prefix' => 'attributes', 'as' => 'attribute.'], function () {
+        Route::get('attribute-delete/{id}', [AttributeController::class, 'destroy'])->name('delete');
+        Route::post('publish', [AttributeController::class, 'attributeStatus'])->name('publish');
     });

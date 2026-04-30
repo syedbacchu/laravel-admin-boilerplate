@@ -107,6 +107,10 @@ class Viewed
             'list' => 'admin.team.index',
             'create' => 'admin.team.create',
         ],
+        'attribute' => [
+            'list' => 'admin.attribute.index',
+            'create' => 'admin.attribute.create',
+        ],
     ];
 
     /**

@@ -221,6 +221,19 @@ return [
         ],
     ],
     [
+        'key' => 'product',
+        'label' => 'Products',
+        'icon' => 'faq',
+        'permission' => null,
+        'children' => [
+            [
+                'label' => 'Attributes List',
+                'route' => 'attribute.list',
+                'permission' => 'attribute.list',
+            ],
+        ],
+    ],
+    [
         'key' => 'feature',
         'label' => 'Features',
         'icon' => 'faq',

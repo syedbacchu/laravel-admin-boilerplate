@@ -86,6 +86,11 @@ use App\Http\Services\Team\TeamRepositoryInterface;
 use App\Http\Services\Team\TeamService;
 use App\Http\Services\Team\TeamServiceInterface;
 
+use App\Http\Services\Attribute\AttributeRepository;
+use App\Http\Services\Attribute\AttributeRepositoryInterface;
+use App\Http\Services\Attribute\AttributeService;
+use App\Http\Services\Attribute\AttributeServiceInterface;
+
 use Illuminate\Support\ServiceProvider;
 
 class ServiceLayerProvider extends ServiceProvider
@@ -155,6 +160,9 @@ class ServiceLayerProvider extends ServiceProvider
 
         $this->app->bind(TeamRepositoryInterface::class, TeamRepository::class);
         $this->app->bind(TeamServiceInterface::class, TeamService::class);
+
+        $this->app->bind(AttributeRepositoryInterface::class, AttributeRepository::class);
+        $this->app->bind(AttributeServiceInterface::class, AttributeService::class);
     }
 
     /**
