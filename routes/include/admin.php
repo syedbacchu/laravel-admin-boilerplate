@@ -21,6 +21,7 @@ use App\Http\Controllers\Admin\Feature\FeatureController;
 use App\Http\Controllers\Admin\Project\ProjectCategoryController;
 use App\Http\Controllers\Admin\Project\ProjectController;
 use App\Http\Controllers\Admin\Stat\StatController;
+use App\Http\Controllers\Admin\Team\TeamController;
 use App\Http\Controllers\Admin\Testimonial\TestimonialController;
 use App\Http\Controllers\Admin\User\UserController;
 use App\Http\Controllers\Auth\AuthController;
@@ -361,4 +362,21 @@ Route::group(['middleware' => ['skip.permission','no.permission.sync']], functio
     Route::group(['prefix' => 'stats', 'as' => 'stat.'], function () {
         Route::get('stat-delete/{id}', [StatController::class, 'destroy'])->name('delete');
         Route::post('publish', [StatController::class, 'statStatus'])->name('publish');
+    });
+
+
+      // Team
+    Route::resource('teams', TeamController::class)
+    ->except(['destroy'])
+    ->names([
+        'index'   => 'team.list',
+        'create'   => 'team.create',
+        'edit'   => 'team.edit',
+        'store'   => 'team.store',
+        'update'  => 'team.update',
+        'show' => 'team.show',
+    ]);
+    Route::group(['prefix' => 'teams', 'as' => 'team.'], function () {
+        Route::get('team-delete/{id}', [TeamController::class, 'destroy'])->name('delete');
+        Route::post('publish', [TeamController::class, 'teamStatus'])->name('publish');
     });

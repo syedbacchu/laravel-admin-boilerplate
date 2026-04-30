@@ -1,83 +1,98 @@
 <?php
 
-namespace App\Http\Services\Stat;
+namespace App\Http\Services\Team;
 
 use App\Enums\StatusEnum;
-use App\Http\Requests\Stat\StatCreateRequest;
+use App\Http\Requests\Team\TeamCreateRequest;
 use App\Http\Services\BaseService;
-use App\Models\Stat;
+use App\Models\Team;
 use App\Models\ServiceCategory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
-class StatService extends BaseService implements StatServiceInterface
+class TeamService extends BaseService implements TeamServiceInterface
 {
-    protected StatRepositoryInterface $statRepository;
+    protected TeamRepositoryInterface $teamRepository;
 
-    public function __construct(StatRepositoryInterface $repository)
+    public function __construct(TeamRepositoryInterface $repository)
     {
         parent::__construct($repository);
-        $this->statRepository = $repository;
+        $this->teamRepository = $repository;
     }
 
-    public function storeOrUpdate(StatCreateRequest $request): array
+    public function storeOrUpdate(TeamCreateRequest $request): array
     {
         $editId = $request->edit_id;
 
         $data = [
-            'title' => $request->title,
-            'subtitle' => $request->subtitle,
-            'description' => $request->description,
-            'link' => $request->link,
+            'name' => $request->name,
+            'slug' => $this->generateUniqueSlug($request->name, $editId),
+            'email' => $request->email,
+            'phone' => $request->phone,
+            'designation' => $request->designation,
+            'bio' => $request->bio,
+
             'image' => $request->image,
-            'sort_order' => $request->sort_order ?? 0,
+            'cover_image' => $request->cover_image,
+
+            'facebook_url' => $request->facebook_url,
+            'twitter_url' => $request->twitter_url,
+            'linkedin_url' => $request->linkedin_url,
+            'instagram_url' => $request->instagram_url,
+            'github_url' => $request->github_url,
+            'youtube_url' => $request->youtube_url,
+
+            'join_date' => $request->join_date,
+
             'status' => $request->status ?? StatusEnum::ACTIVE,
+            'is_featured' => $request->is_featured ?? 0,
             'site_type' => $request->site_type ?? 1,
         ];
 
         if ($editId) {
             $data['updated_by'] = auth()->id();
-            $this->statRepository->update($editId, $data);
+            $this->teamRepository->update($editId, $data);
+
             return $this->sendResponse(true, 'Updated successfully');
         }
 
         $data['created_by'] = auth()->id();
-        $this->statRepository->create($data);
+        $this->teamRepository->create($data);
 
         return $this->sendResponse(true, 'Created successfully');
     }
 
     public function deleteData($id): array
     {
-        $item = $this->statRepository->find($id);
+        $item = $this->teamRepository->find($id);
         if (!$item) {
             return $this->sendResponse(false, __('Data not found'));
         }
 
-        $this->statRepository->delete($id);
+        $this->teamRepository->delete($id);
         return $this->sendResponse(true, __('Data deleted successfully'));
     }
 
     public function publish($id, $status): array
     {
-        $item = $this->statRepository->find($id);
+        $item = $this->teamRepository->find($id);
         if (!$item) {
             return $this->sendResponse(false, __('Data not found'));
         }
 
-        $this->statRepository->update($id, ['status' => (int) $status]);
+        $this->teamRepository->update($id, ['status' => (int) $status]);
         return $this->sendResponse(true, __('Status updated successfully'));
     }
 
     public function getDataTableData($request): array
     {
-        $data = $this->statRepository->dataList($request);
+        $data = $this->teamRepository->dataList($request);
         return $this->sendResponse(true, __('Data get successfully.'), $data);
     }
 
     public function editData($id): array
     {
-        $item = $this->statRepository->find($id);
+        $item = $this->teamRepository->find($id);
         if (!$item) {
             return $this->sendResponse(false, __('Data not found'));
         }
@@ -100,32 +115,32 @@ class StatService extends BaseService implements StatServiceInterface
     public function getPublicList(Request $request): array
     {
         $request->merge(['status' => $request->status ?? 1]);
-        $data = $this->statRepository->dataList($request);
+        $data = $this->teamRepository->dataList($request);
         return $this->sendResponse(true, __('Data get successfully.'), $data);
     }
 
     public function getPublicDetails(string $identifier): array
     {
-        $item = $this->statRepository->findPublicByIdentifier($identifier);
+        $item = $this->teamRepository->findPublicByIdentifier($identifier);
 
         if (!$item) {
-            return $this->sendResponse(false, __('Stat not found'), [], 404, __('Stat not found'));
+            return $this->sendResponse(false, __('Team not found'), [], 404, __('Team not found'));
         }
 
-        return $this->sendResponse(true, __('Stat details'), $item);
+        return $this->sendResponse(true, __('Team details'), $item);
     }
 
     protected function generateUniqueSlug(string $value, ?int $ignoreId = null): string
     {
-        $base = Str::slug($value) ?: 'stat';
+        $base = Str::slug($value) ?: 'team';
 
         if ($ignoreId) {
-            $current = Stat::query()->find($ignoreId, ['id', 'slug']);
+            $current = Team::query()->find($ignoreId, ['id', 'slug']);
             if ($current && $current->slug === $base) {
                 return $base;
             }
         }
 
-        return make_unique_slug($base, 'stats');
+        return make_unique_slug($base, 'teams');
     }
 }

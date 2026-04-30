@@ -103,6 +103,10 @@ class Viewed
             'list' => 'admin.stat.index',
             'create' => 'admin.stat.create',
         ],
+        'team' => [
+            'list' => 'admin.team.index',
+            'create' => 'admin.team.create',
+        ],
     ];
 
     /**

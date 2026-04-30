@@ -202,6 +202,25 @@ return [
         ],
     ],
     [
+        'key' => 'team',
+        'label' => 'Teams',
+        'icon' => 'faq',
+        'permission' => null,
+        'children' => [
+
+            [
+                'label' => 'Create Teams',
+                'route' => 'team.create',
+                'permission' => 'team.create',
+            ],
+            [
+                'label' => 'Teams List',
+                'route' => 'team.list',
+                'permission' => 'team.list',
+            ],
+        ],
+    ],
+    [
         'key' => 'feature',
         'label' => 'Features',
         'icon' => 'faq',

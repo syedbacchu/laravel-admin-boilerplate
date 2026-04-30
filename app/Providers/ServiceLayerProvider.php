@@ -81,6 +81,11 @@ use App\Http\Services\Stat\StatRepositoryInterface;
 use App\Http\Services\Stat\StatService;
 use App\Http\Services\Stat\StatServiceInterface;
 
+use App\Http\Services\Team\TeamRepository;
+use App\Http\Services\Team\TeamRepositoryInterface;
+use App\Http\Services\Team\TeamService;
+use App\Http\Services\Team\TeamServiceInterface;
+
 use Illuminate\Support\ServiceProvider;
 
 class ServiceLayerProvider extends ServiceProvider
@@ -147,6 +152,9 @@ class ServiceLayerProvider extends ServiceProvider
 
         $this->app->bind(StatRepositoryInterface::class, StatRepository::class);
         $this->app->bind(StatServiceInterface::class, StatService::class);
+
+        $this->app->bind(TeamRepositoryInterface::class, TeamRepository::class);
+        $this->app->bind(TeamServiceInterface::class, TeamService::class);
     }
 
     /**
