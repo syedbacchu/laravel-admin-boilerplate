@@ -19,6 +19,8 @@ class SliderListResource extends JsonResource
             'link' => $this->link,
             'serial' => $this->serial,
             'type' => $this->type,
+            'cta_button' => $this->cta_button,
+            'stat' => $this->stat,
         ];
     }
 }

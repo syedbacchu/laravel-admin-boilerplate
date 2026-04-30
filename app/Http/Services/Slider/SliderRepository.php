@@ -50,6 +50,8 @@ class SliderRepository extends BaseRepository implements SliderRepositoryInterfa
                 'link',
                 'type',
                 'serial',
+                'cta_button',
+                'stat',
             ],
         );
     }
