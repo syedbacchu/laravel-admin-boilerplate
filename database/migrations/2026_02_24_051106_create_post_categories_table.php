@@ -29,7 +29,6 @@ return new class extends Migration
 
             $table->integer('serial')->nullable();
             $table->tinyInteger('status')->default(1);
-            $table->tinyInteger('site_type')->default(1);
             $table->foreignId('added_by')->constrained('users')->restrictOnDelete();
 
             $table->timestamps();

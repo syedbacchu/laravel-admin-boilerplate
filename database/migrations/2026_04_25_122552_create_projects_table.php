@@ -28,6 +28,7 @@ return new class extends Migration
             $table->integer('sort_order')->default(0);
             $table->tinyInteger('is_featured')->default(0);
             $table->tinyInteger('status')->default(1);
+            $table->tinyInteger('site_type')->default(1);
             $table->foreignId('added_by')->nullable()->constrained('users')->nullOnDelete();
             $table->foreignId('updated_by')->nullable()->constrained('users')->nullOnDelete();
             $table->string('meta_title')->nullable();

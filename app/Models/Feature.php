@@ -22,6 +22,7 @@ class Feature extends Model
         'sort_order',
         'is_featured',
         'status',
+        'site_type',
         'added_by',
         'updated_by',
         'meta_title',
