@@ -107,9 +107,13 @@ class Viewed
             'list' => 'admin.team.index',
             'create' => 'admin.team.create',
         ],
-        'attribute' => [
+        'attribute_type' => [
             'list' => 'admin.attribute.index',
             'create' => 'admin.attribute.create',
+        ],
+        'attribute_value' => [
+            'list' => 'admin.attribute.attribute_value.index',
+            'create' => 'admin.attribute.attribute_value.create',
         ],
     ];
 

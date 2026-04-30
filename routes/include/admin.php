@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\App\AppSliderController;
 use App\Http\Controllers\Admin\Attribute\AttributeController;
+use App\Http\Controllers\Admin\Attribute\AttributeValueController;
 use App\Http\Controllers\Admin\Audit\AuditSettingController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\Faq\FaqCategoryController;
@@ -382,7 +383,7 @@ Route::group(['middleware' => ['skip.permission','no.permission.sync']], functio
         Route::post('publish', [TeamController::class, 'teamStatus'])->name('publish');
     });
 
-    // Attribute
+    // Attribute type
     Route::resource('attributes', AttributeController::class)
     ->except(['destroy'])
     ->names([
@@ -396,4 +397,20 @@ Route::group(['middleware' => ['skip.permission','no.permission.sync']], functio
     Route::group(['prefix' => 'attributes', 'as' => 'attribute.'], function () {
         Route::get('attribute-delete/{id}', [AttributeController::class, 'destroy'])->name('delete');
         Route::post('publish', [AttributeController::class, 'attributeStatus'])->name('publish');
+    });
+
+    // Attribute Value
+    Route::resource('attributes-value', AttributeValueController::class)
+    ->except(['destroy'])
+    ->names([
+        'index'   => 'attribute.value.list',
+        'create'   => 'attribute.value.create',
+        'edit'   => 'attribute.value.edit',
+        'store'   => 'attribute.value.store',
+        'update'  => 'attribute.value.update',
+        'show' => 'attribute.value.show',
+    ]);
+    Route::group(['prefix' => 'attributes-value', 'as' => 'attribute.value.'], function () {
+        Route::get('attribute-value-delete/{id}', [AttributeValueController::class, 'destroy'])->name('delete');
+        Route::post('publish', [AttributeValueController::class, 'attributeValueStatus'])->name('publish');
     });

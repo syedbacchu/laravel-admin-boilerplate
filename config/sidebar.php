@@ -231,6 +231,11 @@ return [
                 'route' => 'attribute.list',
                 'permission' => 'attribute.list',
             ],
+            [
+                'label' => 'Attribute Values List',
+                'route' => 'attribute.value.list',
+                'permission' => 'attribute.value.list',
+            ],
         ],
     ],
     [
