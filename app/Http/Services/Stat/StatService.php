@@ -31,6 +31,7 @@ class StatService extends BaseService implements StatServiceInterface
             'image' => $request->image,
             'sort_order' => $request->sort_order ?? 0,
             'status' => $request->status ?? 1,
+            'site_type' => $request->site_type ?? 1,
         ];
 
         if ($editId) {

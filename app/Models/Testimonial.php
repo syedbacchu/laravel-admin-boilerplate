@@ -19,5 +19,6 @@ class Testimonial extends Model
         'status',
         'created_by',
         'updated_by',
+        'site_type',
     ];
 }

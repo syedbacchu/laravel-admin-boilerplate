@@ -47,6 +47,7 @@ class PostService extends BaseService implements PostServiceInterface
             'meta_title' => $request->meta_title ?? $request->title,
             'meta_keywords' => $request->meta_keywords,
             'meta_description' => $request->meta_description,
+            'site_type' => $request->site_type ?? 1,
         ];
 
         if ($editId) {

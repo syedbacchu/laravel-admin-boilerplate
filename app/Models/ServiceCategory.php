@@ -20,6 +20,7 @@ class ServiceCategory extends Model
         'status',
         'added_by',
         'updated_by',
+        'site_type',
     ];
 
     protected $casts = [

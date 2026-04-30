@@ -18,5 +18,6 @@ class Stat extends Model
         'status',
         'added_by',
         'updated_by',
+        'site_type',
     ];
 }

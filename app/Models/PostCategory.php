@@ -21,6 +21,7 @@ class PostCategory extends Model
         'serial',
         'status',
         'added_by',
+        'site_type',
     ];
 
     public function parent()

@@ -18,6 +18,7 @@ return new class extends Migration
             $table->text('description');
             $table->unsignedInteger('sort_order')->default(0);
             $table->tinyInteger('status')->default(1);
+            $table->tinyInteger('site_type')->default(1);
             $table->timestamps();
         });
     }

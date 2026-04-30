@@ -30,6 +30,7 @@ class ServiceCategoryService extends BaseService implements ServiceCategoryServi
             'sort_order' => $request->sort_order ?? 0,
             'is_featured' => $request->is_featured ?? 0,
             'status' => $request->status ?? 1,
+            'site_type' => $request->site_type ?? 1,
         ];
 
         if ($editId) {

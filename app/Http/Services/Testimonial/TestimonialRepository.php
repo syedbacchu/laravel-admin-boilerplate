@@ -45,6 +45,7 @@ class TestimonialRepository extends BaseRepository implements TestimonialReposit
                 'status',
                 'created_by',
                 'updated_by',
+                'site_type',
             ],
         );
     }

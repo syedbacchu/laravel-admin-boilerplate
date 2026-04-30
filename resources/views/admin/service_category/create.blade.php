@@ -69,6 +69,23 @@
                             <option value="0" @selected(($item->status ?? 1) == 0)>Inactive</option>
                         </select>
                     </div>
+                    <div class="mb-4">
+                        <label for="site_type" class="">{{ __('Site Type') }}</label>
+                        <div class="flex">
+                            {!! defaultInputIcon() !!}
+                            <select name="site_type" id="" class="form-select">
+                                <option value="">{{__('Select')}}</option>
+                                @foreach(\App\Enums\SliderSiteType::getSliderSiteTypeArray() as $value => $label)
+                                    <option
+                                        value="{{ $value }}"
+                                        {{ old('site_type', $item->site_type ?? '') == $value ? 'selected' : '' }}
+                                    >
+                                        {{ __($label) }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="mb-4">

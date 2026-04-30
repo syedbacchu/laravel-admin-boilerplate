@@ -22,6 +22,7 @@ return new class extends Migration
             $table->tinyInteger('status')->default(1);
             $table->unsignedBigInteger('created_by')->nullable();
             $table->unsignedBigInteger('updated_by')->nullable();
+            $table->tinyInteger('site_type')->default(1);
             $table->timestamps(); 
         });
     }

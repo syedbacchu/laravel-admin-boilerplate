@@ -54,6 +54,7 @@ class ServiceCategoryRepository extends BaseRepository implements ServiceCategor
                 'added_by',
                 'updated_by',
                 'created_at',
+                'site_type',
             ],
         );
     }

@@ -38,6 +38,7 @@ class PostCategoryRepository extends BaseRepository implements PostCategoryRepos
                 'serial',
                 'status',
                 'created_at',
+                'site_type',
             ],
         );
     }

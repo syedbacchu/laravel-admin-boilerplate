@@ -27,6 +27,7 @@ class Service extends Model
         'meta_keywords',
         'meta_description',
         'meta_image',
+        'site_type',
     ];
 
     protected $casts = [

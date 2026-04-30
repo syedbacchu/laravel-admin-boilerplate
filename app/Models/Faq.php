@@ -17,6 +17,7 @@ class Faq extends Model
         'attestment',
         'sort_order',
         'status',
+        'site_type',
     ];
     public function category()
     {

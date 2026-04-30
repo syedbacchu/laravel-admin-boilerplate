@@ -36,6 +36,7 @@ class PostCategoryService extends BaseService implements PostCategoryServiceInte
             'meta_keywords' => $request->meta_keywords ?: null,
             'serial' => $request->serial ?? 0,
             'status' => $request->status ?? StatusEnum::ACTIVE,
+            'site_type' => $request->site_type ?? 1,
         ];
 
         if ($editId) {

@@ -12,6 +12,7 @@ enum SliderSiteType: int
     public static function getSliderSiteTypeArray(): array
     {
         return [
+            self::GENERAL->value => 'GENERAL',
             self::SOLAR->value => 'SOLAR',
             self::CAR->value => 'CAR',
             self::DROP_SHIPPING->value => 'DROP SHIPPING',

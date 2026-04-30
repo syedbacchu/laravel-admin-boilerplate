@@ -15,5 +15,6 @@ class FaqCategory extends Model
         'description',
         'sort_order',
         'status',
+        'site_type',
     ];
 }

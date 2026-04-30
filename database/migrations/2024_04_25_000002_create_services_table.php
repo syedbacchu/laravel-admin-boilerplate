@@ -28,7 +28,7 @@ return new class extends Migration
             $table->string('meta_image', 500)->nullable();
             $table->timestamps();
             $table->softDeletes();
-
+            $table->tinyInteger('site_type')->default(1);
             $table->index('slug');
             $table->index('status');
             $table->index('is_featured');

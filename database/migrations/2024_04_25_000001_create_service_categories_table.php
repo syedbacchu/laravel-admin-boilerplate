@@ -21,7 +21,7 @@ return new class extends Migration
             $table->unsignedBigInteger('updated_by')->nullable();
             $table->timestamps();
             $table->softDeletes();
-
+            $table->tinyInteger('site_type')->default(1);
             $table->index('slug');
             $table->index('status');
             $table->index('is_featured');

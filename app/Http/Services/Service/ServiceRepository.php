@@ -61,6 +61,7 @@ class ServiceRepository extends BaseRepository implements ServiceRepositoryInter
                 'added_by',
                 'updated_by',
                 'created_at',
+                'site_type',
             ],
         );
     }

@@ -48,6 +48,7 @@ class StatRepository extends BaseRepository implements StatRepositoryInterface
                 'status',
                 'added_by',
                 'updated_by',
+                'site_type',
             ],
         );
     }

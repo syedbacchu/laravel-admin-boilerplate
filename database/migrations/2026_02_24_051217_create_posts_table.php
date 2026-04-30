@@ -28,7 +28,7 @@ return new class extends Migration
             $table->string('status')->default('draft'); // draft, published, scheduled
             $table->timestamp('published_at')->nullable();
             $table->integer('serial')->nullable();
-
+            $table->tinyInteger('site_type')->default(1);
             $table->bigInteger('total_hit')->default(0);
             $table->bigInteger('likes_count')->default(0);
             $table->bigInteger('comments_count')->default(0);

@@ -25,6 +25,7 @@ class FaqCategoryService extends BaseService implements FaqCategoryServiceInterf
             'description' => $request->description,
             'sort_order'  => $request->sort_order ?? 0,
             'status'      => $request->status ?? StatusEnum::ACTIVE,
+            'site_type'   => $request->site_type ?? 1,
         ];
 
         if ($request->edit_id) {

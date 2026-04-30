@@ -38,6 +38,7 @@ class Post extends Model
         'meta_title',
         'meta_keywords',
         'meta_description',
+        'site_type',
     ];
 
     protected $casts = [
