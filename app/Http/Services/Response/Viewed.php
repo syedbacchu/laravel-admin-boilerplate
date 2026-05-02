@@ -115,6 +115,11 @@ class Viewed
             'list' => 'admin.attribute.attribute_value.index',
             'create' => 'admin.attribute.attribute_value.create',
         ],
+        'products_category' => [
+            'list' => 'admin.products.products_category.index',
+            'create' => 'admin.products.products_category.create',
+        ],
+        
     ];
 
     /**

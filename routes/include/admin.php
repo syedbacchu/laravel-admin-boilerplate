@@ -20,6 +20,7 @@ use App\Http\Controllers\Admin\Service\ServiceCategoryController;
 use App\Http\Controllers\Admin\Service\ServiceController;
 use App\Http\Controllers\Admin\Feature\FeatureCategoryController;
 use App\Http\Controllers\Admin\Feature\FeatureController;
+use App\Http\Controllers\Admin\Products\ProductCategoryController;
 use App\Http\Controllers\Admin\Project\ProjectCategoryController;
 use App\Http\Controllers\Admin\Project\ProjectController;
 use App\Http\Controllers\Admin\Stat\StatController;
@@ -413,4 +414,20 @@ Route::group(['middleware' => ['skip.permission','no.permission.sync']], functio
     Route::group(['prefix' => 'attributes-value', 'as' => 'attribute.value.'], function () {
         Route::get('attribute-value-delete/{id}', [AttributeValueController::class, 'destroy'])->name('delete');
         Route::post('publish', [AttributeValueController::class, 'attributeValueStatus'])->name('publish');
+    });
+
+    // Products Categories
+    Route::resource('product-categories', ProductCategoryController::class)
+    ->except(['destroy'])
+    ->names([
+        'index'   => 'product.category.list',
+        'create'   => 'product.category.create',
+        'edit'   => 'product.category.edit',
+        'store'   => 'product.category.store',
+        'update'  => 'product.category.update',
+        'show' => 'product.category.show',
+    ]);
+    Route::group(['prefix' => 'product-categories', 'as' => 'product.category.'], function () {
+        Route::get('product-category-delete/{id}', [ProductCategoryController::class, 'destroy'])->name('delete');
+        Route::post('publish', [ProductCategoryController::class, 'productCategoryStatus'])->name('publish');
     });

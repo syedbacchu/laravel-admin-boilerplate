@@ -96,6 +96,11 @@ use App\Http\Services\AttributeValue\AttributeValueRepositoryInterface;
 use App\Http\Services\AttributeValue\AttributeValueService;
 use App\Http\Services\AttributeValue\AttributeValueServiceInterface;
 
+use App\Http\Services\ProductsCategory\ProductsCategoryRepository;
+use App\Http\Services\ProductsCategory\ProductsCategoryRepositoryInterface;
+use App\Http\Services\ProductsCategory\ProductsCategoryService;
+use App\Http\Services\ProductsCategory\ProductsCategoryServiceInterface;
+
 use Illuminate\Support\ServiceProvider;
 
 class ServiceLayerProvider extends ServiceProvider
@@ -171,6 +176,9 @@ class ServiceLayerProvider extends ServiceProvider
 
         $this->app->bind(AttributeValueRepositoryInterface::class, AttributeValueRepository::class);
         $this->app->bind(AttributeValueServiceInterface::class, AttributeValueService::class);
+
+        $this->app->bind(ProductsCategoryRepositoryInterface::class, ProductsCategoryRepository::class);
+        $this->app->bind(ProductsCategoryServiceInterface::class, ProductsCategoryService::class);
     }
 
     /**
