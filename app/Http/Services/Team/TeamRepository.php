@@ -65,7 +65,8 @@ class TeamRepository extends BaseRepository implements TeamRepositoryInterface
         return Team::query()
             ->where('status', 1)
             ->where(function ($query) use ($identifier) {
-                $query->where('id', $identifier);
+                $query->where('id', $identifier)
+                    ->orWhere('slug', $identifier);
             })
             ->first();
     }
