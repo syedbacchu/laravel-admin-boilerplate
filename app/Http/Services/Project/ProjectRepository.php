@@ -48,6 +48,9 @@ class ProjectRepository extends BaseRepository implements ProjectRepositoryInter
                 'category_id' => [
                     'column' => 'category_id',
                 ],
+                'site_type' => [
+                    'column' => 'site_type',
+                ],
             ],
             select: [
                 'id',
@@ -64,6 +67,7 @@ class ProjectRepository extends BaseRepository implements ProjectRepositoryInter
                 'project_status',
                 'sort_order',
                 'is_featured',
+                'site_type',
                 'status',
                 'added_by',
                 'updated_by',

@@ -22,6 +22,7 @@ class ProjectListResource extends JsonResource
             'status' => (bool) $this->status,
             'is_featured' => (bool) $this->is_featured,
             'sort_order' => (int) $this->sort_order,
+            'site_type' => $this->site_type,
             'category' => $this->whenLoaded('category', function () {
                 return [
                     'id' => $this->category?->id,

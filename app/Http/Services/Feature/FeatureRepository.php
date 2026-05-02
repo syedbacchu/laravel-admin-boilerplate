@@ -39,6 +39,9 @@ class FeatureRepository extends BaseRepository implements FeatureRepositoryInter
                 'status' => [
                     'column' => 'status',
                 ],
+                'site_type' => [
+                    'column' => 'site_type',
+                ],
                 'is_featured' => [
                     'column' => 'is_featured',
                 ],
@@ -62,6 +65,7 @@ class FeatureRepository extends BaseRepository implements FeatureRepositoryInter
                 'added_by',
                 'updated_by',
                 'created_at',
+                'site_type'
             ],
         );
     }

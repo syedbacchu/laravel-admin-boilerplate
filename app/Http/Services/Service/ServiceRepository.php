@@ -39,6 +39,9 @@ class ServiceRepository extends BaseRepository implements ServiceRepositoryInter
                 'status' => [
                     'column' => 'status',
                 ],
+                'site_type' => [
+                    'column' => 'site_type',
+                ],
                 'is_featured' => [
                     'column' => 'is_featured',
                 ],
