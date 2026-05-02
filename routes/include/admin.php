@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\Admin\App\AppSliderController;
+use App\Http\Controllers\Admin\Attribute\AttributeController;
+use App\Http\Controllers\Admin\Attribute\AttributeValueController;
 use App\Http\Controllers\Admin\Audit\AuditSettingController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\Faq\FaqCategoryController;
@@ -18,6 +20,7 @@ use App\Http\Controllers\Admin\Service\ServiceCategoryController;
 use App\Http\Controllers\Admin\Service\ServiceController;
 use App\Http\Controllers\Admin\Feature\FeatureCategoryController;
 use App\Http\Controllers\Admin\Feature\FeatureController;
+use App\Http\Controllers\Admin\Products\ProductCategoryController;
 use App\Http\Controllers\Admin\Project\ProjectCategoryController;
 use App\Http\Controllers\Admin\Project\ProjectController;
 use App\Http\Controllers\Admin\Stat\StatController;
@@ -379,4 +382,52 @@ Route::group(['middleware' => ['skip.permission','no.permission.sync']], functio
     Route::group(['prefix' => 'teams', 'as' => 'team.'], function () {
         Route::get('team-delete/{id}', [TeamController::class, 'destroy'])->name('delete');
         Route::post('publish', [TeamController::class, 'teamStatus'])->name('publish');
+    });
+
+    // Attribute type
+    Route::resource('attributes', AttributeController::class)
+    ->except(['destroy'])
+    ->names([
+        'index'   => 'attribute.list',
+        'create'   => 'attribute.create',
+        'edit'   => 'attribute.edit',
+        'store'   => 'attribute.store',
+        'update'  => 'attribute.update',
+        'show' => 'attribute.show',
+    ]);
+    Route::group(['prefix' => 'attributes', 'as' => 'attribute.'], function () {
+        Route::get('attribute-delete/{id}', [AttributeController::class, 'destroy'])->name('delete');
+        Route::post('publish', [AttributeController::class, 'attributeStatus'])->name('publish');
+    });
+
+    // Attribute Value
+    Route::resource('attributes-value', AttributeValueController::class)
+    ->except(['destroy'])
+    ->names([
+        'index'   => 'attribute.value.list',
+        'create'   => 'attribute.value.create',
+        'edit'   => 'attribute.value.edit',
+        'store'   => 'attribute.value.store',
+        'update'  => 'attribute.value.update',
+        'show' => 'attribute.value.show',
+    ]);
+    Route::group(['prefix' => 'attributes-value', 'as' => 'attribute.value.'], function () {
+        Route::get('attribute-value-delete/{id}', [AttributeValueController::class, 'destroy'])->name('delete');
+        Route::post('publish', [AttributeValueController::class, 'attributeValueStatus'])->name('publish');
+    });
+
+    // Products Categories
+    Route::resource('product-categories', ProductCategoryController::class)
+    ->except(['destroy'])
+    ->names([
+        'index'   => 'product.category.list',
+        'create'   => 'product.category.create',
+        'edit'   => 'product.category.edit',
+        'store'   => 'product.category.store',
+        'update'  => 'product.category.update',
+        'show' => 'product.category.show',
+    ]);
+    Route::group(['prefix' => 'product-categories', 'as' => 'product.category.'], function () {
+        Route::get('product-category-delete/{id}', [ProductCategoryController::class, 'destroy'])->name('delete');
+        Route::post('publish', [ProductCategoryController::class, 'productCategoryStatus'])->name('publish');
     });

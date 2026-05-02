@@ -107,6 +107,19 @@ class Viewed
             'list' => 'admin.team.index',
             'create' => 'admin.team.create',
         ],
+        'attribute_type' => [
+            'list' => 'admin.attribute.index',
+            'create' => 'admin.attribute.create',
+        ],
+        'attribute_value' => [
+            'list' => 'admin.attribute.attribute_value.index',
+            'create' => 'admin.attribute.attribute_value.create',
+        ],
+        'products_category' => [
+            'list' => 'admin.products.products_category.index',
+            'create' => 'admin.products.products_category.create',
+        ],
+        
     ];
 
     /**
