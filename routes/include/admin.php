@@ -23,6 +23,7 @@ use App\Http\Controllers\Admin\Feature\FeatureController;
 use App\Http\Controllers\Admin\Products\ProductCategoryController;
 use App\Http\Controllers\Admin\Project\ProjectCategoryController;
 use App\Http\Controllers\Admin\Project\ProjectController;
+use App\Http\Controllers\Admin\AboutCompany\AboutCompanyController;
 use App\Http\Controllers\Admin\Stat\StatController;
 use App\Http\Controllers\Admin\Team\TeamController;
 use App\Http\Controllers\Admin\Testimonial\TestimonialController;
@@ -73,6 +74,12 @@ Route::group(['middleware' => ['skip.permission','no.permission.sync']], functio
     Route::group(['prefix' => 'settings', 'as' => 'settings.'], function () {
         Route::get('/', [SettingsController::class, 'index'])->name('generalSetting');
         Route::post('/settings/{group}', [SettingsController::class, 'update'])->name('update');
+    });
+
+    // About Company
+    Route::group(['prefix' => 'about-company', 'as' => 'about-company.'], function () {
+        Route::get('/', [AboutCompanyController::class, 'index'])->name('edit');
+        Route::post('/', [AboutCompanyController::class, 'update'])->name('update');
     });
 
 

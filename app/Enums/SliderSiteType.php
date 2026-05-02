@@ -8,6 +8,7 @@ enum SliderSiteType: int
     case SOLAR = 2;
     case CAR = 3;
     case DROP_SHIPPING = 4;
+    case BATTERY_WATER = 5;
 
     public static function getSliderSiteTypeArray(): array
     {
@@ -16,6 +17,7 @@ enum SliderSiteType: int
             self::SOLAR->value => 'SOLAR',
             self::CAR->value => 'CAR',
             self::DROP_SHIPPING->value => 'DROP SHIPPING',
+            self::BATTERY_WATER->value => 'Battery Water',
         ];
     }
 }
