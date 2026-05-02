@@ -16,6 +16,7 @@ use App\Http\Controllers\Api\Stat\StatsController;
 use App\Http\Controllers\Api\Team\TeamsController;
 use App\Http\Controllers\Api\Testimonials\TestimonialsController;
 use App\Http\Controllers\Api\User\ProfileController;
+use App\Http\Controllers\Api\Home\HomeController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -38,6 +39,10 @@ Route::group(['prefix' => 'blogs', 'as' => 'apiBlog.'], function () {
     Route::get('{identifier}/comments', [BlogCommentController::class, 'index'])->name('comments');
     Route::post('{identifier}/comments', [BlogCommentController::class, 'store'])->name('commentStore');
     Route::get('{identifier}', [BlogController::class, 'show'])->name('details');
+});
+
+Route::group(['prefix' => 'home', 'as' => 'apiHome.'], function () {
+    Route::get('/', [HomeController::class, 'index'])->name('home');
 });
 
 Route::group(['prefix' => 'services', 'as' => 'apiService.'], function () {

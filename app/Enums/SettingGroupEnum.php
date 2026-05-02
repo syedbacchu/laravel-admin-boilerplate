@@ -9,4 +9,5 @@ enum SettingGroupEnum: string
 
     case SETTING_GROUP_LOGO = "logo";
     case SETTING_GROUP_SMS = "sms";
+    case SETTING_GROUP_LEGAL = "legal";
 }

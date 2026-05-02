@@ -36,5 +36,9 @@ class SettingFieldSeeder extends Seeder
         SettingsField::firstOrCreate(['slug' => 'login_logo'],['group' => enum(SettingGroupEnum::SETTING_GROUP_LOGO), 'label' => 'Login Logo', 'type' => 'file' ]);
         SettingsField::firstOrCreate(['slug' => 'login_sidebar_image'],['group' => enum(SettingGroupEnum::SETTING_GROUP_LOGO), 'label' => 'Login Sidebar Image', 'type' => 'file' ]);
         SettingsField::firstOrCreate(['slug' => 'favicon'],['group' => enum(SettingGroupEnum::SETTING_GROUP_LOGO), 'label' => 'Favicon', 'type' => 'file' ]);
+
+        SettingsField::firstOrCreate(['slug' => 'privacy_policy'],['group' => enum(SettingGroupEnum::SETTING_GROUP_LEGAL), 'label' => 'Privacy Policy', 'type' => 'textarea', 'sort_order' => 1]);
+        SettingsField::firstOrCreate(['slug' => 'terms_condition'],['group' => enum(SettingGroupEnum::SETTING_GROUP_LEGAL), 'label' => 'Terms & Conditions', 'type' => 'textarea', 'sort_order' => 2]);
+        SettingsField::firstOrCreate(['slug' => 'cookie_policy'],['group' => enum(SettingGroupEnum::SETTING_GROUP_LEGAL), 'label' => 'Cookie Policy', 'type' => 'textarea', 'sort_order' => 3]);
     }
 }
