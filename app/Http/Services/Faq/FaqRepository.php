@@ -4,9 +4,8 @@ namespace App\Http\Services\Faq;
 
 use App\Http\Repositories\BaseRepository;
 use App\Models\Faq;
-use Illuminate\Database\Eloquent\Collection;
+use App\Support\DataListManager;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Builder;
 
 class FaqRepository extends BaseRepository implements FaqRepositoryInterface
 {
@@ -17,28 +16,46 @@ class FaqRepository extends BaseRepository implements FaqRepositoryInterface
 
     public function faqList($request): array
     {
-        $query = Faq::query();
+        return DataListManager::list(
+            request: $request,
+            query: Faq::query()->with([
+                'category:id,name',
+            ]),
+            searchable: [
+                'question',
+                'answer',
+            ],
+            filters: [
+                'status' => [
+                    'column' => 'status',
+                ],
+                'site_type' => [
+                    'column' => 'site_type',
+                ],
+                'category_id' => [
+                    'column' => 'category_id',
+                ],
+            ],
+            select: [
+                'id',
+                'category_id',
+                'question',
+                'answer',
+                'attestment',
+                'sort_order',
+                'site_type',
+                'status',
+                'created_at',
+            ],
+        );
+    }
 
-        if ($request->get('status') !== null) {
-            $query->where('status', $request->get('status'));
-        }
-
-        if ($search = $request->get('search')) {
-            if (is_array($search)) {
-                $search = $search['value'] ?? null;
-            }
-
-            if ($search) {
-                $query->where('question', 'like', "%{$search}%")
-                    ->orWhere('answer', 'like', "%{$search}%");
-            }
-        }
-        // IMPORTANT: no ->get()
-        $items = $query->orderBy('id', 'desc');
-
-        return [
-            'data' => $items
-        ];
+    public function findPublicFaqByIdentifier(string $identifier): ?Faq
+    {
+        return Faq::where('id', $identifier)
+            ->where('status', 1)
+            ->with(['category:id,name,slug'])
+            ->first();
     }
 
 

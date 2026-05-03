@@ -17,4 +17,9 @@ class FaqCategory extends Model
         'status',
         'site_type',
     ];
+
+    public function faqs()
+    {
+        return $this->hasMany(Faq::class, 'category_id');
+    }
 }

@@ -6,6 +6,15 @@ use App\Http\Requests\BaseFormRequest;
 
 class ProjectCreateRequest extends BaseFormRequest
 {
+    protected function prepareForValidation(): void
+    {
+        if ($this->has('gallery') && is_string($this->gallery)) {
+            $this->merge([
+                'gallery' => json_decode($this->gallery, true) ?? []
+            ]);
+        }
+    }
+
     /**
      * Get the validation rules that apply to the request.
      *

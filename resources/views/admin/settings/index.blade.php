@@ -1,5 +1,7 @@
 <x-layout.default>
     @section('title', $pageTitle)
+    @vite(['resources/css/quill.snow.css'])
+    <script src="{{ asset('assets/js/quill.js') }}"></script>
     <div class="mt-8 bg-white shadow-xl rounded-2xl p-6 border border-gray-100">
 
         <div class="flex items-center justify-between mb-6">
@@ -63,8 +65,14 @@
                                             @endif
 
                                             @if(in_array($field->type, ['textarea']))
-                                                <textarea name="{{ $field->slug }}" class="form-textarea">{{ old($field->slug, $value) }}</textarea>
-
+                                                @if(in_array($field->slug, ['privacy_policy', 'terms_condition', 'cookie_policy']))
+                                                    <div x-data="quillEditor('{{ $field->slug }}', '{{ old($field->slug, $value) }}')" class="quill-editor-wrapper">
+                                                        <input type="hidden" :name="fieldName" x-model="content">
+                                                        <div x-ref="editor"></div>
+                                                    </div>
+                                                @else
+                                                    <textarea name="{{ $field->slug }}" class="form-textarea">{{ old($field->slug, $value) }}</textarea>
+                                                @endif
                                             @endif
 
                                             {{-- SELECT --}}
@@ -168,4 +176,57 @@
         </div>
     </div>
 
+    <style>
+        .quill-editor-wrapper .ql-toolbar {
+            border-radius: 8px 8px 0 0;
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+        }
+        .quill-editor-wrapper .ql-container {
+            border-radius: 0 0 8px 8px;
+            border: 1px solid #e2e8f0;
+            min-height: 300px;
+            font-size: 14px;
+        }
+    </style>
+
+    <script>
+    function quillEditor(fieldName, initialContent) {
+        return {
+            fieldName: fieldName,
+            content: initialContent || '',
+            quill: null,
+
+            init() {
+                const toolbarOptions = [
+                    [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
+                    ['bold', 'italic', 'underline', 'strike'],
+                    [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+                    [{ 'indent': '-1'}, { 'indent': '+1' }],
+                    [{ 'align': [] }],
+                    ['link'],
+                    ['clean']
+                ];
+
+                this.quill = new Quill(this.$refs.editor, {
+                    modules: {
+                        toolbar: toolbarOptions
+                    },
+                    theme: 'snow',
+                    placeholder: 'Start typing...'
+                });
+
+                // Set initial content
+                if (this.content) {
+                    this.quill.root.innerHTML = this.content;
+                }
+
+                // Update content on change
+                this.quill.on('text-change', () => {
+                    this.content = this.quill.root.innerHTML;
+                });
+            }
+        };
+    }
+    </script>
 </x-layout.default>

@@ -6,6 +6,7 @@ use App\Enums\StatusEnum;
 use App\Http\Requests\Faq\FaqCreateRequest;
 use App\Http\Services\BaseService;
 use App\Traits\FileUploadTrait;
+use Illuminate\Http\Request;
 
 class FaqService extends BaseService implements FaqServiceInterface
 {
@@ -21,7 +22,7 @@ class FaqService extends BaseService implements FaqServiceInterface
     public function storeOrUpdateFaq(FaqCreateRequest $request): array
 {
     $data = [
-        'category_id' => $request->category_id, 
+        'category_id' => $request->category_id,
         'question'    => $request->question,
         'answer'      => $request->answer,
         'attestment'  => $request->attestment ?? null,
@@ -89,5 +90,23 @@ class FaqService extends BaseService implements FaqServiceInterface
     public function faqCreateData($guard): array
     {
         return $this->sendResponse(true, '', []);
+    }
+
+    public function getPublicList(Request $request): array
+    {
+        $request->merge(['status' => $request->status ?? 1]);
+        $data = $this->faqRepository->faqList($request);
+        return $this->sendResponse(true, __('Data get successfully.'), $data);
+    }
+
+    public function getPublicFaqDetails(string $identifier): array
+    {
+        $item = $this->faqRepository->findPublicFaqByIdentifier($identifier);
+
+        if (!$item) {
+            return $this->sendResponse(false, __('Faq not found'), [], 404, __('Faq not found'));
+        }
+
+        return $this->sendResponse(true, __('Faq details'), $item);
     }
 }

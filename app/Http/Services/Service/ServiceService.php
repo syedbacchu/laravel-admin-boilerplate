@@ -34,9 +34,9 @@ class ServiceService extends BaseService implements ServiceServiceInterface
             'sort_order' => $request->sort_order ?? 0,
             'is_featured' => $request->is_featured ?? 0,
             'status' => $request->status ?? 1,
-            'meta_title' => $request->meta_title,
+            'meta_title' => $request->meta_title ?: $request->title,
             'meta_keywords' => $request->meta_keywords,
-            'meta_description' => $request->meta_description,
+            'meta_description' => $request->meta_description ?: $request->short_description,
             'meta_image' => $request->meta_image,
             'site_type' => $request->site_type ?? 1,
         ];

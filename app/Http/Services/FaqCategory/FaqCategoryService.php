@@ -100,4 +100,22 @@ class FaqCategoryService extends BaseService implements FaqCategoryServiceInterf
     {
         return $this->sendResponse(true, '', []);
     }
+
+    public function getPublicFaqCategoryList(Request $request): array
+    {
+        $request->merge(['status' => $request->status ?? 1]);
+        $data = $this->faqCategoryRepository->faqCategoryList($request);
+        return $this->sendResponse(true, __('Data get successfully.'), $data);
+    }
+
+    public function getPublicFaqCategoryDetails(string $identifier): array
+    {
+        $item = $this->faqCategoryRepository->getCategoryWithFaqs($identifier);
+
+        if (!$item) {
+            return $this->sendResponse(false, __('Faq Category not found'), [], 404, __('Faq Category not found'));
+        }
+
+        return $this->sendResponse(true, __('Faq Category details with FAQs'), $item);
+    }
 }

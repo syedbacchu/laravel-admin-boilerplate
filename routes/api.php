@@ -16,6 +16,10 @@ use App\Http\Controllers\Api\Stat\StatsController;
 use App\Http\Controllers\Api\Team\TeamsController;
 use App\Http\Controllers\Api\Testimonials\TestimonialsController;
 use App\Http\Controllers\Api\User\ProfileController;
+use App\Http\Controllers\Api\Home\HomeController;
+use App\Http\Controllers\Api\AboutCompany\AboutCompanyController;
+use App\Http\Controllers\Api\Faq\FaqController;
+use App\Http\Controllers\Api\Faq\FaqCategoryController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -38,6 +42,14 @@ Route::group(['prefix' => 'blogs', 'as' => 'apiBlog.'], function () {
     Route::get('{identifier}/comments', [BlogCommentController::class, 'index'])->name('comments');
     Route::post('{identifier}/comments', [BlogCommentController::class, 'store'])->name('commentStore');
     Route::get('{identifier}', [BlogController::class, 'show'])->name('details');
+});
+
+Route::group(['prefix' => 'home', 'as' => 'apiHome.'], function () {
+    Route::get('/', [HomeController::class, 'index'])->name('home');
+});
+
+Route::group(['prefix' => 'about-company', 'as' => 'apiAboutCompany.'], function () {
+    Route::get('/', [AboutCompanyController::class, 'index'])->name('index');
 });
 
 Route::group(['prefix' => 'services', 'as' => 'apiService.'], function () {
@@ -93,4 +105,14 @@ Route::group(['prefix' => 'stat', 'as' => 'apiStat.'], function () {
 Route::group(['prefix' => 'team', 'as' => 'apiTeam.'], function () {
     Route::get('/', [TeamsController::class, 'index'])->name('list');
     Route::get('{identifier}', [TeamsController::class, 'show'])->name('details');
+});
+
+Route::group(['prefix' => 'faq-category', 'as' => 'apiFaqCategory.'], function () {
+    Route::get('/', [FaqCategoryController::class, 'index'])->name('list');
+    Route::get('{identifier}', [FaqCategoryController::class, 'show'])->name('details');
+});
+
+Route::group(['prefix' => 'faq', 'as' => 'apiFaq.'], function () {
+    Route::get('/', [FaqController::class, 'index'])->name('list');
+    Route::get('{identifier}', [FaqController::class, 'show'])->name('details');
 });
