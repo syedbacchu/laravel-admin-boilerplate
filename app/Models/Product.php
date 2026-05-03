@@ -116,4 +116,9 @@ class Product extends Model
     {
         return $query->where('is_featured', 1);
     }
+
+    public function variations()
+    {
+        return $this->hasMany(ProductVariation::class);
+    }
 }

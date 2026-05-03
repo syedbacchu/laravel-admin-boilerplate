@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Products\ProductsCreateRequest;
 use App\Http\Services\Products\ProductsServiceInterface;
 use App\Http\Services\Response\ResponseService;
+use App\Models\AttributeType;
 use App\Models\AttributeValue;
 use App\Models\ProductCategory;
 use App\Support\DataListManager;
@@ -71,7 +72,10 @@ class ProductController extends Controller
         $data['pageTitle'] = __('Create Product ');
         $data['function_type'] = 'create';
         $data['categories'] = ProductCategory::all();
-        $data['attributes'] = AttributeValue::all();
+
+        // 🔥 FIX
+        $data['attributes'] = AttributeType::all(); 
+        $data['attributeValues'] = AttributeValue::with('attribute')->get();
 
         return ResponseService::send([
             'data' => $data,
@@ -94,18 +98,19 @@ class ProductController extends Controller
     public function edit(string $id)
     {
         $response = $this->product->editData($id);
+
         if ($response['success'] === false) {
             return ResponseService::send();
         }
 
-        $setup = $this->product->createData(request())['data'];
         $item = $response['data'];
 
         $data['pageTitle'] = __('Update Product ');
         $data['function_type'] = 'update';
         $data['item'] = $item;
         $data['categories'] = ProductCategory::all();
-        // $data['attributes'] = AttributeValue::all();
+        $data['attributes'] = AttributeType::all();
+        $data['attributeValues'] = AttributeValue::with('attribute')->get();
 
         return ResponseService::send([
             'data' => $data,

@@ -5,11 +5,12 @@ namespace App\Http\Services\Products;
 use App\Enums\StatusEnum;
 use App\Http\Requests\Products\ProductsCreateRequest;
 use App\Http\Services\BaseService;
+use App\Models\AttributeValue;
 use App\Models\Product;
 use App\Models\Service;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
-
+use Illuminate\Support\Facades\DB;
 class ProductsService extends BaseService implements ProductsServiceInterface
 {
     protected ProductsRepositoryInterface $productsRepository;
@@ -24,75 +25,132 @@ class ProductsService extends BaseService implements ProductsServiceInterface
     {
         $editId = $request->edit_id;
 
-        $data = [
-            // BASIC
-            'name' => $request->name,
-            'slug' => $this->generateUniqueSlug($request->name, $editId),
-            'tagline' => $request->tagline,
+        DB::beginTransaction();
 
-            // MEDIA
-            'image' => $request->image,
-            'gallery' => $request->gallery ? json_encode($request->gallery) : null,
-            'video_img' => $request->video_img,
-            'video_link' => $request->video_link,
+        try {
 
-            // PRICE
-            'price' => $request->price,
-            'discount' => $request->discount,
-            'discount_type' => $request->discount_type,
+            $data = [
+                // BASIC
+                'name' => $request->name,
+                'slug' => $this->generateUniqueSlug($request->name, $editId),
+                'tagline' => $request->tagline,
 
-            // TAX
-            'tax' => $request->tax ?? 5,
-            'tax_type' => $request->tax_type ?? 'percent',
+                // MEDIA
+                'image' => $request->image,
+                'gallery' => $request->gallery ? json_encode($request->gallery) : null,
+                'video_img' => $request->video_img,
+                'video_link' => $request->video_link,
 
-            // RELATION
-            'brand_id' => $request->brand_id,
-            'category_id' => $request->category_id, // ⚠️ parent_id না
+                // PRICE
+                'price' => $request->price,
+                'discount' => $request->discount,
+                'discount_type' => $request->discount_type,
 
-            // STOCK
-            'stock' => $request->stock,
-            'sold' => $request->sold ?? 0,
+                // TAX
+                'tax' => $request->tax ?? 5,
+                'tax_type' => $request->tax_type ?? 'percent',
 
-            // DESCRIPTION
-            'short_description' => $request->short_description,
-            'description' => $request->description,
-            'usage_instructions' => $request->usage_instructions,
+                // RELATION
+                'brand_id' => $request->brand_id,
+                'category_id' => $request->category_id,
 
-            // JSON FIELD
-            'attributes' => $request->attributes ? json_encode($request->attributes) : null,
-            'features' => $request->features ? json_encode($request->features) : null,
-            'quantity_discounts' => $request->quantity_discounts ? json_encode($request->quantity_discounts) : null,
+                // STOCK
+                'stock' => $request->stock,
+                'sold' => $request->sold ?? 0,
 
-            // SEO
-            'meta_title' => $request->meta_title,
-            'meta_description' => $request->meta_description,
-            'meta_keywords' => $request->meta_keywords,
+                // CONTENT
+                'short_description' => $request->short_description,
+                'description' => $request->description,
+                'usage_instructions' => $request->usage_instructions,
 
-            // EXTRA
-            'is_featured' => $request->is_featured ?? 0,
-            'status' => $request->status ?? StatusEnum::ACTIVE,
-        ];
+                // JSON
+                'attributes' => $request->attributes ? json_encode($request->attributes) : null,
+                'features' => $request->features ? json_encode($request->features) : null,
+                'quantity_discounts' => $request->quantity_discounts ? json_encode($request->quantity_discounts) : null,
 
-        if ($editId) {
-            $data['updated_by'] = auth()->id();
+                // SEO
+                'meta_title' => $request->meta_title,
+                'meta_description' => $request->meta_description,
+                'meta_keywords' => $request->meta_keywords,
 
-            $this->productsRepository->update($editId, $data);
+                // FLAGS
+                'is_featured' => $request->is_featured ?? 0,
+                'status' => $request->status ?? StatusEnum::ACTIVE,
+            ];
 
-            return $this->sendResponse(true, 'Updated successfully');
+            /*
+            |----------------------------------------------------------------------
+            | CREATE / UPDATE PRODUCT
+            |----------------------------------------------------------------------
+            */
+            if ($editId) {
+
+                $data['updated_by'] = auth()->id();
+
+                $this->productsRepository->update($editId, $data);
+
+                $product = $this->productsRepository->find($editId);
+
+            } else {
+
+                $data['created_by'] = auth()->id();
+
+                $product = $this->productsRepository->create($data);
+            }
+
+            /*
+            |----------------------------------------------------------------------
+            | VARIATIONS SAVE (FIXED + SKU)
+            |----------------------------------------------------------------------
+            */
+            if (!empty($request->variations)) {
+
+                if ($editId) {
+                    $product->variations()->delete();
+                }
+
+                foreach ($request->variations as $var) {
+
+                    if (!empty($var['name'])) {
+
+                        $product->variations()->create([
+                            'attribute_value_id' => $var['attribute_value_id'] ?? null,
+                            'name' => $var['name'],
+                            'sku' => $var['sku'] ?? 'VAR-' . strtoupper(uniqid()),
+                            'price' => $var['price'] ?? $request->price ?? 0,
+                            'stock' => $var['stock'] ?? 0,
+                            'attributes' => !empty($var['attributes'])
+                                ? json_encode($var['attributes'])
+                                : json_encode([]),
+
+                            'status' => $var['status'] ?? 1,
+                        ]);
+                    }
+                }
+            }
+
+            DB::commit();
+
+            return $this->sendResponse(
+                true,
+                $editId ? 'Updated successfully' : 'Created successfully'
+            );
+
+        } catch (\Exception $e) {
+
+            DB::rollBack();
+
+            return $this->sendResponse(false, $e->getMessage());
         }
-
-        $data['created_by'] = auth()->id();
-
-        $this->productsRepository->create($data);
-
-        return $this->sendResponse(true, 'Created successfully');
     }
+
     public function deleteData($id): array
     {
         $item = $this->productsRepository->find($id);
         if (!$item) {
             return $this->sendResponse(false, __('Data not found'));
         }
+        $item->variations()->delete();
 
         $this->productsRepository->delete($id);
         return $this->sendResponse(true, __('Data deleted successfully'));
@@ -121,7 +179,7 @@ class ProductsService extends BaseService implements ProductsServiceInterface
         if (!$item) {
             return $this->sendResponse(false, __('Data not found'));
         }
-
+        $item->load('variations');
         return $this->sendResponse(true, '', $item);
     }
 
@@ -131,9 +189,10 @@ class ProductsService extends BaseService implements ProductsServiceInterface
             ->where('status', 1)
             ->orderBy('name')
             ->get(['id', 'name']);
-
+        $attributeValues = AttributeValue::with('attribute')->get();
         return $this->sendResponse(true, '', [
             'categories' => $categories,
+            'attributeValues' => $attributeValues,
         ]);
     }
 

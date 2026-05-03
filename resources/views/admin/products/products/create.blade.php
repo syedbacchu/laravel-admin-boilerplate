@@ -1,365 +1,318 @@
 <x-layout.default>
-@section('title', $pageTitle)
+    @section('title', $pageTitle)
 
-<form method="POST" action="{{ route('product.store') }}" class="mt-4">
-    @csrf
+    <form method="POST" action="{{ route('product.store') }}" class="mt-4">
+        @csrf
+        @if(isset($item))
+            <input type="hidden" name="edit_id" value="{{ $item->id }}">
+        @endif
 
-    @if(isset($item))
-        <input type="hidden" name="edit_id" value="{{ $item->id }}">
-    @endif
-
-    <!-- HEADER -->
-    <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-3 mb-4">
-        <h1 class="text-2xl font-bold text-gray-800">
-            {{ $pageTitle }}
-        </h1>
-        <div class="flex items-center gap-2">
-            <a href="{{ route('product.list') }}" class="btn btn-outline-primary">Back</a>
-            <button type="submit" class="btn btn-primary">Save Product</button>
+        <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-3 mb-4">
+            <h1 class="text-2xl font-bold text-gray-800">{{ $pageTitle }}</h1>
+            <div class="flex items-center gap-2">
+                <a href="{{ route('product.list') }}" class="btn btn-outline-primary">Back</a>
+                <button type="submit" class="btn btn-primary">Save Product</button>
+            </div>
         </div>
-    </div>
 
-    <div class="grid grid-cols-1 xl:grid-cols-3 gap-6">
+        <div class="grid grid-cols-1 xl:grid-cols-3 gap-6">
+            <!-- LEFT SIDE -->
+            <div class="xl:col-span-2 space-y-6">
+                <div class="panel border p-5 space-y-4">
+                    <h3 class="font-bold border-b pb-2">Basic Information</h3>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label>Product Name</label>
+                            <input name="name" value="{{ old('name', $item->name ?? '') }}" class="form-input" required>
+                        </div>
+                        <div>
+                            <label>Slug</label>
+                            <input name="slug" value="{{ old('slug', $item->slug ?? '') }}" class="form-input">
+                        </div>
+                    </div>
 
-        <!-- LEFT SIDE -->
-        <div class="xl:col-span-2 space-y-6">
-            <div class="panel border">
+                    <div>
+                        <label>Tagline</label>
+                        <input name="tagline" value="{{ old('tagline', $item->tagline ?? '') }}" class="form-input">
+                    </div>
 
-                <div class="px-4 py-3 border-b bg-gray-50">
-                    <h3 class="font-semibold text-base">Product Information</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label>Category</label>
+                            <select name="category_id" class="form-select">
+                                <option value="">Select Category</option>
+                                @foreach($categories as $cat)
+                                    <option value="{{ $cat->id }}" {{ (old('category_id', $item->category_id ?? '') == $cat->id) ? 'selected' : '' }}>{{ $cat->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div>
+                            <label>Brand</label>
+                            <select name="brand_id" class="form-select">
+                                <option value="">Select Brand</option>
+                                @foreach($brands ?? [] as $brand)
+                                    <option value="{{ $brand->id }}" {{ (old('brand_id', $item->brand_id ?? '') == $brand->id) ? 'selected' : '' }}>{{ $brand->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
                 </div>
 
-                <div class="p-4 space-y-4">
+                <!-- DYNAMIC VARIATIONS (ATTRIBUTES) -->
+                <div class="panel border p-5">
+                    <h3 class="font-bold border-b pb-2 mb-4">Product Variations</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4 bg-gray-50 p-3 rounded">
+                        <div>
+                            <label>Type</label>
+                            <select id="attr-type" class="form-select" onchange="loadValuesByType(this)">
+                                <option value="">Select Type</option>
+                                @foreach($attributes as $attr)
+                                    <option value="{{ $attr->id }}">{{ $attr->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div>
+                            <label>Value</label>
+                            <select id="attr-value" class="form-select">
+                                <option value="">Select Value</option>
+                            </select>
+                        </div>
+                    </div>
+                    <button type="button" onclick="addVariation()" class="btn btn-sm btn-secondary mb-4">+ Add Variation</button>
+                    
+                    <div id="variation-wrapper" class="space-y-3"></div>
+                </div>
 
-                    <!-- NAME -->
-                    <label>Name</label>
-                    <input name="name" value="{{ $item->name ?? '' }}" class="form-input">
+                <!-- FEATURES -->
+                <div class="panel border p-5">
+                    <h3 class="font-bold border-b pb-2 mb-4">Features</h3>
+                    <div id="feature-wrapper" class="space-y-3"></div>
+                    <button type="button" onclick="addNewFeature()" class="btn btn-sm btn-secondary mt-3">+ Add Feature</button>
+                </div>
 
-                    <!-- SLUG -->
-                    <label>Slug</label>
-                    <input name="slug" value="{{ $item->slug ?? '' }}" class="form-input">
-
-                    <!-- TAGLINE -->
-                    <label>Tagline</label>
-                    <input name="tagline" value="{{ $item->tagline ?? '' }}" class="form-input">
-
-                    <!-- CATEGORY -->
+                <!-- DESCRIPTIONS -->
+                <div class="panel border p-5 space-y-4">
                     <div>
-                        <label class="text-xs uppercase text-gray-500">Category</label>
-                        <select name="category_id" class="form-select">
-                            <option value="">Select Category</option>
-                            @foreach($categories as $cat)
-                                <option value="{{ $cat->id }}"
-                                    {{ ($item->category_id ?? '') == $cat->id ? 'selected' : '' }}>
-                                    {{ $cat->name }}
-                                </option>
-                            @endforeach
+                        <label>Short Description</label>
+                        <textarea name="short_description" class="form-input">{{ old('short_description', $item->short_description ?? '') }}</textarea>
+                    </div>
+                    <div>
+                        <label>Full Description</label>
+                        <textarea name="description" rows="5" class="form-input">{{ old('description', $item->description ?? '') }}</textarea>
+                    </div>
+                    <div>
+                        <label>Usage Instructions</label>
+                        <textarea name="usage_instructions" class="form-input">{{ old('usage_instructions', $item->usage_instructions ?? '') }}</textarea>
+                    </div>
+                </div>
+            </div>
+
+            <!-- RIGHT SIDE -->
+            <div class="space-y-6">
+                <!-- PRICING & STOCK -->
+                <div class="panel border p-5 space-y-4">
+                    <h3 class="font-bold border-b pb-2">Inventory & Pricing</h3>
+                    <div>
+                        <label>Base Price</label>
+                        <input type="number" step="0.01" name="price" value="{{ old('price', $item->price ?? '') }}" class="form-input">
+                    </div>
+                    <div class="grid grid-cols-2 gap-3">
+                        <div>
+                            <label>Stock</label>
+                            <input type="number" name="stock" value="{{ old('stock', $item->stock ?? '') }}" class="form-input">
+                        </div>
+                        <div>
+                            <label>Sold</label>
+                            <input type="number" name="sold" value="{{ old('sold', $item->sold ?? 0) }}" class="form-input">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TAX & DISCOUNT -->
+                <div class="panel border p-5 space-y-4">
+                    <h3 class="font-bold border-b pb-2">Tax & Discount</h3>
+                    <div class="grid grid-cols-2 gap-3">
+                        <input name="discount" value="{{ $item->discount ?? '' }}" class="form-input" placeholder="Discount">
+                        <select name="discount_type" class="form-select">
+                            <option value="percent" {{ ($item->discount_type ?? '') == 'percent' ? 'selected' : '' }}>Percent</option>
+                            <option value="flat" {{ ($item->discount_type ?? '') == 'flat' ? 'selected' : '' }}>Flat</option>
                         </select>
                     </div>
-
-                    <!-- ATTRIBUTES -->
-                    <div>
-                        @php
-                            $selectedAttributes = old('attributes', $item->attributes ?? []);
-                            $selectedAttributes = is_string($selectedAttributes)
-                                ? json_decode($selectedAttributes, true)
-                                : $selectedAttributes;
-
-                            $selectedAttributes = is_array($selectedAttributes)
-                                ? $selectedAttributes
-                                : [];
-                        @endphp
-
-                        <div>
-                            <label class="text-xs uppercase text-gray-500">Attributes</label>
-
-                            <select name="attributes[]" class="form-select" multiple>
-
-                                @foreach($attributes as $attr)
-
-                                    <option value="{{ $attr->id }}"
-                                        {{ in_array($attr->id, $selectedAttributes) ? 'selected' : '' }}>
-                                        {{ $attr->name }}
-                                    </option>
-
-                                @endforeach
-
-                            </select>
-
-                            <small class="text-gray-400">You can select multiple attributes</small>
-                        </div>
-
-                        <small class="text-gray-400">You can select multiple attributes</small>
+                    <div class="grid grid-cols-2 gap-3">
+                        <input name="tax" value="{{ $item->tax ?? 0 }}" class="form-input" placeholder="Tax">
+                        <select name="tax_type" class="form-select">
+                            <option value="percent" {{ ($item->tax_type ?? 'percent') == 'percent' ? 'selected' : '' }}>Percent</option>
+                            <option value="flat" {{ ($item->tax_type ?? '') == 'flat' ? 'selected' : '' }}>Flat</option>
+                        </select>
                     </div>
-                    
-                    <div class="mt-6">
-                        <h3 class="font-semibold text-lg mb-3">Features</h3>
-
-                        <div id="stat-wrapper">
-
-                            @php
-                                $features = old('features', $item->features ?? []);
-                                $features = is_string($features) ? json_decode($features, true) : $features;
-                                $features = is_array($features) ? $features : [];
-                            @endphp
-
-                            @foreach($features as $index => $feature)
-                                <div class="grid grid-cols-1 md:grid-cols-5 gap-3 mb-3 border p-3 rounded">
-
-                                    <!-- IMAGE -->
-                                    <div x-data="fileManager('{{ $feature['icon'] ?? '' }}', 'feature_{{ $index }}')">
-
-                                        <button type="button"
-                                                @click="$dispatch('open-file-manager', { callback: callbackName })"
-                                                class="px-4 py-2 bg-blue-600 text-white text-sm rounded-lg shadow hover:bg-blue-700">
-                                            Choose Image
-                                        </button>
-
-                                        <input type="hidden"
-                                            name="features[{{ $index }}][icon]"
-                                            x-model="fileUrl">
-
-                                        <template x-if="filePreview">
-                                            <img :src="filePreview" class="w-16 mt-2">
-                                        </template>
-
-                                    </div>
-
-                                    <!-- TITLE -->
-                                    <input type="text"
-                                        name="features[{{ $index }}][title]"
-                                        value="{{ $feature['title'] ?? '' }}"
-                                        placeholder="Title"
-                                        class="form-input">
-
-                                    <!-- VALUE -->
-                                    <input type="text"
-                                        name="features[{{ $index }}][value]"
-                                        value="{{ $feature['value'] ?? '' }}"
-                                        placeholder="Value"
-                                        class="form-input">
-
-                                    <!-- REMOVE -->
-                                    <button type="button"
-                                            onclick="this.closest('.grid').remove()"
-                                            class="btn btn-danger btn-sm">
-                                        Remove
-                                    </button>
-
-                                </div>
-                            @endforeach
-
-                        </div>
-
-                        <button type="button" onclick="addFeature()" class="btn btn-primary btn-sm">
-                            + Add Feature
-                        </button>
-                    </div>
-                    <!-- PRICE -->
-                    <label>Price</label>
-                    <input name="price" value="{{ $item->price ?? '' }}" class="form-input">
-
-                    <!-- STOCK -->
-                    <label>Stock</label>
-                    <input name="stock" value="{{ $item->stock ?? '' }}" class="form-input">
-
-                    <!-- SHORT DESC -->
-                    <label>Short Description</label>
-                    <textarea name="short_description" class="form-input">{{ $item->short_description ?? '' }}</textarea>
-
-                    <!-- DESCRIPTION -->
-                    <label>Description</label>
-                    <textarea name="description" class="form-input">{{ $item->description ?? '' }}</textarea>
-
-                    <!-- USAGE -->
-                    <label>Usage Instructions</label>
-                    <textarea name="usage_instructions" class="form-input">{{ $item->usage_instructions ?? '' }}</textarea>
-
                 </div>
 
-                {{-- Custom Fields --}}
-                @if(isset($item))
-                    @customFields($item)
-                @else
-                    @customFields(\App\Models\Product::class)
-                @endif
-
-            </div>
-
-            <!-- PRICING -->
-            <div class="panel border p-4 space-y-3">
-                <h3>Pricing</h3>
-
-                <input name="discount" value="{{ $item->discount ?? '' }}" class="form-input" placeholder="Discount">
-
-                <select name="discount_type" class="form-select">
-                    <option value="percent">Percent</option>
-                    <option value="flat">Flat</option>
-                </select>
-
-                <input name="tax" value="{{ $item->tax ?? 0 }}" class="form-input">
-
-                <select name="tax_type" class="form-select">
-                    <option value="percent">Percent</option>
-                    <option value="flat">Flat</option>
-                </select>
-            </div>
-
-            <!-- SEO -->
-            <div class="panel border p-4 space-y-3">
-                <h3>SEO</h3>
-
-                <input name="meta_title" value="{{ $item->meta_title ?? '' }}" class="form-input">
-
-                <textarea name="meta_description" class="form-input">{{ $item->meta_description ?? '' }}</textarea>
-
-                <input name="meta_keywords" value="{{ $item->meta_keywords ?? '' }}" class="form-input">
-            </div>
-
-        </div>
-
-        <!-- RIGHT SIDE -->
-        <div class="space-y-6">
-
-            <!-- STATUS -->
-            <div class="panel border p-4">
-                <select name="status" class="form-select">
-                    <option value="1" @selected(($item->status ?? 1)==1)>Active</option>
-                    <option value="0" @selected(($item->status ?? 1)==0)>Inactive</option>
-                </select>
-
-                <select name="is_featured" class="form-select mt-2">
-                    <option value="0">Not Featured</option>
-                    <option value="1">Featured</option>
-                </select>
-            </div>
-
-            <!-- IMAGE -->
-            <div class="panel border">
-                <div class="px-4 py-3 border-b bg-gray-50">
-                    <h3 class="font-semibold text-base">Image</h3>
-                </div>
-
-                <div class="p-4">
-                    <div x-data="fileManager('{{ $item->image ?? old('image', '') }}', 'image')">
-
-                        <button type="button"
-                                @click="$dispatch('open-file-manager', { callback: callbackName })"
-                                class="btn btn-outline-primary w-full">
-                            Choose Image
-                        </button>
-
+                <!-- MEDIA -->
+                <div class="panel border p-5 space-y-4">
+                    <h3 class="font-bold border-b pb-2">Media</h3>
+                    <!-- Main Image -->
+                    <div x-data="fileManager('{{ $item->image ?? '' }}', 'image')">
+                        <label>Main Image</label>
+                        <button type="button" @click="$dispatch('open-file-manager', { callback: callbackName })" class="btn btn-outline-primary w-full">Choose Image</button>
                         <input type="hidden" name="image" x-model="fileUrl">
-
-                        <template x-if="filePreview">
-                            <img :src="filePreview"
-                                 class="mt-3 rounded border w-full max-h-[160px]">
-                        </template>
-
+                        <template x-if="filePreview"><img :src="filePreview" class="mt-2 h-32 w-full object-cover rounded"></template>
                     </div>
-                </div>
-            </div>
 
-            <!-- GALLERY -->
-            <div class="panel border">
-                <div class="px-4 py-3 border-b bg-gray-50">
-                    <h3 class="font-semibold text-base">Gallery</h3>
-                </div>
+                    <!-- PRODUCT GALLERY -->
+                    <div class="panel border p-5">
+                        <h3 class="font-bold border-b pb-2 mb-4">Product Gallery</h3>
+                        <!-- ডাটা যদি স্ট্রিং হিসেবে থাকে তবে JSON.parse হবে, নাহলে সরাসরি অ্যারে -->
+                        <div x-data="galleryManager({{ isset($item->gallery) ? (is_string($item->gallery) ? $item->gallery : json_encode($item->gallery)) : '[]' }})">
+                            <div class="flex items-center justify-between mb-3">
+                                <label class="text-sm font-semibold">Gallery Images</label>
+                                <button type="button" 
+                                        @click="$dispatch('open-file-manager', { callback: 'galleryCallback' })" 
+                                        class="btn btn-sm btn-outline-primary">
+                                    + Add Images
+                                </button>
+                            </div>
 
-                <div class="p-4">
-                    <div x-data="fileManager('{{ json_encode($item->gallery ?? []) }}', 'gallery', true)">
+                            <!-- Hidden Inputs for Form Submission -->
+                            <template x-for="(url, index) in galleryList" :key="index">
+                                <input type="hidden" name="gallery[]" :value="url">
+                            </template>
 
-                        <button type="button"
-                                @click="$dispatch('open-file-manager', { callback: callbackName })"
-                                class="btn btn-outline-primary w-full">
-                            Choose Gallery
-                        </button>
-
-                        <input type="hidden" name="gallery" x-model="fileUrl">
-
-                        <template x-if="filePreview">
-                            <img :src="filePreview"
-                                 class="mt-3 rounded border w-full max-h-[160px]">
-                        </template>
-
+                            <!-- Preview Grid -->
+                            <div class="grid grid-cols-3 sm:grid-cols-4 gap-4">
+                                <template x-for="(url, index) in galleryList" :key="index">
+                                    <div class="relative group border rounded p-1 bg-white">
+                                        <img :src="url" class="h-24 w-full object-cover rounded">
+                                        <button type="button" 
+                                                @click="removeImage(index)"
+                                                class="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                                            ×
+                                        </button>
+                                    </div>
+                                </template>
+                                
+                                <!-- Empty State -->
+                                <template x-if="galleryList.length === 0">
+                                    <div class="col-span-full py-8 border-2 border-dashed rounded text-center text-gray-400">
+                                        No gallery images selected
+                                    </div>
+                                </template>
+                            </div>
+                        </div>
                     </div>
-                </div>
-            </div>
 
-            <!-- VIDEO IMAGE -->
-            <div class="panel border">
-                <div class="px-4 py-3 border-b bg-gray-50">
-                    <h3 class="font-semibold text-base">Video Image</h3>
-                </div>
-
-                <div class="p-4">
-                    <div x-data="fileManager('{{ $item->video_img ?? old('video_img', '') }}', 'video_img')">
-
-                        <button type="button"
-                                @click="$dispatch('open-file-manager', { callback: callbackName })"
-                                class="btn btn-outline-primary w-full">
-                            Choose Video Image
-                        </button>
-
+                    <!-- Video Section -->
+                    <div x-data="fileManager('{{ $item->video_img ?? '' }}', 'video_img')">
+                        <label>Video Thumbnail</label>
+                        <button type="button" @click="$dispatch('open-file-manager', { callback: callbackName })" class="btn btn-outline-primary w-full">Choose Thumbnail</button>
                         <input type="hidden" name="video_img" x-model="fileUrl">
-
-                        <template x-if="filePreview">
-                            <img :src="filePreview"
-                                 class="mt-3 rounded border w-full max-h-[160px]">
-                        </template>
-
+                        <template x-if="filePreview"><img :src="filePreview" class="mt-2 h-32 w-full object-cover rounded"></template>
                     </div>
+                    <input name="video_link" value="{{ $item->video_link ?? '' }}" class="form-input" placeholder="Video URL (YouTube/Vimeo)">
+                </div>
+
+                <!-- SEO -->
+                <div class="panel border p-5 space-y-3">
+                    <h3 class="font-bold border-b pb-2">SEO Meta</h3>
+                    <input name="meta_title" value="{{ $item->meta_title ?? '' }}" class="form-input" placeholder="Meta Title">
+                    <textarea name="meta_description" class="form-input" placeholder="Meta Description">{{ $item->meta_description ?? '' }}</textarea>
+                    <input name="meta_keywords" value="{{ $item->meta_keywords ?? '' }}" class="form-input" placeholder="Keywords (comma separated)">
                 </div>
             </div>
-
-            <!-- VIDEO LINK -->
-            <div class="panel border p-4">
-                <input name="video_link" value="{{ $item->video_link ?? '' }}" class="form-input" placeholder="Video Link">
-            </div>
-
         </div>
+    </form>
 
-    </div>
+    <script>
+        let vIndex = 0;
+        let fIndex = 0;
+        const attributeValues = @json($attributeValues);
 
-</form>
+        function loadValuesByType(select) {
+            const valSelect = document.getElementById('attr-value');
+            valSelect.innerHTML = '<option value="">Select Value</option>';
+            attributeValues.filter(v => v.type_id == select.value).forEach(v => {
+                valSelect.innerHTML += `<option value="${v.id}">${v.value}</option>`;
+            });
+        }
 
-<script>
-let featureIndex = {{ count($features ?? []) }};
+        function addVariation(data = null) {
+            const wrapper = document.getElementById('variation-wrapper');
+            let name, valId, sku, price, stock;
 
-function addFeature() {
-    const wrapper = document.getElementById('stat-wrapper');
+            if (data) {
+                name = data.name; valId = data.attribute_value_id; sku = data.sku; price = data.price; stock = data.stock;
+            } else {
+                const typeEl = document.getElementById('attr-type');
+                const valEl = document.getElementById('attr-value');
+                if (!valEl.value) return alert("Select value");
+                name = `${typeEl.options[typeEl.selectedIndex].text} - ${valEl.options[valEl.selectedIndex].text}`;
+                valId = valEl.value; sku = ''; price = ''; stock = '';
+            }
 
-    const html = `
-        <div class="grid grid-cols-1 md:grid-cols-5 gap-3 mb-3 border p-3 rounded">
+            wrapper.insertAdjacentHTML('beforeend', `
+                <div class="border p-3 rounded bg-white relative grid grid-cols-1 md:grid-cols-4 gap-2">
+                    <input type="text" name="variations[${vIndex}][name]" value="${name}" class="form-input font-bold" readonly>
+                    <input type="hidden" name="variations[${vIndex}][attribute_value_id]" value="${valId}">
+                    <input type="text" name="variations[${vIndex}][sku]" value="${sku}" placeholder="SKU" class="form-input">
+                    <input type="number" name="variations[${vIndex}][price]" value="${price}" placeholder="Price" class="form-input">
+                    <input type="number" name="variations[${vIndex}][stock]" value="${stock}" placeholder="Stock" class="form-input">
+                    <button type="button" onclick="this.parentElement.remove()" class="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-5 h-5">×</button>
+                </div>
+            `);
+            vIndex++;
+        }
 
-            <div x-data="fileManager('', 'feature_${featureIndex}')">
-                <button type="button"
-                        @click="$dispatch('open-file-manager', { callback: callbackName })"
-                        class="px-4 py-2 bg-blue-600 text-white text-sm rounded-lg shadow">
-                    Choose Image
-                </button>
+        function addNewFeature(data = null) {
+            const wrapper = document.getElementById('feature-wrapper');
+            const title = data ? data.title : '';
+            const val = data ? data.value : '';
+            const icon = data ? data.icon : '';
 
-                <input type="hidden" name="features[${featureIndex}][icon]" x-model="fileUrl">
+            wrapper.insertAdjacentHTML('beforeend', `
+                <div class="flex gap-2 items-center border p-2 rounded">
+                    <input type="text" name="features[${fIndex}][title]" value="${title}" placeholder="Feature Title" class="form-input">
+                    <input type="text" name="features[${fIndex}][value]" value="${val}" placeholder="Value" class="form-input">
+                    <button type="button" onclick="this.parentElement.remove()" class="btn btn-danger btn-sm">Remove</button>
+                </div>
+            `);
+            fIndex++;
+        }
 
-                <template x-if="filePreview">
-                    <img :src="filePreview" class="w-16 mt-2">
-                </template>
-            </div>
+        window.onload = function() {
+            @if(isset($item))
+                @foreach($item->variations as $v) addVariation(@json($v)); @endforeach
+                @php $feats = is_string($item->features) ? json_decode($item->features, true) : $item->features; @endphp
+                @if($feats) @foreach($feats as $f) addNewFeature(@json($f)); @endforeach @endif
+            @endif
+        };
 
-            <input type="text" name="features[${featureIndex}][title]" placeholder="Title" class="form-input">
+        document.addEventListener('alpine:init', () => {
+    Alpine.data('galleryManager', (initialData) => ({
+        galleryList: Array.isArray(initialData) ? initialData : [],
 
-            <input type="text" name="features[${featureIndex}][value]" placeholder="Value" class="form-input">
+        init() {
+            window.addEventListener('galleryCallback', (e) => {
+                const data = e.detail;
 
-            <button type="button" onclick="this.closest('.grid').remove()" class="btn btn-danger btn-sm">
-                Remove
-            </button>
+                if (Array.isArray(data)) {
+                    this.galleryList = [...this.galleryList, ...data];
+                } else if (data && typeof data === 'string') {
+                    this.galleryList.push(data);
+                }
+                
+                this.galleryList = [...new Set(this.galleryList)];
+            });
+        },
 
-        </div>
-    `;
+        removeImage(index) {
+            this.galleryList.splice(index, 1);
+        }
+    }));
+});
 
-    wrapper.insertAdjacentHTML('beforeend', html);
-    featureIndex++;
-}
-</script>
+window.galleryCallback = function(data) {
+    window.dispatchEvent(new CustomEvent('galleryCallback', { detail: data }));
+};
 
+    </script>
 </x-layout.default>
