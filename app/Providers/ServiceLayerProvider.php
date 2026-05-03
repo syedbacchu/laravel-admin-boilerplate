@@ -106,6 +106,11 @@ use App\Http\Repositories\AboutCompany\AboutCompanyRepositoryInterface;
 use App\Http\Services\AboutCompany\AboutCompanyService;
 use App\Http\Services\AboutCompany\AboutCompanyServiceInterface;
 
+use App\Http\Repositories\CollectLeadRepository;
+use App\Http\Repositories\CollectLeadRepositoryInterface;
+use App\Http\Services\CollectLead\CollectLeadService;
+use App\Http\Services\CollectLead\CollectLeadServiceInterface;
+
 use Illuminate\Support\ServiceProvider;
 
 class ServiceLayerProvider extends ServiceProvider
@@ -187,6 +192,9 @@ class ServiceLayerProvider extends ServiceProvider
 
         $this->app->bind(AboutCompanyRepositoryInterface::class, AboutCompanyRepository::class);
         $this->app->bind(AboutCompanyServiceInterface::class, AboutCompanyService::class);
+
+        $this->app->bind(CollectLeadRepositoryInterface::class, CollectLeadRepository::class);
+        $this->app->bind(CollectLeadServiceInterface::class, CollectLeadService::class);
     }
 
     /**
