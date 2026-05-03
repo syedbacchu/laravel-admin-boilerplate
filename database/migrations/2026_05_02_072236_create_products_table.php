@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('tagline')->nullable();
             $table->string('image')->nullable();
             $table->json('gallery')->nullable();
-            $table->string('video_img',20)->nullable();
+            $table->string('video_img',255)->nullable();
             $table->decimal('price', 19, 2)->nullable();
             $table->unsignedBigInteger('brand_id')->nullable();
             $table->json('attributes')->nullable();
@@ -32,10 +32,10 @@ return new class extends Migration
             $table->string('meta_title')->nullable();
             $table->string('meta_description')->nullable();
             $table->string('meta_keywords')->nullable();
-            $table->string('video_link',20)->nullable();
+            $table->string('video_link',200)->nullable();
             $table->decimal('discount',19,2)->nullable();
             $table->string('discount_type',10)->nullable();
-            $table->decimal('tax',19,2)->default(5);
+            $table->decimal('tax',19,2)->default(0);
             $table->string('tax_type')->default('percent');
             $table->json('quantity_discounts')->nullable();
             $table->tinyInteger('is_featured')->default(0);

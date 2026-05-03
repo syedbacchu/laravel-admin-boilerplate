@@ -119,6 +119,10 @@ class Viewed
             'list' => 'admin.products.products_category.index',
             'create' => 'admin.products.products_category.create',
         ],
+        'products' => [
+            'list' => 'admin.products.products.index',
+            'create' => 'admin.products.products.create',
+        ],
         
     ];
 

@@ -241,6 +241,11 @@ return [
                 'route' => 'product.category.list',
                 'permission' => 'products_category.list',
             ],
+            [
+                'label' => 'Products',
+                'route' => 'product.list',
+                'permission' => 'products.list',
+            ],
         ],
     ],
     [
