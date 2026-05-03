@@ -22,7 +22,7 @@ class AttributeController extends Controller
 
     public function index(Request $request)
     {
-        $data['pageTitle'] = __('Attribute List');
+        $data['pageTitle'] = __('Attribute Type List');
         if ($request->ajax()) {
             return DataListManager::dataTableHandle(
                 request: $request,
@@ -98,6 +98,13 @@ class AttributeController extends Controller
         $data['pageTitle'] = __('Update Attribute');
         $data['function_type'] = 'update';
         $data['item'] = $item;
+
+        $values = \App\Models\AttributeValue::where('type_id', $id)->get();
+
+        $data['pageTitle'] = __('Update Attribute');
+        $data['function_type'] = 'update';
+        $data['item'] = $item;
+        $data['values'] = $values;
 
         return ResponseService::send([
             'data' => $data,

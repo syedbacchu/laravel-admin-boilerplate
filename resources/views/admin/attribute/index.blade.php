@@ -9,7 +9,7 @@
     
     <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-6 gap-4">
         <h5 class="text-2xl font-bold text-gray-800">
-            {{ $pageTitle ?? __('Attribute List') }}
+            {{ $pageTitle ?? __('Attribute Type List') }}
         </h5>
 
         <a href="{{ route('attribute.create') }}"

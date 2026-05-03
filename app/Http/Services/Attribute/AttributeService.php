@@ -6,6 +6,7 @@ use App\Enums\StatusEnum;
 use App\Http\Requests\Attribute\AttributeCreateRequest;
 use App\Http\Services\BaseService;
 use App\Models\AttributeType;
+use App\Models\AttributeValue;
 use App\Models\ServiceCategory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -31,15 +32,39 @@ class AttributeService extends BaseService implements AttributeServiceInterface
         ];
 
         if ($editId) {
-            $data['updated_by'] = auth()->id();
+
+            // ✅ UPDATE ATTRIBUTE
             $this->attributeRepository->update($editId, $data);
-            return $this->sendResponse(true, 'Updated successfully');
+
+            $attributeId = $editId;
+
+            // 🔥 IMPORTANT: DELETE OLD VALUES FIRST
+            AttributeValue::where('type_id', $attributeId)->delete();
+
+        } else {
+
+            // ✅ CREATE ATTRIBUTE
+            $attribute = $this->attributeRepository->create($data);
+            $attributeId = $attribute->id;
         }
 
-        $data['created_by'] = auth()->id();
-        $this->attributeRepository->create($data);
+        // ✅ SAVE VALUES (fresh insert)
+        if ($request->values && is_array($request->values)) {
 
-        return $this->sendResponse(true, 'Created successfully');
+            foreach ($request->values as $val) {
+
+                if (!empty($val['name'])) {
+                    AttributeValue::create([
+                        'type_id' => $attributeId,
+                        'name' => $val['name'],
+                        'value' => $val['value'] ?? $val['name'],
+                        'status' => 1
+                    ]);
+                }
+            }
+        }
+
+        return $this->sendResponse(true, $editId ? 'Updated successfully' : 'Created successfully');
     }
 
     public function deleteData($id): array

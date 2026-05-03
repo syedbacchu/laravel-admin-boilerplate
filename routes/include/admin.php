@@ -393,7 +393,7 @@ Route::group(['middleware' => ['skip.permission','no.permission.sync']], functio
     });
 
     // Attribute type
-    Route::resource('attributes', AttributeController::class)
+    Route::resource('attributes-type', AttributeController::class)
     ->except(['destroy'])
     ->names([
         'index'   => 'attribute.list',

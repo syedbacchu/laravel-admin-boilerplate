@@ -227,7 +227,7 @@ return [
         'permission' => null,
         'children' => [
             [
-                'label' => 'Attributes List',
+                'label' => 'Attributes Types List',
                 'route' => 'attribute.list',
                 'permission' => 'attribute.list',
             ],

@@ -35,6 +35,9 @@
                 <div class="p-4 space-y-4">
 
                     <!-- Name -->
+                    <label class="text-xs uppercase font-semibold text-gray-500">
+                        Name
+                    </label>
                     <input
                         name="name"
                         type="text"
@@ -42,8 +45,20 @@
                         class="form-input text-lg font-semibold"
                         placeholder="Name"
                     />
+                    
+                    <div class="mt-6">
+                        <h3 class="font-semibold text-lg mb-3">Attribute Values</h3>
+
+                        <div id="value-wrapper"></div>
+
+                        <button type="button" onclick="addValue()" class="btn btn-primary btn-sm mt-3">
+                            + Add Value
+                        </button>
+                    </div>
 
                 </div>
+
+                
 
                 {{-- Custom Fields --}}
                 @if(isset($item))
@@ -114,4 +129,51 @@
     </div>
 
 </form>
+
+<script>
+let valueIndex = 0;
+
+function addValue(name = '', value = '') {
+
+    const html = `
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-3 mb-2 border p-3 rounded">
+
+        <input type="text"
+            name="values[${valueIndex}][name]"
+            value="${name}"
+            placeholder="Name"
+            class="form-input">
+
+        <input type="text"
+            name="values[${valueIndex}][value]"
+            value="${value}"
+            placeholder="Value"
+            class="form-input">
+
+        <button type="button"
+            onclick="this.closest('.grid').remove()"
+            class="btn btn-danger btn-sm">
+            Remove
+        </button>
+
+    </div>
+    `;
+
+    document.getElementById('value-wrapper').insertAdjacentHTML('beforeend', html);
+    valueIndex++;
+}
+
+document.addEventListener("DOMContentLoaded", function () {
+
+    @if(isset($values) && count($values))
+        @foreach($values as $val)
+            addValue("{{ $val->name }}", "{{ $val->value }}");
+        @endforeach
+    @else
+        addValue(); // empty row for create
+    @endif
+
+});
+</script>
+
 </x-layout.default>
