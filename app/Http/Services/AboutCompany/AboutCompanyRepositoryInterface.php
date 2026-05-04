@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Repositories\AboutCompany;
+namespace App\Http\Services\AboutCompany;
 
 use App\Http\Repositories\BaseRepositoryInterface;
 

@@ -121,4 +121,6 @@ Route::group(['prefix' => 'faq', 'as' => 'apiFaq.'], function () {
 Route::group(['prefix' => 'collect-leads', 'as' => 'apiCollectLead.'], function () {
     Route::post('customer-information', [CollectLeadController::class, 'submitCustomerInformation'])->name('customerInformation');
     Route::post('company-details', [CollectLeadController::class, 'submitCompanyDetails'])->name('companyDetails');
+    Route::get('/', [CollectLeadController::class, 'index'])->name('index');
+    Route::get('detail', [CollectLeadController::class, 'show'])->name('show');
 });

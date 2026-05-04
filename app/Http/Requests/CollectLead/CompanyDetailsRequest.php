@@ -3,6 +3,7 @@
 namespace App\Http\Requests\CollectLead;
 
 use App\Http\Requests\BaseFormRequest;
+use App\Rules\PhoneNumberBD;
 
 class CompanyDetailsRequest extends BaseFormRequest
 {
@@ -20,7 +21,7 @@ class CompanyDetailsRequest extends BaseFormRequest
             // Required fields
             'company_name' => 'required|string|max:255',
             'full_name' => 'required|string|max:255',
-            'phone' => 'required|string|max:20',
+            'phone' => ['required', new PhoneNumberBD()],
             'address' => 'required|string',
             'grid_connection' => 'required|string|max:255',
             'working_shift' => 'required|string|max:255',

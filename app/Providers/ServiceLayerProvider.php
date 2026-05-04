@@ -101,13 +101,13 @@ use App\Http\Services\ProductsCategory\ProductsCategoryRepositoryInterface;
 use App\Http\Services\ProductsCategory\ProductsCategoryService;
 use App\Http\Services\ProductsCategory\ProductsCategoryServiceInterface;
 
-use App\Http\Repositories\AboutCompany\AboutCompanyRepository;
-use App\Http\Repositories\AboutCompany\AboutCompanyRepositoryInterface;
+use App\Http\Services\AboutCompany\AboutCompanyRepository;
+use App\Http\Services\AboutCompany\AboutCompanyRepositoryInterface;
 use App\Http\Services\AboutCompany\AboutCompanyService;
 use App\Http\Services\AboutCompany\AboutCompanyServiceInterface;
 
-use App\Http\Repositories\CollectLeadRepository;
-use App\Http\Repositories\CollectLeadRepositoryInterface;
+use App\Http\Services\CollectLead\CollectLeadRepository;
+use App\Http\Services\CollectLead\CollectLeadRepositoryInterface;
 use App\Http\Services\CollectLead\CollectLeadService;
 use App\Http\Services\CollectLead\CollectLeadServiceInterface;
 
