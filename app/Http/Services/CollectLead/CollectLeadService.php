@@ -4,7 +4,11 @@ namespace App\Http\Services\CollectLead;
 
 use App\Http\Services\BaseService;
 use App\Http\Services\CollectLead\CollectLeadServiceInterface;
-use App\Http\Repositories\CollectLeadRepositoryInterface;
+use App\Http\Services\CollectLead\CollectLeadRepositoryInterface;
+use App\Mail\LeadSubmissionMail;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Http\Request;
+use Exception;
 
 class CollectLeadService extends BaseService implements CollectLeadServiceInterface
 {
@@ -19,7 +23,7 @@ class CollectLeadService extends BaseService implements CollectLeadServiceInterf
     public function submitCustomerInformation(array $data): array
     {
         $leadData = [
-            'type' => $data['type'] ?? 1,
+            'type' => 1,
             'site_type' => $data['site_type'] ?? 1,
             'full_name' => $data['full_name'],
             'phone' => $data['phone'],
@@ -53,10 +57,17 @@ class CollectLeadService extends BaseService implements CollectLeadServiceInterf
 
         $lead = $this->collectLeadRepository->createCustomerLead($leadData);
 
+        try {
+            Mail::to('sazzad.reza@bio-xin.com')
+                ->send(new LeadSubmissionMail($lead->toArray(), 'customer'));
+        } catch (Exception $e) {
+            logStore('Lead email sending failed', $e->getMessage());
+        }
+
         return $this->sendResponse(
             true,
             'Customer information submitted successfully',
-            $lead,
+            $lead->toArray(),
             201
         );
     }
@@ -106,11 +117,45 @@ class CollectLeadService extends BaseService implements CollectLeadServiceInterf
 
         $lead = $this->collectLeadRepository->createCompanyLead($leadData);
 
+        try {
+            Mail::to('sazzad.reza@bio-xin.com')
+                ->send(new LeadSubmissionMail($lead->toArray(), 'company'));
+        } catch (Exception $e) {
+            logStore('Lead email sending failed', $e->getMessage());
+        }
+
         return $this->sendResponse(
             true,
             'Company details submitted successfully',
-            $lead,
+            $lead->toArray(),
             201
+        );
+    }
+
+    public function getLeadList(Request $request): array
+    {
+        $data = $this->collectLeadRepository->leadList($request);
+        return $this->sendResponse(true, 'Leads retrieved successfully', $data);
+    }
+
+    public function getLeadDetail(int $id): array
+    {
+        $lead = $this->collectLeadRepository->getLeadById($id);
+
+        if (!$lead) {
+            return $this->sendResponse(
+                false,
+                'Lead not found',
+                [],
+                404
+            );
+        }
+
+        return $this->sendResponse(
+            true,
+            'Lead retrieved successfully',
+            $lead,
+            200
         );
     }
 }

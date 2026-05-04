@@ -3,6 +3,7 @@
 namespace App\Http\Requests\CollectLead;
 
 use App\Http\Requests\BaseFormRequest;
+use App\Rules\PhoneNumberBD;
 
 class CompanyDetailsRequest extends BaseFormRequest
 {
@@ -20,7 +21,7 @@ class CompanyDetailsRequest extends BaseFormRequest
             // Required fields
             'company_name' => 'required|string|max:255',
             'full_name' => 'required|string|max:255',
-            'phone' => 'required|string|max:20',
+            'phone' => ['required', new PhoneNumberBD()],
             'address' => 'required|string',
             'grid_connection' => 'required|string|max:255',
             'working_shift' => 'required|string|max:255',
@@ -48,8 +49,8 @@ class CompanyDetailsRequest extends BaseFormRequest
             'inverter_size' => 'nullable|numeric|min:0',
             'panel_size' => 'nullable|numeric|min:0',
             'panel_quantity' => 'nullable|integer|min:0',
-            'estimated_project_cost' => 'nullable|numeric|min:0',
-            'expected_payback_period' => 'nullable|numeric|min:0',
+            'estimated_project_cost' => 'required|numeric|min:0',
+            'expected_payback_period' => 'required|numeric|min:0',
 
             // JSON fields
             'machinery_load_details' => 'nullable|array',
@@ -69,8 +70,8 @@ class CompanyDetailsRequest extends BaseFormRequest
             // Optional fields
             'google_map' => 'nullable|string',
             'has_shadow' => 'nullable|boolean',
-            'customer_signature' => 'nullable|string',
-            'declaration_date' => 'nullable|date',
+            'customer_signature' => 'required|string',
+            'declaration_date' => 'required|date',
         ];
     }
 }

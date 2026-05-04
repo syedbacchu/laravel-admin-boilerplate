@@ -70,4 +70,30 @@ class CollectLead extends Model
         'customer_signature',
         'declaration_date',
     ];
+
+    protected $casts = [
+        'machinery_load_details' => 'array',
+        'motor_load_details' => 'array',
+        'monthly_bill' => 'decimal:2',
+        'transformer_capacity' => 'decimal:2',
+        'contract_demand' => 'decimal:2',
+        'monthly_consumption' => 'decimal:2',
+        'total_connected_load' => 'decimal:2',
+        'total_motor_load' => 'decimal:2',
+        'daytime_load_percentage' => 'decimal:2',
+        'system_size_kw' => 'decimal:2',
+        'demand_factor' => 'decimal:2',
+        'diversity_factor' => 'decimal:2',
+        'maximum_demand' => 'decimal:2',
+        'daily_consumption' => 'decimal:2',
+        'solar_target_percent' => 'decimal:2',
+        'required_capacity_kw' => 'decimal:2',
+        'critical_load' => 'decimal:2',
+        'inverter_size' => 'decimal:2',
+        'panel_size' => 'decimal:2',
+        'estimated_project_cost' => 'decimal:2',
+        'expected_payback_period' => 'decimal:2',
+        'has_shadow' => 'boolean',
+        'declaration_date' => 'date',
+    ];
 }

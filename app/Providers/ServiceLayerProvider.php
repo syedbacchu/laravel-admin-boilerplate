@@ -111,6 +111,11 @@ use App\Http\Repositories\AboutCompany\AboutCompanyRepositoryInterface;
 use App\Http\Services\AboutCompany\AboutCompanyService;
 use App\Http\Services\AboutCompany\AboutCompanyServiceInterface;
 
+use App\Http\Services\CollectLead\CollectLeadRepository;
+use App\Http\Services\CollectLead\CollectLeadRepositoryInterface;
+use App\Http\Services\CollectLead\CollectLeadService;
+use App\Http\Services\CollectLead\CollectLeadServiceInterface;
+
 use Illuminate\Support\ServiceProvider;
 
 class ServiceLayerProvider extends ServiceProvider

@@ -13,6 +13,7 @@ class SliderListResource extends JsonResource
             'id' => $this->id,
             'title' => $this->title,
             'subtitle' => $this->subtitle,
+            'description' => $this->description,
             'tagline' => $this->tagline,
             'photo' => $this->photo,
             'mobile_banner' => $this->mobile_banner,

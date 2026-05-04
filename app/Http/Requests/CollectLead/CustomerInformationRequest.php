@@ -3,6 +3,7 @@
 namespace App\Http\Requests\CollectLead;
 
 use App\Http\Requests\BaseFormRequest;
+use App\Rules\PhoneNumberBD;
 
 class CustomerInformationRequest extends BaseFormRequest
 {
@@ -20,7 +21,7 @@ class CustomerInformationRequest extends BaseFormRequest
 
             // Required fields
             'full_name' => 'required|string|max:255',
-            'phone' => 'required|string|max:20',
+            'phone' => ['required', new PhoneNumberBD()],
             'customer_type' => 'required|string|max:255',
             'address' => 'required|string',
             'district' => 'required|string|max:255',
@@ -44,11 +45,11 @@ class CustomerInformationRequest extends BaseFormRequest
             'email' => 'nullable|email|max:255',
             'nid' => 'nullable|string|max:255',
             'google_map' => 'nullable|string',
-            'monthly_bill' => 'nullable|numeric|min:0',
-            'system_size_kw' => 'nullable|numeric|min:0',
-            'has_shadow' => 'nullable|boolean',
-            'customer_signature' => 'nullable|string',
-            'declaration_date' => 'nullable|date',
+            'monthly_bill' => 'required|numeric|min:0',
+            'system_size_kw' => 'required|numeric|min:0',
+            'has_shadow' => 'required|boolean',
+            'customer_signature' => 'required|string',
+            'declaration_date' => 'required|date',
         ];
     }
 }
