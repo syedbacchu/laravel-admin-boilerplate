@@ -23,25 +23,30 @@ class ProductController extends Controller
         $this->product = $product;
     }
 
+    /*
+    |--------------------------------------------------------------------------
+    | LIST (DataTable)
+    |--------------------------------------------------------------------------
+    */
     public function index(Request $request)
     {
-        $data['pageTitle'] = __('Product  List');
+        $data['pageTitle'] = __('Product List');
+
         if ($request->ajax()) {
             return DataListManager::dataTableHandle(
                 request: $request,
                 dataProvider: function ($request) {
-                    return $this->product
-                        ->getDataTableData($request)['data']['data'];
+                    return $this->product->getDataTableData($request)['data']['data'];
                 },
                 columns: [
-                    'image' => fn ($item) => $item->image
-                    ? '<img src="' . $item->image . '" class="h-12 w-12 rounded object-cover">'
-                    : '-',
+                    'image' => fn($item) => $item->image
+                        ? '<img src="' . $item->image . '" class="h-12 w-12 rounded object-cover">'
+                        : '<span class="text-gray-400">-</span>',
 
-                    'category' => fn ($item) => $item->category?->name ?? '-',
-                    'slug' => fn ($item) => $item->slug ?? '-',
-                    'status_toggle' => fn ($item) =>
-                    toggle_column(
+                    'category' => fn($item) => $item->category?->name ?? '-',
+                    'slug'     => fn($item) => $item->slug ?? '-',
+
+                    'status_toggle' => fn($item) => toggle_column(
                         route('product.publish'),
                         $item->id,
                         $item->status === 1
@@ -52,7 +57,6 @@ class ProductController extends Controller
                             edit_column(route('product.edit', $item->id)),
                             delete_column(route('product.delete', $item->id)),
                         ];
-
                         return action_buttons($buttons);
                     },
                 ],
@@ -65,36 +69,53 @@ class ProductController extends Controller
         ], null, \App\Http\Services\Response\Viewed::get('products', 'list'));
     }
 
+    /*
+    |--------------------------------------------------------------------------
+    | CREATE FORM
+    |--------------------------------------------------------------------------
+    */
     public function create(Request $request)
     {
-        $setup = $this->product->createData($request)['data'];
-
-        $data['pageTitle'] = __('Create Product ');
-        $data['function_type'] = 'create';
-        $data['categories'] = ProductCategory::all();
-
-        // 🔥 FIX
-        $data['attributes'] = AttributeType::all(); 
-        $data['attributeValues'] = AttributeValue::with('attribute')->get();
+        $data['pageTitle']       = __('Create Product');
+        $data['function_type']   = 'create';
+        $data['categories']      = ProductCategory::where('status', 1)->orderBy('name')->get();
+        $data['attributes']      = AttributeType::where('status', 1)->orderBy('name')->get();
+        $data['attributeValues'] = AttributeValue::with('attribute')->where('status', 1)->get();
 
         return ResponseService::send([
             'data' => $data,
         ], null, \App\Http\Services\Response\Viewed::get('products', 'create'));
     }
 
+    /*
+    |--------------------------------------------------------------------------
+    | STORE
+    |--------------------------------------------------------------------------
+    */
     public function store(ProductsCreateRequest $request): RedirectResponse
     {
         $response = $this->product->storeOrUpdate($request);
+
         return ResponseService::send([
             'response' => $response,
         ], successRoute: 'product.list');
     }
 
+    /*
+    |--------------------------------------------------------------------------
+    | SHOW (optional)
+    |--------------------------------------------------------------------------
+    */
     public function show(string $id)
     {
         //
     }
 
+    /*
+    |--------------------------------------------------------------------------
+    | EDIT FORM
+    |--------------------------------------------------------------------------
+    */
     public function edit(string $id)
     {
         $response = $this->product->editData($id);
@@ -105,18 +126,23 @@ class ProductController extends Controller
 
         $item = $response['data'];
 
-        $data['pageTitle'] = __('Update Product ');
-        $data['function_type'] = 'update';
-        $data['item'] = $item;
-        $data['categories'] = ProductCategory::all();
-        $data['attributes'] = AttributeType::all();
-        $data['attributeValues'] = AttributeValue::with('attribute')->get();
+        $data['pageTitle']       = __('Update Product');
+        $data['function_type']   = 'update';
+        $data['item']            = $item;
+        $data['categories']      = ProductCategory::where('status', 1)->orderBy('name')->get();
+        $data['attributes']      = AttributeType::where('status', 1)->orderBy('name')->get();
+        $data['attributeValues'] = AttributeValue::with('attribute')->where('status', 1)->get();
 
         return ResponseService::send([
             'data' => $data,
         ], null, \App\Http\Services\Response\Viewed::get('products', 'create'));
     }
 
+    /*
+    |--------------------------------------------------------------------------
+    | UPDATE
+    |--------------------------------------------------------------------------
+    */
     public function update(ProductsCreateRequest $request, string $id): RedirectResponse
     {
         $request->merge(['edit_id' => $id]);
@@ -127,14 +153,25 @@ class ProductController extends Controller
         ], successRoute: 'product.list');
     }
 
+    /*
+    |--------------------------------------------------------------------------
+    | DELETE
+    |--------------------------------------------------------------------------
+    */
     public function destroy(string $id): RedirectResponse
     {
         $response = $this->product->deleteData($id);
+
         return ResponseService::send([
             'response' => $response,
         ], successRoute: 'product.list');
     }
 
+    /*
+    |--------------------------------------------------------------------------
+    | STATUS TOGGLE (AJAX)
+    |--------------------------------------------------------------------------
+    */
     public function productStatus(Request $request): JsonResponse
     {
         try {
