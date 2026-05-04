@@ -452,10 +452,9 @@
         */
         function addVariation(data = null) {
             const wrapper = document.getElementById('variation-wrapper');
-            let name, valId, sku, price, stock;
+            let valId, sku, price, stock;
 
             if (data) {
-                name  = data.name;
                 valId = data.attribute_value_id ?? '';
                 sku   = data.sku ?? '';
                 price = data.price ?? '';
@@ -473,13 +472,12 @@
                 const valText  = valEl.options[valEl.selectedIndex].text;
 
                 // Check duplicate
-                const existing = wrapper.querySelector(`input[value="${typeName} - ${valText}"]`);
+                const existing = wrapper.querySelector(`input[name$="[attribute_value_id]"][value="${valEl.value}"]`);
                 if (existing) {
                     alert('This variation already exists!');
                     return;
                 }
 
-                name  = `${typeName} - ${valText}`;
                 valId = valEl.value;
                 sku   = '';
                 price = '';
@@ -488,12 +486,6 @@
 
             const html = `
                 <div class="border rounded-lg p-3 bg-gray-50 relative grid grid-cols-1 md:grid-cols-4 gap-2 items-center variation-row">
-                    <input type="text"
-                           name="variations[${vIndex}][name]"
-                           value="${escHtml(name)}"
-                           class="form-input font-medium text-sm col-span-1"
-                           readonly
-                           title="Variation name">
                     <input type="hidden"
                            name="variations[${vIndex}][attribute_value_id]"
                            value="${escHtml(valId)}">

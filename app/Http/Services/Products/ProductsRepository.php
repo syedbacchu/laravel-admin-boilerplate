@@ -24,7 +24,7 @@ class ProductsRepository extends BaseRepository implements ProductsRepositoryInt
     {
         return DataListManager::list(
             request: $request,
-            query: Product::with('category', 'categories', 'variations'),
+            query: Product::with('category', 'categories', 'variations.attributeValue.attribute'),
 
             searchable: [
                 'name',
@@ -100,7 +100,7 @@ class ProductsRepository extends BaseRepository implements ProductsRepositoryInt
    public function findPublicByIdentifier(string $identifier): ?Product
    {
        return Product::query()
-           ->with('category', 'categories', 'variations')
+           ->with('category', 'categories', 'variations.attributeValue.attribute')
            ->where('status', 1)
            ->where(function ($query) use ($identifier) {
                $query->where('id', $identifier)

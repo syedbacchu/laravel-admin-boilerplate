@@ -65,15 +65,34 @@ class ProductDetailResource extends JsonResource
             // Variations
             'variations' => $this->whenLoaded('variations', function () {
                 return $this->variations->map(function ($variation) {
-                    return [
+                    $variationData = [
                         'id' => $variation->id,
-                        'name' => $variation->name,
                         'sku' => $variation->sku,
                         'price' => (float) ($variation->price ?? 0),
                         'stock' => (int) ($variation->stock ?? 0),
-                        'attributes' => $variation->attributes ?? [],
                         'status' => (bool) $variation->status,
                     ];
+
+                    // Load attribute value details
+                    if ($variation->attributeValue && $variation->attributeValue->attribute) {
+                        $variationData['name'] = $variation->attributeValue->name;
+                        $variationData['attribute_value'] = [
+                            'id' => $variation->attributeValue->id,
+                            'name' => $variation->attributeValue->name,
+                            'value' => $variation->attributeValue->value,
+                            'attribute_type' => [
+                                'id' => $variation->attributeValue->attribute->id,
+                                'name' => $variation->attributeValue->attribute->name,
+                            ],
+                        ];
+
+                        // Build structured attributes object
+                        $variationData['attributes'] = [
+                            $variation->attributeValue->attribute->name => $variation->attributeValue->name
+                        ];
+                    }
+
+                    return $variationData;
                 });
             }),
 

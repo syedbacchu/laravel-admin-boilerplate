@@ -12,16 +12,10 @@ class ProductVariation extends Model
     protected $fillable = [
         'product_id',
         'attribute_value_id',
-        'name',
         'sku',
         'price',
         'stock',
-        'attributes',
         'status',
-    ];
-
-    protected $casts = [
-        'attributes' => 'array',
     ];
 
     // PRODUCT RELATION

@@ -108,14 +108,12 @@ class ProductsService extends BaseService implements ProductsServiceInterface
                 }
 
                 foreach ($request->variations as $var) {
-                    if (!empty($var['name'])) {
+                    if (!empty($var['attribute_value_id'])) {
                         $product->variations()->create([
-                            'attribute_value_id' => $var['attribute_value_id'] ?? null,
-                            'name'               => $var['name'],
+                            'attribute_value_id' => $var['attribute_value_id'],
                             'sku'                => $var['sku'] ?? 'VAR-' . strtoupper(uniqid()),
                             'price'              => $var['price'] ?? $request->price ?? 0,
                             'stock'              => $var['stock'] ?? 0,
-                            'attributes'         => $var['attributes'] ?? [],
                             'status'             => $var['status'] ?? 1,
                         ]);
                     }
@@ -214,7 +212,7 @@ class ProductsService extends BaseService implements ProductsServiceInterface
             return $this->sendResponse(false, __('Data not found'));
         }
 
-        $item->load('variations', 'categories');
+        $item->load('variations.attributeValue.attribute', 'categories');
 
         return $this->sendResponse(true, '', $item);
     }
