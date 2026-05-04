@@ -101,6 +101,11 @@ use App\Http\Services\ProductsCategory\ProductsCategoryRepositoryInterface;
 use App\Http\Services\ProductsCategory\ProductsCategoryService;
 use App\Http\Services\ProductsCategory\ProductsCategoryServiceInterface;
 
+use App\Http\Services\Products\ProductsRepository;
+use App\Http\Services\Products\ProductsRepositoryInterface;
+use App\Http\Services\Products\ProductsService;
+use App\Http\Services\Products\ProductsServiceInterface;
+
 use App\Http\Repositories\AboutCompany\AboutCompanyRepository;
 use App\Http\Repositories\AboutCompany\AboutCompanyRepositoryInterface;
 use App\Http\Services\AboutCompany\AboutCompanyService;
@@ -187,6 +192,9 @@ class ServiceLayerProvider extends ServiceProvider
 
         $this->app->bind(AboutCompanyRepositoryInterface::class, AboutCompanyRepository::class);
         $this->app->bind(AboutCompanyServiceInterface::class, AboutCompanyService::class);
+
+        $this->app->bind(ProductsRepositoryInterface::class, ProductsRepository::class);
+        $this->app->bind(ProductsServiceInterface::class, ProductsService::class);
     }
 
     /**

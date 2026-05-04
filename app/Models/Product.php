@@ -57,7 +57,6 @@ class Product extends Model
         'price' => 'float',
         'discount' => 'float',
         'tax' => 'float',
-        'is_featured' => 'boolean',
     ];
 
     /*
