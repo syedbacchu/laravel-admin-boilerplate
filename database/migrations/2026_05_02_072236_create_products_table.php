@@ -23,10 +23,9 @@ return new class extends Migration
             $table->unsignedBigInteger('brand_id')->nullable();
             $table->json('attributes')->nullable();
             $table->json('features')->nullable();
-            $table->string('short_description')->nullable();
-            $table->string('description')->nullable();
+            $table->text('short_description')->nullable();
+            $table->longText('description')->nullable();
             $table->text('usage_instructions')->nullable();
-            $table->unsignedBigInteger('category_id')->nullable();
             $table->integer('stock')->nullable();
             $table->integer('sold')->nullable();
             $table->string('meta_title')->nullable();

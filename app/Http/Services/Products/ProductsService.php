@@ -41,7 +41,7 @@ class ProductsService extends BaseService implements ProductsServiceInterface
 
                 // MEDIA
                 'image'      => $request->image,
-                'gallery'    => $request->gallery ? json_encode($request->gallery) : null,
+                'gallery'    => $request->gallery ?? null,
                 'video_img'  => $request->video_img,
                 'video_link' => $request->video_link,
 
@@ -56,7 +56,7 @@ class ProductsService extends BaseService implements ProductsServiceInterface
 
                 // RELATIONS
                 'brand_id'    => $request->brand_id,
-                'category_id' => $request->category_id,
+                'category_id' => $request->category_id ?? null, // Primary category for backward compatibility
 
                 // STOCK
                 'stock' => $request->stock,
@@ -68,9 +68,9 @@ class ProductsService extends BaseService implements ProductsServiceInterface
                 'usage_instructions' => $request->usage_instructions,
 
                 // JSON FIELDS
-                'attributes'         => $request->attributes ? json_encode($request->attributes) : null,
-                'features'           => $request->features ? json_encode($request->features) : null,
-                'quantity_discounts' => $request->quantity_discounts ? json_encode($request->quantity_discounts) : null,
+                'attributes'         => $request->attributes ?? null,
+                'features'           => $request->features ?? null,
+                'quantity_discounts' => $request->quantity_discounts ?? null,
 
                 // SEO
                 'meta_title'       => $request->meta_title,
@@ -115,13 +115,29 @@ class ProductsService extends BaseService implements ProductsServiceInterface
                             'sku'                => $var['sku'] ?? 'VAR-' . strtoupper(uniqid()),
                             'price'              => $var['price'] ?? $request->price ?? 0,
                             'stock'              => $var['stock'] ?? 0,
-                            'attributes'         => !empty($var['attributes'])
-                                ? json_encode($var['attributes'])
-                                : json_encode([]),
+                            'attributes'         => $var['attributes'] ?? [],
                             'status'             => $var['status'] ?? 1,
                         ]);
                     }
                 }
+            }
+
+            /*
+            |------------------------------------------------------------------
+            | MULTIPLE CATEGORIES (MANY-TO-MANY)
+            |------------------------------------------------------------------
+            */
+            if (!empty($request->category_ids) && is_array($request->category_ids)) {
+                // Remove empty values
+                $categoryIds = array_filter($request->category_ids, function ($value) {
+                    return !empty($value) && is_numeric($value);
+                });
+
+                // Sync categories to pivot table
+                $product->categories()->sync($categoryIds);
+            } else {
+                // If no category_ids provided, remove all mappings
+                $product->categories()->sync([]);
             }
 
             DB::commit();
@@ -198,7 +214,7 @@ class ProductsService extends BaseService implements ProductsServiceInterface
             return $this->sendResponse(false, __('Data not found'));
         }
 
-        $item->load('variations');
+        $item->load('variations', 'categories');
 
         return $this->sendResponse(true, '', $item);
     }

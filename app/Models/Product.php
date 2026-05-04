@@ -20,12 +20,12 @@ class Product extends Model
         'video_img',
         'price',
         'brand_id',
+        'category_id',
         'attributes',
         'features',
         'short_description',
         'description',
         'usage_instructions',
-        'category_id',
         'stock',
         'sold',
         'meta_title',
@@ -65,10 +65,17 @@ class Product extends Model
     |--------------------------------------------------------------------------
     */
 
-    // Category
+    // Single Category (backward compatibility)
     public function category()
     {
         return $this->belongsTo(ProductCategory::class, 'category_id');
+    }
+
+    // Multiple Categories (many-to-many)
+    public function categories()
+    {
+        return $this->belongsToMany(ProductCategory::class, 'product_category_mappings', 'product_id', 'category_id')
+            ->withTimestamps();
     }
 
     // Brand

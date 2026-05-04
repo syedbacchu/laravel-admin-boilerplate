@@ -21,6 +21,7 @@ use App\Http\Controllers\Api\AboutCompany\AboutCompanyController;
 use App\Http\Controllers\Api\Faq\FaqController;
 use App\Http\Controllers\Api\Faq\FaqCategoryController;
 use App\Http\Controllers\Api\CollectLead\CollectLeadController;
+use App\Http\Controllers\Api\Product\ProductController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -123,4 +124,9 @@ Route::group(['prefix' => 'collect-leads', 'as' => 'apiCollectLead.'], function 
     Route::post('company-details', [CollectLeadController::class, 'submitCompanyDetails'])->name('companyDetails');
     Route::get('/', [CollectLeadController::class, 'index'])->name('index');
     Route::get('detail', [CollectLeadController::class, 'show'])->name('show');
+});
+
+Route::group(['prefix' => 'products', 'as' => 'apiProduct.'], function () {
+    Route::get('/', [ProductController::class, 'index'])->name('list');
+    Route::get('{identifier}', [ProductController::class, 'show'])->name('details');
 });

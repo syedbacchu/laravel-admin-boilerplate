@@ -69,18 +69,6 @@
 
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
-                            <label class="form-label">Category</label>
-                            <select name="category_id" class="form-select">
-                                <option value="">— Select Category —</option>
-                                @foreach($categories as $cat)
-                                    <option value="{{ $cat->id }}"
-                                        {{ old('category_id', $item->category_id ?? '') == $cat->id ? 'selected' : '' }}>
-                                        {{ $cat->name }}
-                                    </option>
-                                @endforeach
-                            </select>
-                        </div>
-                        <div>
                             <label class="form-label">Brand</label>
                             <select name="brand_id" class="form-select">
                                 <option value="">— Select Brand —</option>
@@ -272,6 +260,59 @@
                         </div>
                     </div>
                 </div>
+
+                {{-- CATEGORIES --}}
+                <div class="panel border rounded-xl p-5 bg-white shadow-sm">
+                    <h3 class="font-bold text-gray-700 border-b pb-2">📁 Categories</h3>
+
+                    <!-- Search Box -->
+                    <input type="text"
+                           id="category-search"
+                           placeholder="🔍 Search categories..."
+                           class="form-input mb-3"
+                           onkeyup="filterCategories()">
+
+                    <!-- Scrollable Checkbox List -->
+                    <div id="category-list" class="border rounded-lg p-3 max-h-56 overflow-auto bg-white">
+                        @php
+                            $selectedCategoryIds = isset($item) && $item->categories
+                                ? $item->categories->pluck('id')->toArray()
+                                : [];
+                        @endphp
+                        @forelse($categories as $cat)
+                            <label class="flex items-center gap-2 category-item p-1 hover:bg-gray-50 rounded">
+                                <input
+                                    type="checkbox"
+                                    name="category_ids[]"
+                                    value="{{ $cat->id }}"
+                                    class="form-checkbox"
+                                    data-name="{{ strtolower($cat->name) }}"
+                                    @checked(in_array((int) $cat->id, $selectedCategoryIds, true))
+                                >
+                                <span>{{ $cat->name }}</span>
+                            </label>
+                        @empty
+                            <p class="text-sm text-gray-500">No category found</p>
+                        @endforelse
+                    </div>
+                </div>
+
+                <script>
+                function filterCategories() {
+                    const searchInput = document.getElementById('category-search');
+                    const filter = searchInput.value.toLowerCase();
+                    const categoryItems = document.querySelectorAll('.category-item');
+
+                    categoryItems.forEach(function(item) {
+                        const name = item.getAttribute('data-name') || item.textContent.toLowerCase();
+                        if (name.includes(filter)) {
+                            item.style.display = '';
+                        } else {
+                            item.style.display = 'none';
+                        }
+                    });
+                }
+                </script>
 
                 {{-- MEDIA --}}
                 <div class="panel border rounded-xl p-5 bg-white shadow-sm space-y-4">

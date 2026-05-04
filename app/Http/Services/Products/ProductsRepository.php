@@ -24,38 +24,88 @@ class ProductsRepository extends BaseRepository implements ProductsRepositoryInt
     {
         return DataListManager::list(
             request: $request,
-            query: Product::with('category'), // relation load
+            query: Product::with('category', 'categories', 'variations'),
 
             searchable: [
                 'name',
                 'slug',
+                'short_description',
+                'description',
             ],
 
             filters: [
                 'status' => [
                     'column' => 'status',
+                    'type' => 'basic',
+                ],
+                'is_featured' => [
+                    'column' => 'is_featured',
+                    'type' => 'basic',
+                ],
+                'category_id' => [
+                    'column' => 'category_id',
+                    'type' => 'basic',
+                ],
+                'brand_id' => [
+                    'column' => 'brand_id',
+                    'type' => 'basic',
+                ],
+                'min_price' => [
+                    'column' => 'price',
+                    'type' => 'basic',
+                    'operator' => '>=',
+                ],
+                'max_price' => [
+                    'column' => 'price',
+                    'type' => 'basic',
+                    'operator' => '<=',
+                ],
+                'min_stock' => [
+                    'column' => 'stock',
+                    'type' => 'basic',
+                    'operator' => '>=',
+                ],
+                'max_stock' => [
+                    'column' => 'stock',
+                    'type' => 'basic',
+                    'operator' => '<=',
+                ],
+                'in_stock' => [
+                    'column' => 'stock',
+                    'type' => 'basic',
+                    'operator' => '>',
+                    'value' => 0,
                 ],
             ],
 
             select: [
                 'id',
-                'category_id',
                 'name',
+                'short_description',
                 'slug',
+                'tagline',
                 'image',
                 'price',
+                'discount',
+                'discount_type',
                 'stock',
+                'sold',
+                'is_featured',
                 'status',
+                'category_id',
+                'created_at',
             ],
         );
     }
    public function findPublicByIdentifier(string $identifier): ?Product
-    {
-        return Product::query()
-            ->where('status', 1)
-            ->where(function ($query) use ($identifier) {
-                $query->where('id', $identifier);
-            })
-            ->first();
-    }
+   {
+       return Product::query()
+           ->with('category', 'categories', 'variations')
+           ->where('status', 1)
+           ->where(function ($query) use ($identifier) {
+               $query->where('id', $identifier)
+                     ->orWhere('slug', $identifier);
+           })
+           ->first();
+   }
 }

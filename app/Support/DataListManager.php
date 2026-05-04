@@ -59,6 +59,7 @@ class DataListManager
 
             $column = $filter['column'] ?? null;
             $type   = $filter['type'] ?? 'basic';
+            $operator = $filter['operator'] ?? '=';
 
             if (!$column) {
                 continue;
@@ -66,7 +67,7 @@ class DataListManager
 
             // BASIC (=)
             if ($type === 'basic' && $request->filled($key)) {
-                $query->where($column, $request->get($key));
+                $query->where($column, $operator, $request->get($key));
             }
 
             // DATE

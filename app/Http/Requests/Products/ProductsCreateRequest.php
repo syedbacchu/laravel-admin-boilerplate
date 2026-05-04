@@ -35,6 +35,8 @@ class ProductsCreateRequest extends FormRequest
             |------------------------------------------------------------------
             */
             'category_id' => ['nullable', 'exists:product_categories,id'],
+            'category_ids' => ['nullable', 'array'],
+            'category_ids.*' => ['nullable', 'integer', 'exists:product_categories,id'],
             'brand_id'    => ['nullable', 'integer'],
 
             /*
