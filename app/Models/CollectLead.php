@@ -1,0 +1,73 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+
+class CollectLead extends Model
+{
+    use HasFactory;
+
+    protected $fillable = [
+        'type',
+        'site_type',
+        'company_name',
+        'full_name',
+        'phone',
+        'whatsapp',
+        'email',
+        'nid',
+        'customer_type',
+        'address',
+        'district',
+        'google_map',
+        'installation_site_type',
+        'electricity_source',
+        'monthly_bill',
+        'meter_type',
+        'daytime_usage',
+        'grid_connection',
+        'transformer_capacity',
+        'contract_demand',
+        'monthly_consumption',
+        'machinery_load_details',
+        'motor_load_details',
+        'total_connected_load',
+        'total_motor_load',
+        'working_shift',
+        'peak_load_time',
+        'daytime_load_percentage',
+        'system_type',
+        'system_size_kw',
+        'main_purpose',
+        'budget_range',
+        'payment_preference',
+        'roof_size',
+        'roof_type',
+        'has_shadow',
+        'installation_area',
+        'lead_source',
+        'decision_maker',
+        'decision_time',
+        'lead_priority',
+        'estimated_deal_value',
+        'status',
+        'sales_person_name',
+        'demand_factor',
+        'diversity_factor',
+        'maximum_demand',
+        'daily_consumption',
+        'solar_target_percent',
+        'required_capacity_kw',
+        'backup_hours',
+        'critical_load',
+        'inverter_size',
+        'panel_size',
+        'panel_quantity',
+        'estimated_project_cost',
+        'expected_payback_period',
+        'customer_signature',
+        'declaration_date',
+    ];
+}

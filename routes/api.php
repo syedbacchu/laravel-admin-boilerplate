@@ -20,6 +20,7 @@ use App\Http\Controllers\Api\Home\HomeController;
 use App\Http\Controllers\Api\AboutCompany\AboutCompanyController;
 use App\Http\Controllers\Api\Faq\FaqController;
 use App\Http\Controllers\Api\Faq\FaqCategoryController;
+use App\Http\Controllers\Api\CollectLead\CollectLeadController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -115,4 +116,9 @@ Route::group(['prefix' => 'faq-category', 'as' => 'apiFaqCategory.'], function (
 Route::group(['prefix' => 'faq', 'as' => 'apiFaq.'], function () {
     Route::get('/', [FaqController::class, 'index'])->name('list');
     Route::get('{identifier}', [FaqController::class, 'show'])->name('details');
+});
+
+Route::group(['prefix' => 'collect-leads', 'as' => 'apiCollectLead.'], function () {
+    Route::post('customer-information', [CollectLeadController::class, 'submitCustomerInformation'])->name('customerInformation');
+    Route::post('company-details', [CollectLeadController::class, 'submitCompanyDetails'])->name('companyDetails');
 });
