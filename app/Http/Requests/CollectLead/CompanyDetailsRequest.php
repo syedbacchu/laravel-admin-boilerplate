@@ -49,8 +49,8 @@ class CompanyDetailsRequest extends BaseFormRequest
             'inverter_size' => 'nullable|numeric|min:0',
             'panel_size' => 'nullable|numeric|min:0',
             'panel_quantity' => 'nullable|integer|min:0',
-            'estimated_project_cost' => 'nullable|numeric|min:0',
-            'expected_payback_period' => 'nullable|numeric|min:0',
+            'estimated_project_cost' => 'required|numeric|min:0',
+            'expected_payback_period' => 'required|numeric|min:0',
 
             // JSON fields
             'machinery_load_details' => 'nullable|array',
@@ -70,8 +70,8 @@ class CompanyDetailsRequest extends BaseFormRequest
             // Optional fields
             'google_map' => 'nullable|string',
             'has_shadow' => 'nullable|boolean',
-            'customer_signature' => 'nullable|string',
-            'declaration_date' => 'nullable|date',
+            'customer_signature' => 'required|string',
+            'declaration_date' => 'required|date',
         ];
     }
 }
