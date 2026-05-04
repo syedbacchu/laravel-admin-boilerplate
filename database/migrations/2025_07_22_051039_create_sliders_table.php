@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('photo')->nullable();
             $table->string('title')->nullable();
             $table->string('subtitle')->nullable();
+            $table->string('description')->nullable();
             $table->string('tagline')->nullable();
             $table->tinyInteger('status')->default(1);
             $table->string('link')->nullable();

@@ -35,6 +35,7 @@ class SliderService extends BaseService implements SliderServiceInterface
             'type' => $request->type,
             'title' => $request->title,
             'subtitle' => $request->subtitle,
+            'description' => $request->description,
             'tagline' => $request->tagline,
             'link' => $request->link,
             'position' => $request->position,

@@ -15,6 +15,7 @@ class Slider extends Model
         'photo',
         'title',
         'subtitle',
+        'description',
         'tagline',
         'status',
         'link',

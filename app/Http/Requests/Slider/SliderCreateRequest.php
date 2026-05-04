@@ -26,6 +26,7 @@ class SliderCreateRequest extends BaseFormRequest
             'title' => 'nullable|max:255',
             'mobile_banner' => 'nullable',
             'subtitle' => 'nullable|max:255',
+            'description' => 'nullable|max:1000',
             'tagline' => 'nullable|max:255',
             'link' => 'nullable|max:255',
             'page' => 'nullable|max:100',
