@@ -333,7 +333,7 @@
                     </div>
 
                     {{-- Gallery --}}
-                    <div x-data="galleryManager({{ isset($item->gallery) ? (is_string($item->gallery) ? $item->gallery : json_encode($item->gallery)) : '[]' }})">
+                    <div x-data="galleryManager(@json(isset($item->gallery) && is_array($item->gallery) ? $item->gallery : []))">
                         <div class="flex items-center justify-between mb-2">
                             <label class="form-label">Gallery Images</label>
                             <button type="button"
@@ -667,17 +667,20 @@
                 galleryList: Array.isArray(initialData) ? initialData : [],
 
                 init() {
-                    window.galleryCallback = (data) => {
-                        if (Array.isArray(data)) {
-                            data.forEach(url => {
-                                if (!this.galleryList.includes(url)) {
-                                    this.galleryList.push(url);
-                                }
-                            });
-                        } else if (data && typeof data === 'string') {
-                            if (!this.galleryList.includes(data)) {
-                                this.galleryList.push(data);
-                            }
+                    window.galleryCallback = (e) => {
+                        // Handle both direct URL and event detail format
+                        let url = null;
+
+                        if (typeof e === 'string') {
+                            url = e;
+                        } else if (e?.detail?.url) {
+                            url = e.detail.url;
+                        } else if (e?.url) {
+                            url = e.url;
+                        }
+
+                        if (url && !this.galleryList.includes(url)) {
+                            this.galleryList.push(url);
                         }
                     };
                 },
@@ -691,6 +694,38 @@
 
                 removeImage(index) {
                     this.galleryList.splice(index, 1);
+                }
+            }));
+
+            /*
+            |------------------------------------------------------------------
+            | Alpine.js: File Manager (Single Image)
+            |------------------------------------------------------------------
+            */
+            Alpine.data('fileManager', (initialUrl, fieldName) => ({
+                fileUrl: initialUrl || '',
+                filePreview: initialUrl || '',
+                callbackName: `${fieldName}_callback`,
+
+                init() {
+                    // Listen for the callback event
+                    window.addEventListener(this.callbackName, (e) => {
+                        // Handle both direct URL and event detail format
+                        let url = null;
+
+                        if (typeof e === 'string') {
+                            url = e;
+                        } else if (e?.detail?.url) {
+                            url = e.detail.url;
+                        } else if (e?.url) {
+                            url = e.url;
+                        }
+
+                        if (url) {
+                            this.fileUrl = url;
+                            this.filePreview = url;
+                        }
+                    });
                 }
             }));
         });
