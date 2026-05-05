@@ -23,6 +23,9 @@ class ProductListResource extends JsonResource
             'sold' => (int) ($this->sold ?? 0),
             'is_featured' => (bool) ($this->is_featured ?? false),
             'status' => (bool) ($this->status ?? false),
+            'features' => $this->when($this->features, function () {
+                return $this->features ?? [];
+            }),
 
             'categories' => $this->whenLoaded('categories', function () {
                 return $this->categories->map(function ($cat) {

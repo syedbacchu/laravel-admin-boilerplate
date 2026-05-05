@@ -92,6 +92,7 @@ class ProductsRepository extends BaseRepository implements ProductsRepositoryInt
                 'sold',
                 'is_featured',
                 'status',
+                'features',
                 'category_id',
                 'created_at',
             ],
