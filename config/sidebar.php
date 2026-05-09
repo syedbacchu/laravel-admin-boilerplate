@@ -340,6 +340,11 @@ return [
                 'route' => 'settings.fields.index',
                 'permission' => 'settings.fields.index',
             ],
+            [
+                'label' => 'About Company',
+                'route' => 'about-company.edit',
+                'permission' => null,
+            ],
         ],
     ],
     [

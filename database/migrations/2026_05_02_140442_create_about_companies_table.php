@@ -23,6 +23,7 @@ return new class extends Migration
             $table->json('core_values')->nullable();
             $table->json('company_stats')->nullable();
             $table->json('why_choose')->nullable();
+            $table->tinyInteger('site_type')->default(1);
             $table->foreignId('added_by')->nullable()->constrained('users')->nullOnDelete();
             $table->foreignId('updated_by')->nullable()->constrained('users')->nullOnDelete();
             $table->timestamps();

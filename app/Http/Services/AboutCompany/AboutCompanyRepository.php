@@ -16,4 +16,11 @@ class AboutCompanyRepository extends BaseRepository implements AboutCompanyRepos
     {
         return AboutCompany::first();
     }
+
+    public function getBySiteType(int $siteType): ?AboutCompany
+    {
+        return AboutCompany::query()
+            ->where('site_type', $siteType)
+            ->first();
+    }
 }

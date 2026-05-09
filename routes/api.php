@@ -18,6 +18,7 @@ use App\Http\Controllers\Api\Testimonials\TestimonialsController;
 use App\Http\Controllers\Api\User\ProfileController;
 use App\Http\Controllers\Api\Home\HomeController;
 use App\Http\Controllers\Api\AboutCompany\AboutCompanyController;
+use App\Http\Controllers\Api\Settings\CompanyPolicyController;
 use App\Http\Controllers\Api\Faq\FaqController;
 use App\Http\Controllers\Api\Faq\FaqCategoryController;
 use App\Http\Controllers\Api\CollectLead\CollectLeadController;
@@ -52,6 +53,10 @@ Route::group(['prefix' => 'home', 'as' => 'apiHome.'], function () {
 
 Route::group(['prefix' => 'about-company', 'as' => 'apiAboutCompany.'], function () {
     Route::get('/', [AboutCompanyController::class, 'index'])->name('index');
+});
+
+Route::group(['prefix' => 'company-policy', 'as' => 'apiCompanyPolicy.'], function () {
+    Route::get('/', [CompanyPolicyController::class, 'show'])->name('show');
 });
 
 Route::group(['prefix' => 'services', 'as' => 'apiService.'], function () {

@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers\Admin\AboutCompany;
 
+use App\Enums\SliderSiteType;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\AboutCompany\AboutCompanyUpdateRequest;
 use App\Http\Services\AboutCompany\AboutCompanyServiceInterface;
 use App\Http\Services\Response\ResponseService;
 use Illuminate\Http\Request;
+use Illuminate\Contracts\View\View;
 
 class AboutCompanyController extends Controller
 {
@@ -17,16 +19,18 @@ class AboutCompanyController extends Controller
         $this->service = $service;
     }
 
-    public function index(Request $request)
+    public function index(Request $request): View
     {
-        $response = $this->service->getAboutCompanyData();
+        $selectedSiteType = (int) $request->get('site_type', SliderSiteType::GENERAL->value);
+        $response = $this->service->getAboutCompanyData($selectedSiteType);
         $data = $response['data'];
 
-        $data['pageTitle'] = __('About Company');
-
-        return ResponseService::send([
+        return view(viewss('about-company', 'form'), [
+            'pageTitle' => __('About Company'),
             'data' => $data,
-        ], view: viewss('about-company', 'form'));
+            'siteTypes' => SliderSiteType::getSliderSiteTypeArray(),
+            'selectedSiteType' => $selectedSiteType,
+        ]);
     }
 
     public function update(AboutCompanyUpdateRequest $request)
@@ -35,7 +39,6 @@ class AboutCompanyController extends Controller
 
         return ResponseService::send([
             'response' => $response,
-        ], 'about-company.edit', null, [], 'about-company.edit');
+        ], 'about-company.edit', null, ['site_type' => $request->site_type], 'about-company.edit');
     }
 }
-

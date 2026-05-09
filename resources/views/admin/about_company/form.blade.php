@@ -11,6 +11,7 @@
     class="mt-4"
 >
     @csrf
+    <input type="hidden" name="site_type" value="{{ $selectedSiteType }}">
 
     <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-3 mb-4">
         <h1 class="text-2xl font-bold text-gray-800 dark:text-gray-100">
@@ -19,6 +20,24 @@
         <div class="flex items-center gap-2">
             <a href="{{ route('dashboard') }}" class="btn btn-outline-primary">{{ __('Back') }}</a>
             <button type="submit" class="btn btn-primary">{{ __('Update') }}</button>
+        </div>
+    </div>
+
+    <div class="panel !p-0 overflow-hidden border border-[#e0e6ed] dark:border-[#1b2e4b] mb-6">
+        <div class="px-4 py-3 border-b border-[#e0e6ed] dark:border-[#1b2e4b] bg-[#fafafa] dark:bg-[#0b1320]">
+            <h3 class="font-semibold text-base">{{ __('Site Type') }}</h3>
+        </div>
+        <div class="p-4">
+            <label class="text-xs uppercase font-semibold text-gray-500">{{ __('Select Site Type') }}</label>
+            <select class="form-select mt-1 w-full" onchange="window.location=this.options[this.selectedIndex].dataset.url">
+                @foreach($siteTypes as $value => $label)
+                    <option value="{{ $value }}"
+                            data-url="{{ route('about-company.edit', ['site_type' => $value]) }}"
+                            @selected((int) $selectedSiteType === (int) $value)>
+                        {{ $label }}
+                    </option>
+                @endforeach
+            </select>
         </div>
     </div>
 
@@ -76,7 +95,7 @@
 
                 <div>
                     <label class="text-xs uppercase font-semibold text-gray-500">{{ __('Our Story') }}</label>
-                    <div x-data="quillEditor('our_story', '{{ $data->our_story ?? '' }}')" class="quill-editor-wrapper">
+                    <div x-data="quillEditor('our_story', @js($data->our_story ?? ''))" class="quill-editor-wrapper">
                         <input type="hidden" name="our_story" x-model="content">
                         <div x-ref="editor"></div>
                     </div>
@@ -91,7 +110,7 @@
                     <h3 class="font-semibold text-base">{{ __('Mission') }}</h3>
                 </div>
                 <div class="p-4">
-                    <div x-data="quillEditor('mission', '{{ $data->mission ?? '' }}')" class="quill-editor-wrapper">
+                    <div x-data="quillEditor('mission', @js($data->mission ?? ''))" class="quill-editor-wrapper">
                         <input type="hidden" name="mission" x-model="content">
                         <div x-ref="editor"></div>
                     </div>
@@ -103,7 +122,7 @@
                     <h3 class="font-semibold text-base">{{ __('Vision') }}</h3>
                 </div>
                 <div class="p-4">
-                    <div x-data="quillEditor('vision', '{{ $data->vision ?? '' }}')" class="quill-editor-wrapper">
+                    <div x-data="quillEditor('vision', @js($data->vision ?? ''))" class="quill-editor-wrapper">
                         <input type="hidden" name="vision" x-model="content">
                         <div x-ref="editor"></div>
                     </div>

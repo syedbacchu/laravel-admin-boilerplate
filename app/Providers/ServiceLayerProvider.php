@@ -110,10 +110,10 @@ use App\Http\Services\ProductFeature\ProductFeatureRepositoryInterface;
 use App\Http\Services\ProductFeature\ProductFeatureService;
 use App\Http\Services\ProductFeature\ProductFeatureServiceInterface;
 
-use App\Http\Repositories\AboutCompany\AboutCompanyRepository;
-use App\Http\Repositories\AboutCompany\AboutCompanyRepositoryInterface;
 use App\Http\Services\AboutCompany\AboutCompanyService;
 use App\Http\Services\AboutCompany\AboutCompanyServiceInterface;
+use App\Http\Services\AboutCompany\AboutCompanyRepository;
+use App\Http\Services\AboutCompany\AboutCompanyRepositoryInterface;
 
 use App\Http\Services\CollectLead\CollectLeadRepository;
 use App\Http\Services\CollectLead\CollectLeadRepositoryInterface;

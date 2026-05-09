@@ -2,6 +2,7 @@
 
 namespace App\Http\Services\AboutCompany;
 
+use App\Enums\SliderSiteType;
 use App\Http\Requests\AboutCompany\AboutCompanyUpdateRequest;
 use App\Http\Services\BaseService;
 use App\Models\AboutCompany;
@@ -16,12 +17,14 @@ class AboutCompanyService extends BaseService implements AboutCompanyServiceInte
         $this->aboutCompanyRepository = $repository;
     }
 
-    public function getAboutCompanyData(): array
+    public function getAboutCompanyData(int $siteType = 1): array
     {
-        $aboutCompany = $this->aboutCompanyRepository->getFirst();
+        $aboutCompany = $this->aboutCompanyRepository->getBySiteType($siteType);
 
         if (!$aboutCompany) {
-            return $this->sendResponse(true, 'About Company data not found', (object) []);
+            $aboutCompany = new AboutCompany([
+                'site_type' => $siteType,
+            ]);
         }
 
         return $this->sendResponse(true, 'About Company data retrieved successfully', $aboutCompany);
@@ -29,9 +32,11 @@ class AboutCompanyService extends BaseService implements AboutCompanyServiceInte
 
     public function updateAboutCompany(AboutCompanyUpdateRequest $request): array
     {
-        $aboutCompany = $this->aboutCompanyRepository->getFirst();
+        $siteType = (int) ($request->site_type ?? SliderSiteType::GENERAL->value);
+        $aboutCompany = $this->aboutCompanyRepository->getBySiteType($siteType);
 
         $data = [
+            'site_type' => $siteType,
             'banner_image' => $request->banner_image,
             'title' => $request->title,
             'subtitle' => $request->subtitle,

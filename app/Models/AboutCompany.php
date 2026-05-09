@@ -22,6 +22,7 @@ class AboutCompany extends Model
         'why_choose',
         'added_by',
         'updated_by',
+        'site_type'
     ];
 
     protected $casts = [

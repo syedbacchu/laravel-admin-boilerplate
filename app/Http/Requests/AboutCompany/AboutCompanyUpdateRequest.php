@@ -22,6 +22,7 @@ class AboutCompanyUpdateRequest extends FormRequest
     public function rules(): array
     {
         return [
+            'site_type' => 'required|integer|in:1,2,3,4,5',
             'banner_image' => 'nullable|string|max:500',
             'title' => 'nullable|string|max:255',
             'subtitle' => 'nullable|string|max:500',
@@ -53,9 +54,16 @@ class AboutCompanyUpdateRequest extends FormRequest
     protected function prepareForValidation(): void
     {
         $this->merge([
-            'core_values' => $this->core_values ? json_decode($this->core_values, true) : null,
-            'company_stats' => $this->company_stats ? json_decode($this->company_stats, true) : null,
-            'why_choose' => $this->why_choose ? json_decode($this->why_choose, true) : null,
+            'site_type' => (int) ($this->site_type ?? 1),
+            'core_values' => is_string($this->core_values)
+                ? json_decode($this->core_values, true)
+                : ($this->core_values ?: null),
+            'company_stats' => is_string($this->company_stats)
+                ? json_decode($this->company_stats, true)
+                : ($this->company_stats ?: null),
+            'why_choose' => is_string($this->why_choose)
+                ? json_decode($this->why_choose, true)
+                : ($this->why_choose ?: null),
         ]);
     }
 }
