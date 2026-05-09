@@ -1,5 +1,7 @@
 <x-layout.default>
     @section('title', $pageTitle)
+    @vite(['resources/css/quill.snow.css'])
+    <script src="{{ asset('assets/js/quill.js') }}"></script>
 
     <form method="POST"
           action="{{ isset($item) ? route('product.update', $item->id) : route('product.store') }}"
@@ -137,10 +139,10 @@
                     </div>
                     <div>
                         <label class="form-label">Full Description</label>
-                        <textarea name="description"
-                                  rows="6"
-                                  class="form-input"
-                                  placeholder="Detailed product description...">{{ old('description', $item->description ?? '') }}</textarea>
+                        <div x-data="quillEditor('description', @js(old('description', $item->description ?? '')))" class="quill-editor-wrapper">
+                            <input type="hidden" name="description" x-model="content">
+                            <div x-ref="editor"></div>
+                        </div>
                     </div>
                     <div>
                         <label class="form-label">Usage Instructions</label>
@@ -568,10 +570,61 @@
 
     </form>
 
+    <style>
+        .quill-editor-wrapper .ql-toolbar {
+            border-radius: 8px 8px 0 0;
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+        }
+
+        .quill-editor-wrapper .ql-container {
+            border-radius: 0 0 8px 8px;
+            border: 1px solid #e2e8f0;
+            min-height: 250px;
+            font-size: 14px;
+        }
+    </style>
+
     {{-- ============================= --}}
     {{-- JAVASCRIPT                   --}}
     {{-- ============================= --}}
     <script>
+        function quillEditor(fieldName, initialContent) {
+            return {
+                fieldName: fieldName,
+                content: initialContent || '',
+                quill: null,
+
+                init() {
+                    const toolbarOptions = [
+                        [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
+                        ['bold', 'italic', 'underline', 'strike'],
+                        [{ 'list': 'ordered' }, { 'list': 'bullet' }],
+                        [{ 'indent': '-1' }, { 'indent': '+1' }],
+                        [{ 'align': [] }],
+                        ['link'],
+                        ['clean']
+                    ];
+
+                    this.quill = new Quill(this.$refs.editor, {
+                        modules: {
+                            toolbar: toolbarOptions
+                        },
+                        theme: 'snow',
+                        placeholder: 'Detailed product description...'
+                    });
+
+                    if (this.content) {
+                        this.quill.root.innerHTML = this.content;
+                    }
+
+                    this.quill.on('text-change', () => {
+                        this.content = this.quill.root.innerHTML;
+                    });
+                }
+            };
+        }
+
         let vIndex = 0;
         let qIndex = 0;
 
