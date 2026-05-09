@@ -242,6 +242,11 @@ return [
                 'permission' => 'products_category.list',
             ],
             [
+                'label' => 'Product Features',
+                'route' => 'product.feature.list',
+                'permission' => 'product.feature.list',
+            ],
+            [
                 'label' => 'Products',
                 'route' => 'product.list',
                 'permission' => 'products.list',

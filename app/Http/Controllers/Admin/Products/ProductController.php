@@ -9,6 +9,7 @@ use App\Http\Services\Response\ResponseService;
 use App\Models\AttributeType;
 use App\Models\AttributeValue;
 use App\Models\ProductCategory;
+use App\Models\ProductFeature;
 use App\Support\DataListManager;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
@@ -79,6 +80,7 @@ class ProductController extends Controller
         $data['pageTitle']       = __('Create Product');
         $data['function_type']   = 'create';
         $data['categories']      = ProductCategory::where('status', 1)->orderBy('name')->get();
+        $data['productFeatures'] = ProductFeature::where('status', 1)->orderBy('sort_order')->orderBy('title')->get();
         $data['attributes']      = AttributeType::where('status', 1)->orderBy('name')->get();
         $data['attributeValues'] = AttributeValue::with('attribute')->where('status', 1)->get();
 
@@ -130,6 +132,7 @@ class ProductController extends Controller
         $data['function_type']   = 'update';
         $data['item']            = $item;
         $data['categories']      = ProductCategory::where('status', 1)->orderBy('name')->get();
+        $data['productFeatures'] = ProductFeature::where('status', 1)->orderBy('sort_order')->orderBy('title')->get();
         $data['attributes']      = AttributeType::where('status', 1)->orderBy('name')->get();
         $data['attributeValues'] = AttributeValue::with('attribute')->where('status', 1)->get();
 

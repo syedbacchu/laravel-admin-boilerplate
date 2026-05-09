@@ -31,7 +31,7 @@ return new class extends Migration
             $table->string('meta_title')->nullable();
             $table->string('meta_description')->nullable();
             $table->string('meta_keywords')->nullable();
-            $table->string('video_link',200)->nullable();
+            $table->string('video_link',500)->nullable();
             $table->decimal('discount',19,2)->nullable();
             $table->string('discount_type',10)->nullable();
             $table->decimal('tax',19,2)->default(0);

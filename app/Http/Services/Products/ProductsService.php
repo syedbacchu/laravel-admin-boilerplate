@@ -69,7 +69,7 @@ class ProductsService extends BaseService implements ProductsServiceInterface
 
                 // JSON FIELDS
                 'attributes'         => $request->attributes ?? null,
-                'features'           => $request->features ?? null,
+                'features'           => $this->normalizeProductFeatures($request->features),
                 'quantity_discounts' => $request->quantity_discounts ?? null,
 
                 // SEO
@@ -276,5 +276,49 @@ class ProductsService extends BaseService implements ProductsServiceInterface
         }
 
         return make_unique_slug($base, 'products');
+    }
+
+    protected function normalizeProductFeatures(?array $features): ?array
+    {
+        $normalized = collect($features ?? [])
+            ->map(function ($feature) {
+                $items = collect($feature['items'] ?? [])
+                    ->map(function ($item) {
+                        return [
+                            'title' => trim((string) ($item['title'] ?? '')),
+                            'sub_title' => trim((string) ($item['sub_title'] ?? '')),
+                            'description' => trim((string) ($item['description'] ?? '')),
+                            'image' => $item['image'] ?? null,
+                            'sort_order' => (int) ($item['sort_order'] ?? 0),
+                            'status' => (int) ($item['status'] ?? 1),
+                        ];
+                    })
+                    ->filter(function ($item) {
+                        return $item['title'] !== ''
+                            || $item['sub_title'] !== ''
+                            || $item['description'] !== ''
+                            || !empty($item['image']);
+                    })
+                    ->values()
+                    ->all();
+
+                return [
+                    'product_feature_id' => !empty($feature['product_feature_id']) ? (int) $feature['product_feature_id'] : null,
+                    'feature_title' => trim((string) ($feature['feature_title'] ?? '')),
+                    'feature_slug' => trim((string) ($feature['feature_slug'] ?? '')),
+                    'feature_sub_title' => trim((string) ($feature['feature_sub_title'] ?? '')),
+                    'feature_description' => trim((string) ($feature['feature_description'] ?? '')),
+                    'feature_image' => $feature['feature_image'] ?? null,
+                    'feature_sort_order' => (int) ($feature['feature_sort_order'] ?? 0),
+                    'items' => $items,
+                ];
+            })
+            ->filter(function ($feature) {
+                return !empty($feature['feature_title']) || !empty($feature['items']);
+            })
+            ->values()
+            ->all();
+
+        return !empty($normalized) ? $normalized : null;
     }
 }

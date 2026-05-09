@@ -90,7 +90,21 @@ class ProductsCreateRequest extends FormRequest
             |------------------------------------------------------------------
             */
             'attributes'   => ['nullable', 'array'],
-            'features'     => ['nullable', 'array'],
+            'features' => ['nullable', 'array'],
+            'features.*.product_feature_id' => ['nullable', 'integer', 'exists:product_features,id'],
+            'features.*.feature_title' => ['nullable', 'string', 'max:255'],
+            'features.*.feature_slug' => ['nullable', 'string', 'max:255'],
+            'features.*.feature_sub_title' => ['nullable', 'string', 'max:255'],
+            'features.*.feature_description' => ['nullable', 'string'],
+            'features.*.feature_image' => ['nullable', 'string'],
+            'features.*.feature_sort_order' => ['nullable', 'integer', 'min:0'],
+            'features.*.items' => ['nullable', 'array'],
+            'features.*.items.*.title' => ['nullable', 'string', 'max:255'],
+            'features.*.items.*.sub_title' => ['nullable', 'string', 'max:255'],
+            'features.*.items.*.description' => ['nullable', 'string'],
+            'features.*.items.*.image' => ['nullable', 'string'],
+            'features.*.items.*.sort_order' => ['nullable', 'integer', 'min:0'],
+            'features.*.items.*.status' => ['nullable', 'boolean'],
 
             // Quantity Discounts
             'quantity_discounts'               => ['nullable', 'array'],
@@ -150,6 +164,27 @@ class ProductsCreateRequest extends FormRequest
             })->toArray();
 
             $this->merge(['variations' => $variations]);
+        }
+
+        if ($this->features) {
+            $features = collect($this->features)->map(function ($feature) {
+                $feature['product_feature_id'] = !empty($feature['product_feature_id'])
+                    ? (int) $feature['product_feature_id']
+                    : null;
+                $feature['feature_sort_order'] = isset($feature['feature_sort_order'])
+                    ? (int) $feature['feature_sort_order']
+                    : 0;
+
+                $feature['items'] = collect($feature['items'] ?? [])->map(function ($item) {
+                    $item['sort_order'] = isset($item['sort_order']) ? (int) $item['sort_order'] : 0;
+                    $item['status'] = isset($item['status']) ? (int) $item['status'] : 1;
+                    return $item;
+                })->toArray();
+
+                return $feature;
+            })->toArray();
+
+            $this->merge(['features' => $features]);
         }
     }
 

@@ -8,6 +8,11 @@ class ProductListResource extends JsonResource
 {
     public function toArray($request): array
     {
+        $mainFeature = collect($this->features ?? [])
+            ->first(function ($feature) {
+                return ($feature['feature_slug'] ?? null) === 'main-feature';
+            });
+
         return [
             'id' => $this->id,
             'name' => $this->name,
@@ -23,8 +28,8 @@ class ProductListResource extends JsonResource
             'sold' => (int) ($this->sold ?? 0),
             'is_featured' => (bool) ($this->is_featured ?? false),
             'status' => (bool) ($this->status ?? false),
-            'features' => $this->when($this->features, function () {
-                return $this->features ?? [];
+            'features' => $this->when($mainFeature, function () use ($mainFeature) {
+                return $mainFeature['items'];
             }),
 
             'categories' => $this->whenLoaded('categories', function () {

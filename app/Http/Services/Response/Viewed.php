@@ -123,6 +123,10 @@ class Viewed
             'list' => 'admin.products.products.index',
             'create' => 'admin.products.products.create',
         ],
+        'product_feature' => [
+            'list' => 'admin.products.product_feature.index',
+            'create' => 'admin.products.product_feature.create',
+        ],
         
     ];
 
