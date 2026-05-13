@@ -30,7 +30,7 @@ return [
     [
         'key' => 'slider',
         'label' => 'Slider',
-        'icon' => 'app',
+        'icon' => 'slider',
         'permission' => null,
         'children' => [
             [
@@ -95,7 +95,7 @@ return [
     [
         'key' => 'blog',
         'label' => 'Blog',
-        'icon' => 'faq',
+        'icon' => 'blog',
         'permission' => null,
         'children' => [
             [
@@ -138,7 +138,7 @@ return [
     [
         'key' => 'service',
         'label' => 'Services',
-        'icon' => 'faq',
+        'icon' => 'service',
         'permission' => null,
         'children' => [
             [
@@ -166,7 +166,7 @@ return [
     [
         'key' => 'testimonial',
         'label' => 'Testimonials',
-        'icon' => 'faq',
+        'icon' => 'testimonial',
         'permission' => null,
         'children' => [
 
@@ -185,7 +185,7 @@ return [
     [
         'key' => 'stat',
         'label' => 'Stats',
-        'icon' => 'faq',
+        'icon' => 'stat',
         'permission' => null,
         'children' => [
 
@@ -204,7 +204,7 @@ return [
     [
         'key' => 'team',
         'label' => 'Teams',
-        'icon' => 'faq',
+        'icon' => 'team',
         'permission' => null,
         'children' => [
 
@@ -223,7 +223,7 @@ return [
     [
         'key' => 'product',
         'label' => 'Products',
-        'icon' => 'faq',
+        'icon' => 'product',
         'permission' => null,
         'children' => [
             [
@@ -256,7 +256,7 @@ return [
     [
         'key' => 'feature',
         'label' => 'Features',
-        'icon' => 'faq',
+        'icon' => 'feature',
         'permission' => null,
         'children' => [
             [
@@ -284,7 +284,7 @@ return [
     [
         'key' => 'project',
         'label' => 'Projects',
-        'icon' => 'faq',
+        'icon' => 'project',
         'permission' => null,
         'children' => [
             [
