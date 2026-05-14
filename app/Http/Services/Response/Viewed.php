@@ -127,12 +127,14 @@ class Viewed
             'list' => 'admin.products.product_feature.index',
             'create' => 'admin.products.product_feature.create',
         ],
-
         'about-company' => [
             'form' => 'admin.about_company.form',
             'edit' => 'admin.about_company.edit',
         ],
-        
+        'contact' => [
+            'list' => 'admin.contact.list',
+        ],
+
     ];
 
     /**
