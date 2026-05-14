@@ -30,7 +30,9 @@ class ContactService extends BaseService implements ContactServiceInterface
     {
         try {
             $contact = $this->contactRepository->create($data);
-            return $this->sendResponse(true, 'Contact submitted successfully', $contact, 201);
+            // Prevent recursion by hiding relationships and converting to array
+            $contactData = $contact->makeHidden(['repliedBy'])->toArray();
+            return $this->sendResponse(true, 'Contact submitted successfully', $contactData, 201);
         } catch (Exception $e) {
             return $this->sendResponse(false, 'Failed to submit contact', [], 500, $e->getMessage());
         }
@@ -62,7 +64,9 @@ class ContactService extends BaseService implements ContactServiceInterface
                 return $this->sendResponse(false, 'Contact not found', [], 404);
             }
 
-            return $this->sendResponse(true, 'Contact detail retrieved successfully', $contact);
+            // Prevent recursion by hiding relationships and converting to array
+            $contactData = $contact->makeHidden(['repliedBy'])->toArray();
+            return $this->sendResponse(true, 'Contact detail retrieved successfully', $contactData);
         } catch (Exception $e) {
             return $this->sendResponse(false, 'Failed to retrieve contact detail', [], 500, $e->getMessage());
         }
@@ -103,7 +107,9 @@ class ContactService extends BaseService implements ContactServiceInterface
 
             $this->contactRepository->update($id, $updateData);
 
-            return $this->sendResponse(true, 'Reply sent successfully', $contact->fresh());
+            // Prevent recursion by hiding relationships and converting to array
+            $updatedContact = $contact->fresh()->makeHidden(['repliedBy'])->toArray();
+            return $this->sendResponse(true, 'Reply sent successfully', $updatedContact);
         } catch (Exception $e) {
             return $this->sendResponse(false, 'Failed to send reply', [], 500, $e->getMessage());
         }

@@ -199,6 +199,11 @@
 </div>
 
 <script>
+function showToast(type, message) {
+    // Simple alert fallback
+    alert(message);
+}
+
 function viewContact(id) {
     fetch('{{ route('contact.show') }}?id=' + id)
         .then(response => response.json())

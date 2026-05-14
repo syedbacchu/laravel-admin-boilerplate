@@ -71,7 +71,7 @@ class ContactController extends Controller
         }
 
         $response = $this->service->getContactDetail($id);
-        return ResponseService::send($response);
+        return response()->json($response);
     }
 
     public function reply(ContactReplyRequest $request, int $id): JsonResponse
