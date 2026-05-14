@@ -23,6 +23,7 @@ use App\Http\Controllers\Api\Faq\FaqController;
 use App\Http\Controllers\Api\Faq\FaqCategoryController;
 use App\Http\Controllers\Api\CollectLead\CollectLeadController;
 use App\Http\Controllers\Api\Product\ProductController;
+use App\Http\Controllers\Api\Contact\ContactController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -97,6 +98,10 @@ Route::group(['middleware' => ['auth:api'],'prefix' => 'user', 'as' => 'apiUser.
 Route::group(['prefix' => 'testimonials', 'as' => 'apiTestimonial.'], function () {
     Route::get('/', [TestimonialsController::class, 'index'])->name('list');
     Route::get('{identifier}', [TestimonialsController::class, 'show'])->name('details');
+});
+
+Route::group(['prefix' => 'contact', 'as' => 'apiContact.'], function () {
+    Route::post('/', [ContactController::class, 'store'])->name('store');
 });
 
 Route::group(['prefix' => 'sliders', 'as' => 'slider.'], function () {

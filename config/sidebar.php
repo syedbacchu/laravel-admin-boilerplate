@@ -345,6 +345,11 @@ return [
                 'route' => 'about-company.edit',
                 'permission' => null,
             ],
+            [
+                'label' => 'Contact Messages',
+                'route' => 'contact.index',
+                'permission' => null,
+            ],
         ],
     ],
     [

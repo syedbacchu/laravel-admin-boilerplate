@@ -44,9 +44,9 @@ class AboutCompanyService extends BaseService implements AboutCompanyServiceInte
             'story_image' => $request->story_image,
             'mission' => $request->mission,
             'vision' => $request->vision,
-            'core_values' => $request->core_values ? json_encode($request->core_values) : null,
-            'company_stats' => $request->company_stats ? json_encode($request->company_stats) : null,
-            'why_choose' => $request->why_choose ? json_encode($request->why_choose) : null,
+            'core_values' => $request->core_values,
+            'company_stats' => $request->company_stats,
+            'why_choose' => $request->why_choose,
             'updated_by' => auth()->id() ?? null,
         ];
 

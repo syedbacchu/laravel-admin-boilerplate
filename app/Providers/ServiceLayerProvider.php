@@ -120,6 +120,11 @@ use App\Http\Services\CollectLead\CollectLeadRepositoryInterface;
 use App\Http\Services\CollectLead\CollectLeadService;
 use App\Http\Services\CollectLead\CollectLeadServiceInterface;
 
+use App\Http\Services\Contact\ContactRepository;
+use App\Http\Services\Contact\ContactRepositoryInterface;
+use App\Http\Services\Contact\ContactService;
+use App\Http\Services\Contact\ContactServiceInterface;
+
 use Illuminate\Support\ServiceProvider;
 
 class ServiceLayerProvider extends ServiceProvider
@@ -207,6 +212,12 @@ class ServiceLayerProvider extends ServiceProvider
 
         $this->app->bind(ProductFeatureRepositoryInterface::class, ProductFeatureRepository::class);
         $this->app->bind(ProductFeatureServiceInterface::class, ProductFeatureService::class);
+
+        $this->app->bind(CollectLeadRepositoryInterface::class, CollectLeadRepository::class);
+        $this->app->bind(CollectLeadServiceInterface::class, CollectLeadService::class);
+
+        $this->app->bind(ContactRepositoryInterface::class, ContactRepository::class);
+        $this->app->bind(ContactServiceInterface::class, ContactService::class);
     }
 
     /**
