@@ -20,6 +20,7 @@ class ContactController extends Controller
     public function store(ContactStoreRequest $request): JsonResponse
     {
         $response = $this->service->submitContact($request->validated());
+        logStore('contact response', $response);
         return ResponseService::send($response);
     }
 }

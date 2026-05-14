@@ -2,9 +2,10 @@
 
 namespace App\Http\Requests\Contact;
 
+use App\Http\Requests\BaseFormRequest;
 use Illuminate\Foundation\Http\FormRequest;
 
-class ContactReplyRequest extends FormRequest
+class ContactReplyRequest extends BaseFormRequest
 {
     public function authorize(): bool
     {

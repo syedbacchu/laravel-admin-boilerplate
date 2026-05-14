@@ -30,11 +30,64 @@ class ContactService extends BaseService implements ContactServiceInterface
     {
         try {
             $contact = $this->contactRepository->create($data);
+
+            // Send auto-reply if enabled
+            $this->sendAutoReply($contact);
+
             // Prevent recursion by hiding relationships and converting to array
             $contactData = $contact->makeHidden(['repliedBy'])->toArray();
             return $this->sendResponse(true, 'Contact submitted successfully', $contactData, 201);
         } catch (Exception $e) {
             return $this->sendResponse(false, 'Failed to submit contact', [], 500, $e->getMessage());
+        }
+    }
+
+    private function sendAutoReply($contact): void
+    {
+        try {
+            // Check if auto-reply is enabled
+            $autoReplyEnabled = settings('auto_reply', '0');
+
+            if ($autoReplyEnabled !== '1' && $autoReplyEnabled !== 1) {
+                \Log::info('Auto-reply disabled - skipping automatic reply');
+                return;
+            }
+
+            // Check if mail is configured
+            if (!$this->mailManager->isConfigured()) {
+                \Log::info('Mail not configured - skipping auto-reply');
+                return;
+            }
+
+            // Send auto-reply email - extract all data as pure strings to avoid Message object issues
+            $name = strip_tags((string) $contact->name);
+            $email = filter_var((string) $contact->email, FILTER_SANITIZE_EMAIL);
+            $phone = strip_tags((string) $contact->phone);
+            $subject = strip_tags((string) $contact->subject);
+            $userMessage = nl2br(strip_tags((string) $contact->message));
+
+            $mailService = $this->mailManager->make();
+            $mailService->send(
+                'emails.contact-auto-reply',
+                [
+                    'name' => $name,
+                    'email' => $email,
+                    'phone' => $phone,
+                    'subject' => $subject,
+                    'userMessage' => $userMessage,
+                    'date' => now()->format('F j, Y'),
+                    'reference_id' => 'REF-' . strtoupper(uniqid()),
+                ],
+                $email,
+                $name,
+                'Thank You for Contacting Us'
+            );
+
+            \Log::info('Auto-reply sent successfully to ' . $contact->email);
+
+        } catch (\Exception $e) {
+            // Log error but don't fail the contact submission
+            \Log::warning('Auto-reply failed: ' . $e->getMessage());
         }
     }
 
