@@ -42,9 +42,9 @@ class ContactController extends Controller
                         $buttons = [
                             '<button type="button" onclick="viewContact(' . $item->id . ')" class="btn btn-sm btn-outline-primary">View</button>',
                         ];
-                        if ($item->status === 'pending') {
+//                        if ($item->status === 'pending') {
                             $buttons[] = '<button type="button" onclick="openReplyModal(' . $item->id . ')" class="btn btn-sm btn-primary">Reply</button>';
-                        }
+//                        }
                         return implode(' ', $buttons);
                     },
                 ],
