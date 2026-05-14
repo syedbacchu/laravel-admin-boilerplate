@@ -80,24 +80,32 @@ class ContactService extends BaseService implements ContactServiceInterface
                 return $this->sendResponse(false, 'Contact not found', [], 404);
             }
 
-            // Send email
-            $mailService = $this->mailManager->make();
-            $emailSent = $mailService->send(
-                'emails.contact-reply',
-                [
-                    'contact' => $contact,
-                    'reply_message' => $data['reply_message'],
-                ],
-                $contact->email,
-                $contact->name,
-                'Re: ' . $contact->subject
-            );
+            // Try to send email if mail is configured
+            $emailSent = false;
+            $mailConfigured = $this->mailManager->isConfigured();
 
-            if (!$emailSent) {
-                return $this->sendResponse(false, 'Failed to send email', [], 500);
+            if ($mailConfigured) {
+                try {
+                    $mailService = $this->mailManager->make();
+                    $emailSent = $mailService->send(
+                        'emails.contact-reply',
+                        [
+                            'contact' => $contact,
+                            'reply_message' => $data['reply_message'],
+                        ],
+                        $contact->email,
+                        $contact->name,
+                        'Re: ' . $contact->subject
+                    );
+                } catch (\Exception $e) {
+                    // Log email error but don't fail the reply
+                    \Log::warning('Failed to send contact reply email: ' . $e->getMessage());
+                }
+            } else {
+                \Log::info('Mail not configured - skipping email send for contact reply');
             }
 
-            // Update contact record
+            // Update contact record regardless of email status
             $updateData = [
                 'status' => 'replied',
                 'reply_message' => $data['reply_message'],
@@ -109,7 +117,17 @@ class ContactService extends BaseService implements ContactServiceInterface
 
             // Prevent recursion by hiding relationships and converting to array
             $updatedContact = $contact->fresh()->makeHidden(['repliedBy'])->toArray();
-            return $this->sendResponse(true, 'Reply sent successfully', $updatedContact);
+
+            // Provide appropriate message based on email status
+            if (!$mailConfigured) {
+                $message = 'Reply saved (email not configured - please configure email settings)';
+            } elseif ($emailSent) {
+                $message = 'Reply sent successfully';
+            } else {
+                $message = 'Reply saved (email could not be sent - check mail settings)';
+            }
+
+            return $this->sendResponse(true, $message, $updatedContact);
         } catch (Exception $e) {
             return $this->sendResponse(false, 'Failed to send reply', [], 500, $e->getMessage());
         }

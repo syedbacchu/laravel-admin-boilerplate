@@ -147,9 +147,11 @@ class Settings
                 );
             }
 
+            self::clearCache();
             return sendResponse(true,__('Settings updated successfully'));
         } catch (\Exception $e) {
             logStore('updateData ex', $e->getMessage());
+            self::clearCache();
             return sendResponse(false, $e->getMessage());
         }
     }

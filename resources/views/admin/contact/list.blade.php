@@ -200,8 +200,13 @@
 
 <script>
 function showToast(type, message) {
-    // Simple alert fallback
-    alert(message);
+    // Simple alert fallback with type indication
+    let prefix = '';
+    if (type === 'success') prefix = '✓ ';
+    if (type === 'error') prefix = '✗ ';
+    if (type === 'warning') prefix = '⚠ ';
+
+    alert(prefix + message);
 }
 
 function viewContact(id) {
@@ -271,7 +276,19 @@ function submitReply(event) {
     .then(response => response.json())
     .then(data => {
         if (data.success) {
-            showToast('success', data.message || 'Reply sent successfully');
+            // Handle different success messages
+            let message = data.message || 'Reply sent successfully';
+            let messageType = 'success';
+
+            if (message.includes('not configured')) {
+                message = 'Reply saved! (Email not configured - go to Settings to setup email)';
+                messageType = 'warning';
+            } else if (message.includes('email could not be sent')) {
+                message = 'Reply saved! (Email failed - check your mail settings)';
+                messageType = 'warning';
+            }
+
+            showToast(messageType, message);
             alpineData.show = false;
             $('#itemsTable').DataTable().ajax.reload();
         } else {

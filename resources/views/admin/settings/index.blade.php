@@ -174,6 +174,102 @@
                 </section>
             </div>
         </div>
+
+        <!-- MAIL TESTING SECTION -->
+        <div class="mt-8 bg-white shadow-xl rounded-2xl p-6 border border-gray-100">
+            <div class="flex items-center justify-between mb-6">
+                <div>
+                    <h5 class="text-2xl font-bold text-gray-800">📧 Test Mail Configuration</h5>
+                    <p class="text-sm text-gray-500 mt-1">Test if your email settings are working correctly</p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <!-- Test Email Form -->
+                <div class="lg:col-span-2">
+                    <div class="border border-gray-200 rounded-lg p-6">
+                        <form id="testMailForm" class="space-y-4">
+                            @csrf
+                            <div>
+                                <label class="block mb-2 text-sm font-medium text-gray-700">
+                                    Recipient Email Address
+                                </label>
+                                <div class="flex gap-3">
+                                    <input type="email"
+                                           id="test_email"
+                                           name="test_email"
+                                           placeholder="Enter email to receive test mail"
+                                           required
+                                           class="form-input flex-1">
+                                    <button type="submit"
+                                            id="sendTestMailBtn"
+                                            class="btn btn-primary px-6">
+                                        <span id="btnText">Send Test Email</span>
+                                        <span id="btnLoader" class="hidden">
+                                            <svg class="animate-spin h-5 w-5 mr-3" viewBox="0 0 24 24">
+                                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12c0 4.418 3.582 8 8 8s8-3.582 8-8 8-3.582-8-8-8-3.582-8-8-8z"></path>
+                                            </svg>
+                                            Sending...
+                                        </span>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Status Messages -->
+                            <div id="mailStatus" class="hidden rounded-lg p-4">
+                                <div class="flex items-start">
+                                    <div id="statusIcon" class="flex-shrink-0"></div>
+                                    <div class="ml-3">
+                                        <h3 id="statusTitle" class="text-sm font-medium"></h3>
+                                        <div id="statusMessage" class="mt-1 text-sm"></div>
+                                        <div id="statusErrors" class="mt-2 text-sm hidden"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Current Mail Settings Display -->
+                <div class="lg:col-span-1">
+                    <div class="bg-gray-50 rounded-lg p-6">
+                        <h6 class="text-lg font-semibold text-gray-800 mb-4">Current Mail Settings</h6>
+                        <div class="space-y-3 text-sm">
+                            <div class="flex justify-between">
+                                <span class="text-gray-600">Driver:</span>
+                                <span class="font-medium text-gray-800">{{ settings('mail_driver', 'Not Set') }}</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-600">Host:</span>
+                                <span class="font-medium text-gray-800">{{ settings('email_host', env('MAIL_HOST', 'Not Set')) }}</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-600">Port:</span>
+                                <span class="font-medium text-gray-800">{{ settings('email_port', env('MAIL_PORT', 'Not Set')) }}</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-600">Username:</span>
+                                <span class="font-medium text-gray-800">{{ settings('email_username', env('MAIL_USERNAME', 'Not Set')) ? '✓ Configured' : 'Not Set' }}</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-600">From Email:</span>
+                                <span class="font-medium text-gray-800">{{ settings('mail_from_address', env('MAIL_FROM_ADDRESS', 'Not Set')) }}</span>
+                            </div>
+                        </div>
+
+                        <div class="mt-4 pt-4 border-t border-gray-200">
+                            <div class="text-xs text-gray-500">
+                                <strong>Configuration Priority:</strong><br>
+                                1. Admin Settings (Database)<br>
+                                2. Environment Variables (.env)<br>
+                                3. Not Configured
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
     <style>
@@ -230,3 +326,119 @@
     }
     </script>
 </x-layout.default>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const testMailForm = document.getElementById('testMailForm');
+    const sendTestMailBtn = document.getElementById('sendTestMailBtn');
+    const btnText = document.getElementById('btnText');
+    const btnLoader = document.getElementById('btnLoader');
+    const mailStatus = document.getElementById('mailStatus');
+
+    if (testMailForm) {
+        testMailForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const formData = new FormData(this);
+            const testEmail = document.getElementById('test_email').value;
+
+            if (!testEmail) {
+                alert('Please enter an email address');
+                return;
+            }
+
+            // Show loading state
+            btnText.classList.add('hidden');
+            btnLoader.classList.remove('hidden');
+            sendTestMailBtn.disabled = true;
+
+            // Hide previous status
+            mailStatus.classList.add('hidden');
+
+            fetch('{{ route('settings.testMail') }}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                },
+                body: JSON.stringify({
+                    test_email: testEmail
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                // Reset button state
+                btnText.classList.remove('hidden');
+                btnLoader.classList.add('hidden');
+                sendTestMailBtn.disabled = false;
+
+                // Show status
+                mailStatus.classList.remove('hidden');
+
+                if (data.success) {
+                    // Success
+                    mailStatus.className = 'rounded-lg p-4 bg-green-50 border border-green-200';
+                    document.getElementById('statusIcon').innerHTML = `
+                        <svg class="h-6 w-6 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                    `;
+                    document.getElementById('statusTitle').className = 'text-sm font-medium text-green-800';
+                    document.getElementById('statusTitle').textContent = 'Success!';
+                    document.getElementById('statusMessage').className = 'mt-1 text-sm text-green-700';
+                    document.getElementById('statusMessage').textContent = data.message;
+                    document.getElementById('statusErrors').classList.add('hidden');
+                } else {
+                    // Error
+                    mailStatus.className = 'rounded-lg p-4 bg-red-50 border border-red-200';
+                    document.getElementById('statusIcon').innerHTML = `
+                        <svg class="h-6 w-6 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m7 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                    `;
+                    document.getElementById('statusTitle').className = 'text-sm font-medium text-red-800';
+                    document.getElementById('statusTitle').textContent = 'Failed';
+                    document.getElementById('statusMessage').className = 'mt-1 text-sm text-red-700';
+                    document.getElementById('statusMessage').textContent = data.message;
+
+                    // Show errors if available
+                    const errorsDiv = document.getElementById('statusErrors');
+                    if (data.errors && data.errors.length > 0) {
+                        errorsDiv.classList.remove('hidden');
+                        errorsDiv.className = 'mt-2 text-sm text-red-600';
+                        errorsDiv.innerHTML = '<strong>Details:</strong><br>' +
+                            (Array.isArray(data.errors)
+                                ? data.errors.join('<br>')
+                                : data.errors
+                            );
+                    } else {
+                        errorsDiv.classList.add('hidden');
+                    }
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+
+                // Reset button state
+                btnText.classList.remove('hidden');
+                btnLoader.classList.add('hidden');
+                sendTestMailBtn.disabled = false;
+
+                // Show error status
+                mailStatus.classList.remove('hidden');
+                mailStatus.className = 'rounded-lg p-4 bg-red-50 border border-red-200';
+                document.getElementById('statusIcon').innerHTML = `
+                    <svg class="h-6 w-6 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m7 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                `;
+                document.getElementById('statusTitle').className = 'text-sm font-medium text-red-800';
+                document.getElementById('statusTitle').textContent = 'Error';
+                document.getElementById('statusMessage').className = 'mt-1 text-sm text-red-700';
+                document.getElementById('statusMessage').textContent = 'Failed to send test email. Please check your connection.';
+                document.getElementById('statusErrors').classList.add('hidden');
+            });
+        });
+    }
+});
+</script>

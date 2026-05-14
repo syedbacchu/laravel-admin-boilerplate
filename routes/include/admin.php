@@ -77,6 +77,7 @@ Route::group(['middleware' => ['skip.permission','no.permission.sync']], functio
     Route::group(['prefix' => 'settings', 'as' => 'settings.'], function () {
         Route::get('/', [SettingsController::class, 'index'])->name('generalSetting');
         Route::post('/settings/{group}', [SettingsController::class, 'update'])->name('update');
+        Route::post('/test-mail', [SettingsController::class, 'testMail'])->name('testMail');
     });
 
     // About Company
