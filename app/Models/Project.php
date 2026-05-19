@@ -15,6 +15,8 @@ class Project extends Model
         'slug',
         'short_description',
         'description',
+        'location',
+        'savings',
         'project_url',
         'video_url',
         'start_date',

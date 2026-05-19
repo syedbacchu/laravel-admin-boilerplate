@@ -28,6 +28,8 @@ class ProjectService extends BaseService implements ProjectServiceInterface
             'slug' => $this->generateUniqueSlug($request->slug ?: $request->title, $editId ? (int) $editId : null),
             'short_description' => $request->short_description,
             'description' => $request->description,
+            'location' => $request->location,
+            'savings' => $request->savings,
             'project_url' => $request->project_url,
             'start_date' => $request->start_date,
             'end_date' => $request->end_date,

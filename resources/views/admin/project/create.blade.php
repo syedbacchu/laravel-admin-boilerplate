@@ -67,6 +67,17 @@
                         <textarea name="description" rows="6" class="form-textarea mt-1 w-full">{{ $item->description ?? old('description') }}</textarea>
                     </div>
 
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="text-xs uppercase font-semibold text-gray-500">{{ __('Location') }}</label>
+                            <input type="text" name="location" value="{{ $item->location ?? old('location') }}" class="form-input mt-1" placeholder="{{ __('Project location') }}">
+                        </div>
+                        <div>
+                            <label class="text-xs uppercase font-semibold text-gray-500">{{ __('Savings') }}</label>
+                            <input type="text" name="savings" value="{{ $item->savings ?? old('savings') }}" class="form-input mt-1" placeholder="{{ __('Project savings (e.g., $50,000)') }}">
+                        </div>
+                    </div>
+
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                         <div>
                             <label class="text-xs uppercase font-semibold text-gray-500">{{ __('Start Date') }}</label>
