@@ -24,6 +24,7 @@ use App\Http\Controllers\Api\Faq\FaqCategoryController;
 use App\Http\Controllers\Api\CollectLead\CollectLeadController;
 use App\Http\Controllers\Api\Product\ProductController;
 use App\Http\Controllers\Api\Contact\ContactController;
+use App\Http\Controllers\Api\Settings\CommonSettingController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -58,6 +59,11 @@ Route::group(['prefix' => 'about-company', 'as' => 'apiAboutCompany.'], function
 
 Route::group(['prefix' => 'company-policy', 'as' => 'apiCompanyPolicy.'], function () {
     Route::get('/', [CompanyPolicyController::class, 'show'])->name('show');
+});
+
+Route::group(['prefix' => 'common-settings', 'as' => 'apiCommonSetting.'], function () {
+    Route::get('/', [CommonSettingController::class, 'index'])->name('list');
+    Route::get('show', [CommonSettingController::class, 'show'])->name('show');
 });
 
 Route::group(['prefix' => 'services', 'as' => 'apiService.'], function () {
