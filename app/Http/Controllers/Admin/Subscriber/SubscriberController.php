@@ -36,13 +36,13 @@ class SubscriberController extends Controller
                         : '<span class="badge bg-danger/10 text-danger">Inactive</span>',
                     'created_at' => fn ($item) => $item->created_at->format('M j, Y'),
                     'actions' => function ($item) {
-                        $statusButton = $item->status === 1
-                            ? '<button type="button" onclick="toggleStatus(' . $item->id . ')" class="btn btn-sm btn-outline-warning">Deactivate</button>'
-                            : '<button type="button" onclick="toggleStatus(' . $item->id . ')" class="btn btn-sm btn-outline-success">Activate</button>';
+                        $toggleButton = $item->status === 1
+                            ? '<button type="button" onclick="toggleStatus(' . $item->id . ')" class="inline-flex items-center px-3 py-1.5 text-sm font-semibold text-yellow-600 hover:text-white hover:bg-yellow-600 border border-yellow-600 rounded-lg transition duration-200">Deactivate</button>'
+                            : '<button type="button" onclick="toggleStatus(' . $item->id . ')" class="inline-flex items-center px-3 py-1.5 text-sm font-semibold text-green-600 hover:text-white hover:bg-green-600 border border-green-600 rounded-lg transition duration-200">Activate</button>';
 
-                        $deleteButton = '<button type="button" onclick="deleteSubscriber(' . $item->id . ')" class="btn btn-sm btn-outline-danger">Delete</button>';
+                        $deleteButton = '<button type="button" onclick="confirmDelete(\'' . route('subscriber.delete') . '\', ' . $item->id . ')" class="inline-flex items-center px-3 py-1.5 text-sm font-semibold text-red-600 hover:text-white hover:bg-red-600 border border-red-600 rounded-lg transition duration-200">Delete</button>';
 
-                        return $statusButton . ' ' . $deleteButton;
+                        return action_buttons([$toggleButton, $deleteButton]);
                     },
                 ],
                 rawColumns: ['status', 'actions']

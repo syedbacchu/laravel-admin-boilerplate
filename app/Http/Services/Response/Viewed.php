@@ -135,6 +135,10 @@ class Viewed
             'list' => 'admin.contact.list',
         ],
 
+        'subscriber' => [
+            'list' => 'admin.subscriber.list',
+        ],
+
     ];
 
     /**

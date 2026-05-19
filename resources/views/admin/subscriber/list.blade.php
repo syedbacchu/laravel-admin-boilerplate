@@ -46,15 +46,6 @@
 </div>
 
 <script>
-function showToast(type, message) {
-    let prefix = '';
-    if (type === 'success') prefix = '✓ ';
-    if (type === 'error') prefix = '✗ ';
-    if (type === 'warning') prefix = '⚠ ';
-
-    alert(prefix + message);
-}
-
 function toggleStatus(id) {
     if (!confirm('Are you sure you want to toggle this subscriber status?')) {
         return;
@@ -85,12 +76,12 @@ function toggleStatus(id) {
     });
 }
 
-function deleteSubscriber(id) {
+function confirmDelete(route, id) {
     if (!confirm('Are you sure you want to delete this subscriber?')) {
         return;
     }
 
-    fetch('{{ route('subscriber.delete') }}', {
+    fetch(route, {
         method: 'DELETE',
         headers: {
             'Content-Type': 'application/json',
