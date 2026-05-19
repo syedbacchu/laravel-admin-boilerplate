@@ -11,4 +11,5 @@ interface CollectLeadServiceInterface extends BaseServiceInterface
     public function submitCompanyDetails(array $data): array;
     public function getLeadList(Request $request): array;
     public function getLeadDetail(int $id): array;
+    public function updateStatus($id, $status): array;
 }

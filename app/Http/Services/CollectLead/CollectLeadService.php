@@ -158,4 +158,16 @@ class CollectLeadService extends BaseService implements CollectLeadServiceInterf
             200
         );
     }
+
+    public function updateStatus($id, $status): array
+    {
+        $item = $this->collectLeadRepository->find($id);
+
+        if (!$item) {
+            return $this->sendResponse(false, __('Data not found'));
+        }
+
+        $this->collectLeadRepository->update($id, ['status' => (int) $status]);
+        return $this->sendResponse(true, __('Status updated successfully'));
+    }
 }

@@ -309,6 +309,21 @@ return [
             ],
         ],
     ],
+
+    [
+        'key' => 'lead',
+        'label' => 'Leads',
+        'icon' => 'project',
+        'permission' => null,
+        'children' => [
+            [
+                'label' => 'Collect Leads',
+                'route' => 'collect.lead.list',
+                'permission' => 'collect.lead.list',
+            ],
+        ],
+    ],
+
     [
         'key' => 'file_manager',
         'label' => 'File Manager',

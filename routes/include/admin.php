@@ -26,6 +26,7 @@ use App\Http\Controllers\Admin\Project\ProjectCategoryController;
 use App\Http\Controllers\Admin\Project\ProjectController;
 use App\Http\Controllers\Admin\AboutCompany\AboutCompanyController;
 use App\Http\Controllers\Admin\Contact\ContactController;
+use App\Http\Controllers\Admin\Lead\CollectLeadController;
 use App\Http\Controllers\Admin\Products\ProductController;
 use App\Http\Controllers\Admin\Stat\StatController;
 use App\Http\Controllers\Admin\Team\TeamController;
@@ -479,4 +480,17 @@ Route::group(['middleware' => ['skip.permission','no.permission.sync']], functio
     Route::group(['prefix' => 'products', 'as' => 'product.'], function () {
         Route::get('product-delete/{id}', [ProductController::class, 'destroy'])->name('delete');
         Route::post('publish', [ProductController::class, 'productStatus'])->name('publish');
+    });
+
+
+    // Collect Leads
+    Route::resource('collect-leads', CollectLeadController::class)
+    ->except(['destroy'])
+    ->names([
+        'index'   => 'collect.lead.list',
+        'show' => 'collect.lead.show',
+    ]);
+    Route::group(['prefix' => 'collect-leads', 'as' => 'collect.lead.'], function () {
+        Route::get('collect-lead-delete/{id}', [CollectLeadController::class, 'destroy'])->name('delete');
+        Route::post('publish', [CollectLeadController::class, 'collectLeadStatus'])->name('publish');
     });

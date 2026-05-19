@@ -134,6 +134,10 @@ class Viewed
         'contact' => [
             'list' => 'admin.contact.list',
         ],
+        'lead' => [
+            'list' => 'admin.lead.index',
+            'show' => 'admin.lead.show',
+        ],
 
     ];
 
