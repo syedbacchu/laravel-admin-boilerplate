@@ -26,7 +26,7 @@
                 ['data' => 'phone',        'name' => 'phone',        'title' => 'Phone'],
                 ['data' => 'district',     'name' => 'district',     'title' => 'District'],
                 ['data' => 'type_label',   'name' => 'type_label',   'title' => 'Type', 'orderable' => false],
-                ['data' => 'status_badge', 'name' => 'status',       'title' => 'Status', 'orderable' => false],
+                // ['data' => 'status_badge', 'name' => 'status',       'title' => 'Status', 'orderable' => false],
                 ['data' => 'created_at',   'name' => 'created_at',   'title' => 'Submitted'],
                 [
                     'data'       => 'actions',
