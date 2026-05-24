@@ -30,9 +30,9 @@ class AppSliderController extends Controller
             return DataListManager::dataTableHandle(
                 request: $request,
                 dataProvider: function ($request) {
-                    $request->merge(['type' => SliderTypeEnum::APP->value]);
-                    return $this->service
-                        ->getDataTableData($request)['data']['data'];
+                    $query = \App\Models\Slider::query()->latest();
+                    $query->where('type', SliderTypeEnum::APP->value);
+                    return $query;
                 },
                 columns: [
                     'photo' => function ($item) {
@@ -74,9 +74,9 @@ class AppSliderController extends Controller
             return DataListManager::dataTableHandle(
                 request: $request,
                 dataProvider: function ($request) {
-                    $request->merge(['type' => SliderTypeEnum::WEB->value]);
-                    return $this->service
-                        ->getDataTableData($request)['data']['data'];
+                    $query = \App\Models\Slider::query()->latest();
+                    $query->where('type', SliderTypeEnum::WEB->value);
+                    return $query;
                 },
                 columns: [
                     'photo' => function ($item) {
