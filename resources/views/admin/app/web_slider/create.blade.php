@@ -81,7 +81,9 @@
                         <label for="description" class="">{{ __('Description') }}</label>
                         <div class="flex">
                             {!! defaultInputIcon() !!}
-                            <textarea name="description" rows="3" class="form-input ltr:rounded-l-none rtl:rounded-r-none">@if(isset($item)){{ $item->description }}@else{{ old('description') }}@endif</textarea>
+                            <input name="description" type="text" @if(isset($item)) value="{{ $item->description }}" @else
+                            value="{{ old('description') }}" @endif
+                                class="form-input ltr:rounded-l-none rtl:rounded-r-none" />
                         </div>
                     </div>
                 </div>
