@@ -47,6 +47,12 @@ class ProductController extends Controller
                     'category' => fn($item) => $item->category?->name ?? '-',
                     'slug'     => fn($item) => $item->slug ?? '-',
 
+                    'is_featured_toggle' => fn($item) => toggle_column(
+                        route('product.featured'),
+                        $item->id,
+                        $item->is_featured === 1
+                    ),
+
                     'status_toggle' => fn($item) => toggle_column(
                         route('product.publish'),
                         $item->id,
@@ -61,13 +67,13 @@ class ProductController extends Controller
                         return action_buttons($buttons);
                     },
                 ],
-                rawColumns: ['image', 'status_toggle', 'actions']
+                rawColumns: ['image', 'is_featured_toggle', 'status_toggle', 'actions']
             );
         }
 
         return ResponseService::send([
             'data' => $data,
-        ], null, \App\Http\Services\Response\Viewed::get('products', 'list'));
+        ], null, viewss('products', 'list'));
     }
 
     /*
@@ -86,7 +92,7 @@ class ProductController extends Controller
 
         return ResponseService::send([
             'data' => $data,
-        ], null, \App\Http\Services\Response\Viewed::get('products', 'create'));
+        ], null, viewss('products', 'create'));
     }
 
     /*
@@ -138,7 +144,7 @@ class ProductController extends Controller
 
         return ResponseService::send([
             'data' => $data,
-        ], null, \App\Http\Services\Response\Viewed::get('products', 'create'));
+        ], null, viewss('products', 'create'));
     }
 
     /*
@@ -182,6 +188,22 @@ class ProductController extends Controller
             return response()->json($response);
         } catch (\Exception $e) {
             logStore('productStatus', $e->getMessage());
+            return response()->json(['success' => false, 'message' => somethingWrong()]);
+        }
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | FEATURED TOGGLE (AJAX)
+    |--------------------------------------------------------------------------
+    */
+    public function productFeatured(Request $request): JsonResponse
+    {
+        try {
+            $response = $this->product->featured($request->id, $request->status);
+            return response()->json($response);
+        } catch (\Exception $e) {
+            logStore('productFeatured', $e->getMessage());
             return response()->json(['success' => false, 'message' => somethingWrong()]);
         }
     }

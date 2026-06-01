@@ -190,6 +190,24 @@ class ProductsService extends BaseService implements ProductsServiceInterface
 
     /*
     |--------------------------------------------------------------------------
+    | FEATURED TOGGLE
+    |--------------------------------------------------------------------------
+    */
+    public function featured($id, $status): array
+    {
+        $item = $this->productsRepository->find($id);
+
+        if (!$item) {
+            return $this->sendResponse(false, __('Data not found'));
+        }
+
+        $this->productsRepository->update($id, ['is_featured' => (int) $status]);
+
+        return $this->sendResponse(true, __('Featured updated successfully'));
+    }
+
+    /*
+    |--------------------------------------------------------------------------
     | DATATABLE DATA
     |--------------------------------------------------------------------------
     */
@@ -320,5 +338,17 @@ class ProductsService extends BaseService implements ProductsServiceInterface
             ->all();
 
         return !empty($normalized) ? $normalized : null;
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | PUBLIC LIST
+    |--------------------------------------------------------------------------
+    */
+    public function getHomeProductList(Request $request): array
+    {
+        $request->merge(['status' => $request->status ?? 1, 'per_page' => 3 , 'is_featured' => enum(StatusEnum::ACTIVE)]);
+        $data = $this->productsRepository->dataList($request);
+        return $this->sendResponse(true, __('Data get successfully.'), $data);
     }
 }

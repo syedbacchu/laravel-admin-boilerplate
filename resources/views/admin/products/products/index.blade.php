@@ -6,7 +6,7 @@
 <script src="{{ asset('assets/common/datatables/jquery.dataTables.min.js') }}"></script>
 
 <div class="mt-8 bg-white shadow-xl rounded-2xl p-6 border border-gray-100">
-    
+
     <!-- HEADER -->
     <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-6 gap-4">
         <h5 class="text-2xl font-bold text-gray-800">
@@ -15,7 +15,7 @@
 
         <a href="{{ route('product.create') }}"
            class="inline-flex items-center px-5 py-2.5 bg-gradient-to-r from-indigo-600 to-blue-600 text-white font-medium rounded-lg shadow-md hover:shadow-lg transition-all">
-            
+
             <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 mr-2" fill="none"
                  viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -39,6 +39,7 @@
                 ['data' => 'price', 'name' => 'price', 'title' => 'Price'],
                 ['data' => 'stock', 'name' => 'stock', 'title' => 'Stock'],
                 ['data' => 'status_toggle', 'name' => 'status', 'title' => 'Status', 'orderable' => false],
+                ['data' => 'is_featured_toggle', 'name' => 'is_featured', 'title' => 'Featured', 'orderable' => false, 'searchable' => false],
 
                 [
                     'data' => 'actions',

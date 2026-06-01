@@ -487,4 +487,5 @@ Route::group(['middleware' => ['skip.permission','no.permission.sync']], functio
     Route::group(['prefix' => 'products', 'as' => 'product.'], function () {
         Route::get('product-delete/{id}', [ProductController::class, 'destroy'])->name('delete');
         Route::post('publish', [ProductController::class, 'productStatus'])->name('publish');
+        Route::post('featured', [ProductController::class, 'productFeatured'])->name('featured');
     });
