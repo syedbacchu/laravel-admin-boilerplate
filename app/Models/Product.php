@@ -39,6 +39,7 @@ class Product extends Model
         'quantity_discounts',
         'is_featured',
         'status',
+        'site_type',
         'created_by',
         'updated_by',
     ];

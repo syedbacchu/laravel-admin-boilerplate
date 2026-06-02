@@ -346,6 +346,21 @@
                             {{ old('is_featured', $item->is_featured ?? 0) ? 'checked' : '' }}>
                         <span class="text-yellow-600 font-medium">⭐ Featured Product</span>
                     </label>
+
+                    <div>
+                        <label class="form-label">{{ __('Site Type') }}</label>
+                        <select name="site_type" class="form-select">
+                            <option value="">{{__('Select')}}</option>
+                            @foreach(\App\Enums\SliderSiteType::getSliderSiteTypeArray() as $value => $label)
+                                <option
+                                    value="{{ $value }}"
+                                    {{ old('site_type', $item->site_type ?? '') == $value ? 'selected' : '' }}
+                                >
+                                    {{ __($label) }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
                 </div>
 
                 {{-- PRICING & STOCK --}}
