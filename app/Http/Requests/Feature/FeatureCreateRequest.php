@@ -26,6 +26,7 @@ class FeatureCreateRequest extends BaseFormRequest
             'sort_order' => 'nullable|integer|min:0',
             'is_featured' => 'nullable|integer|in:0,1',
             'status' => 'nullable|integer|in:0,1',
+            'site_type' => 'nullable|string|max:255',
             'meta_title' => 'nullable|string|max:255',
             'meta_keywords' => 'nullable|string|max:500',
             'meta_description' => 'nullable|string|max:500',

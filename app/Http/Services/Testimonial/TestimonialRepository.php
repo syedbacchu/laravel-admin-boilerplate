@@ -33,6 +33,9 @@ class TestimonialRepository extends BaseRepository implements TestimonialReposit
                 'status' => [
                     'column' => 'status',
                 ],
+                'site_type' => [
+                    'column' => 'site_type',
+                ],
             ],
             select: [
                 'id',

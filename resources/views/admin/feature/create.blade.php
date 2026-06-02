@@ -109,6 +109,24 @@
                                 <input type="number" name="sort_order" value="{{ $item->sort_order ?? old('sort_order', 0) }}" class="form-input mt-1 w-full" />
                             </div>
                         </div>
+
+                        <div>
+                            <label for="site_type" class="text-xs uppercase font-semibold text-gray-500">{{ __('Site Type') }}</label>
+                            <div class="flex mt-1">
+                                {!! defaultInputIcon() !!}
+                                <select name="site_type" id="site_type" class="form-select">
+                                    <option value="">{{__('Select')}}</option>
+                                    @foreach(\App\Enums\SliderSiteType::getSliderSiteTypeArray() as $value => $label)
+                                        <option
+                                            value="{{ $value }}"
+                                            {{ old('site_type', $item->site_type ?? '') == $value ? 'selected' : '' }}
+                                        >
+                                            {{ __($label) }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
