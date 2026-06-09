@@ -77,6 +77,15 @@
                                 class="form-input ltr:rounded-l-none rtl:rounded-r-none" />
                         </div>
                     </div>
+                    <div class="mb-2 md:col-span-2">
+                        <label for="description" class="">{{ __('Description') }}</label>
+                        <div class="flex">
+                            {!! defaultInputIcon() !!}
+                            <input name="description" type="text" @if(isset($item)) value="{{ $item->description }}" @else
+                            value="{{ old('description') }}" @endif
+                                class="form-input ltr:rounded-l-none rtl:rounded-r-none" />
+                        </div>
+                    </div>
                 </div>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
                     <div class="mb-2">

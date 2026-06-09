@@ -27,6 +27,7 @@ use App\Http\Controllers\Admin\Project\ProjectController;
 use App\Http\Controllers\Admin\AboutCompany\AboutCompanyController;
 use App\Http\Controllers\Admin\Contact\ContactController;
 use App\Http\Controllers\Admin\Lead\CollectLeadController;
+use App\Http\Controllers\Admin\Subscriber\SubscriberController;
 use App\Http\Controllers\Admin\Products\ProductController;
 use App\Http\Controllers\Admin\Stat\StatController;
 use App\Http\Controllers\Admin\Team\TeamController;
@@ -92,6 +93,13 @@ Route::group(['middleware' => ['skip.permission','no.permission.sync']], functio
         Route::get('/', [ContactController::class, 'index'])->name('index');
         Route::get('show', [ContactController::class, 'show'])->name('show');
         Route::post('reply/{id}', [ContactController::class, 'reply'])->name('reply');
+    });
+
+    // Subscriber Management
+    Route::group(['prefix' => 'subscriber', 'as' => 'subscriber.'], function () {
+        Route::get('/', [SubscriberController::class, 'index'])->name('index');
+        Route::post('toggle-status', [SubscriberController::class, 'toggleStatus'])->name('toggleStatus');
+        Route::delete('delete', [SubscriberController::class, 'destroy'])->name('delete');
     });
 
     // App Slider
@@ -480,6 +488,7 @@ Route::group(['middleware' => ['skip.permission','no.permission.sync']], functio
     Route::group(['prefix' => 'products', 'as' => 'product.'], function () {
         Route::get('product-delete/{id}', [ProductController::class, 'destroy'])->name('delete');
         Route::post('publish', [ProductController::class, 'productStatus'])->name('publish');
+        Route::post('featured', [ProductController::class, 'productFeatured'])->name('featured');
     });
 
 

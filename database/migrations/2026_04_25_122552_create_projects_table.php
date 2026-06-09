@@ -18,6 +18,8 @@ return new class extends Migration
             $table->text('short_description')->nullable();
             $table->text('description')->nullable();
             $table->string('project_url')->nullable();
+            $table->string('location')->nullable();
+            $table->string('savings')->nullable();
             $table->string('video_url')->nullable();
             $table->date('start_date')->nullable();
             $table->date('end_date')->nullable();

@@ -80,6 +80,7 @@ class ProductsService extends BaseService implements ProductsServiceInterface
                 // FLAGS
                 'is_featured' => $request->is_featured ?? 0,
                 'status'      => $request->status ?? StatusEnum::ACTIVE,
+                'site_type'      => $request->site_type ,
             ];
 
             /*
@@ -186,6 +187,24 @@ class ProductsService extends BaseService implements ProductsServiceInterface
         $this->productsRepository->update($id, ['status' => (int) $status]);
 
         return $this->sendResponse(true, __('Status updated successfully'));
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | FEATURED TOGGLE
+    |--------------------------------------------------------------------------
+    */
+    public function featured($id, $status): array
+    {
+        $item = $this->productsRepository->find($id);
+
+        if (!$item) {
+            return $this->sendResponse(false, __('Data not found'));
+        }
+
+        $this->productsRepository->update($id, ['is_featured' => (int) $status]);
+
+        return $this->sendResponse(true, __('Featured updated successfully'));
     }
 
     /*
@@ -320,5 +339,17 @@ class ProductsService extends BaseService implements ProductsServiceInterface
             ->all();
 
         return !empty($normalized) ? $normalized : null;
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | PUBLIC LIST
+    |--------------------------------------------------------------------------
+    */
+    public function getHomeProductList(Request $request): array
+    {
+        $request->merge(['status' => $request->status ?? 1, 'per_page' => 3 , 'is_featured' => enum(StatusEnum::ACTIVE)]);
+        $data = $this->productsRepository->dataList($request);
+        return $this->sendResponse(true, __('Data get successfully.'), $data);
     }
 }

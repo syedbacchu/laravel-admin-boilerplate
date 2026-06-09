@@ -11,9 +11,11 @@ interface ProductsServiceInterface extends BaseServiceInterface
     public function storeOrUpdate(ProductsCreateRequest $request): array;
     public function deleteData($id): array;
     public function publish($id, $status): array;
+    public function featured($id, $status): array;
     public function getDataTableData(Request $request): array;
     public function editData($id): array;
     public function createData(Request $request): array;
     public function getPublicList(Request $request): array;
+    public function getHomeProductList(Request $request): array;
     public function getPublicDetails(string $identifier): array;
 }

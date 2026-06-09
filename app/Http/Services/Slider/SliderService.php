@@ -59,6 +59,10 @@ class SliderService extends BaseService implements SliderServiceInterface
                 }
                 $this->sliderRepository->update($existItem->id,$data);
                 $item = $this->sliderRepository->find($existItem->id);
+
+                // Force clear ALL cache
+                \Illuminate\Support\Facades\Cache::flush();
+
                 $message = __('Slider updated successfully');
             } else {
                 return $this->sendResponse(false,__('Data not found'));
@@ -69,6 +73,10 @@ class SliderService extends BaseService implements SliderServiceInterface
 //                $data['photo'] = $this->uploadFilePublic($request->file('photo'),UploadFolderEnum::GENERAL->value);
             }
             $item = $this->sliderRepository->createSlider($data);
+
+            // Force clear ALL cache
+            \Illuminate\Support\Facades\Cache::flush();
+
             $message = __('Slider created successfully');
         }
 
@@ -80,6 +88,9 @@ class SliderService extends BaseService implements SliderServiceInterface
         $item = $this->sliderRepository->find($id);
         if ($item) {
             $this->delete($item->id);
+            // Clear any cached data
+            \Illuminate\Support\Facades\Cache::forget('sliders.public');
+            \Illuminate\Support\Facades\Cache::forget('sliders.list');
             return $this->sendResponse(true,__('Slider deleted successfully'));
         } else {
             return $this->sendResponse(false,__('Data not found'));
@@ -91,6 +102,9 @@ class SliderService extends BaseService implements SliderServiceInterface
         $item = $this->sliderRepository->find($id);
         if ($item) {
             $this->update($item->id,['status' => $status]);
+            // Clear any cached data
+            \Illuminate\Support\Facades\Cache::forget('sliders.public');
+            \Illuminate\Support\Facades\Cache::forget('sliders.list');
             return $this->sendResponse(true,__('Status updated successfully'));
         } else {
             return $this->sendResponse(false,__('Data not found'));
@@ -100,7 +114,13 @@ class SliderService extends BaseService implements SliderServiceInterface
      public function getPublicList(Request $request): array
     {
         $request->merge(['status' => $request->status ?? StatusEnum::ACTIVE->value]);
+
+        // Completely bypass cache and get fresh data
         $data = $this->sliderRepository->dataList($request);
+
+        // Force clear any existing cache
+        \Illuminate\Support\Facades\Cache::flush();
+
         return $this->sendResponse(true, __('Data get successfully.'), $data);
     }
 

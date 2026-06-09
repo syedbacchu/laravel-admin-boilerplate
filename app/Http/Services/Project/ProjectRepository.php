@@ -34,6 +34,8 @@ class ProjectRepository extends BaseRepository implements ProjectRepositoryInter
                 'slug',
                 'short_description',
                 'description',
+                'location',
+                'savings',
             ],
             filters: [
                 'status' => [
@@ -58,6 +60,8 @@ class ProjectRepository extends BaseRepository implements ProjectRepositoryInter
                 'slug',
                 'short_description',
                 'description',
+                'location',
+                'savings',
                 'project_url',
                 'start_date',
                 'end_date',

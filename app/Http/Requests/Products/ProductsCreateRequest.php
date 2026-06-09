@@ -137,6 +137,7 @@ class ProductsCreateRequest extends FormRequest
             */
             'is_featured' => ['nullable', 'boolean'],
             'status'      => ['required', 'boolean'],
+            'site_type'   => ['nullable', 'integer'],
         ];
     }
 

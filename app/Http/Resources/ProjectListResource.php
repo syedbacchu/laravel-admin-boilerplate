@@ -14,6 +14,8 @@ class ProjectListResource extends JsonResource
             'title' => $this->title,
             'slug' => $this->slug,
             'short_description' => $this->short_description ?: Str::limit(strip_tags((string) $this->description), 150),
+            'location' => $this->location,
+            'savings' => $this->savings,
             'thumbnail' => $this->thumbnail,
             'project_url' => $this->project_url,
             'start_date' => optional($this->start_date)->format('Y-m-d'),

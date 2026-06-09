@@ -39,6 +39,7 @@ class FeatureService extends BaseService implements FeatureServiceInterface
             'meta_keywords' => $request->meta_keywords,
             'meta_description' => $request->meta_description ?: $request->short_description,
             'meta_image' => $request->meta_image,
+            'site_type' => $request->site_type,
         ];
 
         if ($editId) {

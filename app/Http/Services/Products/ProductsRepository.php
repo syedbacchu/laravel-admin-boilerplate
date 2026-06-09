@@ -42,6 +42,11 @@ class ProductsRepository extends BaseRepository implements ProductsRepositoryInt
                     'column' => 'is_featured',
                     'type' => 'basic',
                 ],
+
+                'site_type' => [
+                    'column' => 'site_type',
+                    'type' => 'basic',
+                ],
                 'category_id' => [
                     'column' => 'category_id',
                     'type' => 'basic',

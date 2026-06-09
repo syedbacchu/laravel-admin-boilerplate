@@ -365,6 +365,11 @@ return [
                 'route' => 'contact.index',
                 'permission' => null,
             ],
+            [
+                'label' => 'Newsletter Subscribers',
+                'route' => 'subscriber.index',
+                'permission' => null,
+            ],
         ],
     ],
     [

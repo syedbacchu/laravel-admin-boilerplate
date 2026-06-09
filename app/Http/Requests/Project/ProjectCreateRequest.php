@@ -27,6 +27,8 @@ class ProjectCreateRequest extends BaseFormRequest
             'slug' => 'nullable|string|max:255|unique:projects,slug',
             'short_description' => 'nullable|string|max:500',
             'description' => 'nullable|string',
+            'location' => 'nullable|string|max:500',
+            'savings' => 'nullable|string|max:255',
             'project_url' => 'nullable|url|max:500',
             'start_date' => 'nullable|date',
             'end_date' => 'nullable|date|after:start_date',

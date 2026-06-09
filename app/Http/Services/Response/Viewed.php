@@ -139,6 +139,10 @@ class Viewed
             'show' => 'admin.lead.show',
         ],
 
+        'subscriber' => [
+            'list' => 'admin.subscriber.list',
+        ],
+
     ];
 
     /**

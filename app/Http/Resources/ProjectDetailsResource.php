@@ -14,6 +14,8 @@ class ProjectDetailsResource extends JsonResource
             'slug' => $this->slug,
             'short_description' => $this->short_description,
             'description' => $this->description,
+            'location' => $this->location,
+            'savings' => $this->savings,
             'thumbnail' => $this->thumbnail,
             'gallery' => $this->gallery ?? [],
             'project_url' => $this->project_url,

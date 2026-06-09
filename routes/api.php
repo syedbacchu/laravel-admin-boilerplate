@@ -25,6 +25,7 @@ use App\Http\Controllers\Api\CollectLead\CollectLeadController;
 use App\Http\Controllers\Api\Product\ProductController;
 use App\Http\Controllers\Api\Contact\ContactController;
 use App\Http\Controllers\Api\Settings\CommonSettingController;
+use App\Http\Controllers\Api\Subscriber\SubscriberController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -64,6 +65,7 @@ Route::group(['prefix' => 'company-policy', 'as' => 'apiCompanyPolicy.'], functi
 Route::group(['prefix' => 'common-settings', 'as' => 'apiCommonSetting.'], function () {
     Route::get('/', [CommonSettingController::class, 'index'])->name('list');
     Route::get('show', [CommonSettingController::class, 'show'])->name('show');
+    Route::get('web', [CommonSettingController::class, 'forWeb'])->name('forWeb');
 });
 
 Route::group(['prefix' => 'services', 'as' => 'apiService.'], function () {
@@ -108,6 +110,10 @@ Route::group(['prefix' => 'testimonials', 'as' => 'apiTestimonial.'], function (
 
 Route::group(['prefix' => 'contact', 'as' => 'apiContact.'], function () {
     Route::post('/', [ContactController::class, 'store'])->name('store');
+});
+
+Route::group(['prefix' => 'subscriber', 'as' => 'apiSubscriber.'], function () {
+    Route::post('subscribe', [SubscriberController::class, 'subscribe'])->name('subscribe');
 });
 
 Route::group(['prefix' => 'sliders', 'as' => 'slider.'], function () {

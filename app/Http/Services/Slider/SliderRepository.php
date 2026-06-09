@@ -18,42 +18,29 @@ class SliderRepository extends BaseRepository implements SliderRepositoryInterfa
 
     public function dataList($request): array
     {
-        return DataListManager::list(
-            request: $request,
-            query: Slider::query(),
+        // Force fresh query with no cache
+        $query = Slider::query()->latest();
 
-            searchable: [
-                'title',
-                'tagline',
-            ],
+        // Add conditions
+        if ($request->has('status')) {
+            $query->where('status', $request->status);
+        }
 
-            filters: [
-                'status' => [
-                    'column' => 'status'
-                ],
-                'type' => [
-                    'column' => 'type'
-                ],
-                'site_type' => [
-                    'column' => 'site_type'
-                ],
-            ],
+        if ($request->has('type')) {
+            $query->where('type', $request->type);
+        }
 
-            select: [
-                'id',
-                'photo',
-                'site_type',
-                'title',
-                'subtitle',
-                'tagline',
-                'status',
-                'link',
-                'type',
-                'serial',
-                'cta_button',
-                'stat',
-            ],
-        );
+        if ($request->has('site_type')) {
+            $query->where('site_type', $request->site_type);
+        }
+
+        // Get fresh data without any cache
+        $data = $query->get();
+
+        return [
+            'total_count' => $data->count(),
+            'data' => $data,
+        ];
     }
 
     public function createSlider(array $data): Model

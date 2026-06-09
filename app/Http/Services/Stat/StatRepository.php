@@ -35,6 +35,9 @@ class StatRepository extends BaseRepository implements StatRepositoryInterface
                 'status' => [
                     'column' => 'status',
                 ],
+                'site_type' => [
+                    'column' => 'site_type',
+                ],
             ],
 
             select: [

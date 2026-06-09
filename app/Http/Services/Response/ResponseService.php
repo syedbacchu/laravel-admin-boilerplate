@@ -78,13 +78,22 @@ class ResponseService
 
     protected static function makeApiResponse(array $res): JsonResponse
     {
-        return response()->json([
+        $response = response()->json([
             'success'       => $res['success'] ?? false,
             'message'       => $res['message'] ?? '',
             'data'          => $res['data'] ?? [],
             'status'        => $res['status'] ?? 400,
             'error_message' => $res['error_message'] ?? ($res['success'] ? '' : ($res['message'] ?? 'Error')),
+            'timestamp'     => now()->toIso8601String(), // Add timestamp to prevent caching
         ], $res['status'] ?? 400);
+
+        // Aggressive cache busting headers
+        return $response
+            ->header('Cache-Control', 'no-cache, no-store, must-revalidate, max-age=0, private')
+            ->header('Pragma', 'no-cache')
+            ->header('Expires', '0')
+            ->header('X-Accel-Expires', '0') // Nginx specific
+            ->header('Last-Modified', gmdate('D, d M Y H:i:s') . ' GMT'); // Always set current time
     }
 
     public static function exception(Throwable $e)

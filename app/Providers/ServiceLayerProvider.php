@@ -124,6 +124,10 @@ use App\Http\Services\Contact\ContactRepository;
 use App\Http\Services\Contact\ContactRepositoryInterface;
 use App\Http\Services\Contact\ContactService;
 use App\Http\Services\Contact\ContactServiceInterface;
+use App\Http\Services\Subscriber\SubscriberRepository;
+use App\Http\Services\Subscriber\SubscriberRepositoryInterface;
+use App\Http\Services\Subscriber\SubscriberService;
+use App\Http\Services\Subscriber\SubscriberServiceInterface;
 
 use Illuminate\Support\ServiceProvider;
 
@@ -218,6 +222,9 @@ class ServiceLayerProvider extends ServiceProvider
 
         $this->app->bind(ContactRepositoryInterface::class, ContactRepository::class);
         $this->app->bind(ContactServiceInterface::class, ContactService::class);
+
+        $this->app->bind(SubscriberRepositoryInterface::class, SubscriberRepository::class);
+        $this->app->bind(SubscriberServiceInterface::class, SubscriberService::class);
     }
 
     /**
