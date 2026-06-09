@@ -317,7 +317,7 @@ return [
         'permission' => null,
         'children' => [
             [
-                'label' => 'Collect Leads',
+                'label' => 'Solar Collect Leads',
                 'route' => 'collect.lead.list',
                 'permission' => 'collect.lead.list',
             ],

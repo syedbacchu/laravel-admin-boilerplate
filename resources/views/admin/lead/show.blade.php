@@ -4,7 +4,7 @@
     $lead = $lead ?? $data ?? null;
 @endphp
 
-@section('title', 'Lead Details — #' . ($lead->id ?? ''))
+@section('title', 'Solar Collect Lead Details — #' . ($lead->id ?? ''))
 
 <div class="mt-6 max-w-6xl mx-auto space-y-6 pb-16 px-4 sm:px-6">
 
@@ -17,7 +17,7 @@
                 </svg>
             </div>
             <div>
-                <h1 class="text-xl font-bold text-gray-900 sm:text-2xl">Lead Details</h1>
+                <h1 class="text-xl font-bold text-gray-900 sm:text-2xl">Solar Collect Lead Details</h1>
                 <p class="text-xs sm:text-sm text-gray-500">Manage and view captured lead parameters</p>
             </div>
         </div>

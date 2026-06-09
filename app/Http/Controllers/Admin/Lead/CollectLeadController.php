@@ -25,7 +25,7 @@ class CollectLeadController extends Controller
     */
     public function index(Request $request)
     {
-        $data['pageTitle'] = __('Collect Lead List');
+        $data['pageTitle'] = __(' Solar Collect Lead List');
 
         if ($request->ajax()) {
             return DataListManager::dataTableHandle(
