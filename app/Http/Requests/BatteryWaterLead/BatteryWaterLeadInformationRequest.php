@@ -15,7 +15,7 @@ public function authorize(): bool
     public function rules(): array
     {
         return [
-            'name'        => 'required|string|max:255',
+            'name'        => 'nullable|string|max:255',
             'phone'       => ['required', new PhoneNumberBD()],
             'district'    => 'nullable|string|max:255',
             'thana'       => 'nullable|string|max:255',
