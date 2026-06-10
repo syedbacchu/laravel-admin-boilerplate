@@ -143,6 +143,11 @@ class Viewed
             'list' => 'admin.subscriber.list',
         ],
 
+        'battery-water' => [
+            'list' => 'admin.battery_water.index',
+            'show' => 'admin.battery_water.show',
+        ],
+
     ];
 
     /**

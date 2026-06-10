@@ -321,6 +321,11 @@ return [
                 'route' => 'collect.lead.list',
                 'permission' => 'collect.lead.list',
             ],
+            [
+                'label' => 'Battery Water Leads',
+                'route' => 'battery.water.lead.list',
+                'permission' => 'battery.water.lead.list',
+            ],
         ],
     ],
 

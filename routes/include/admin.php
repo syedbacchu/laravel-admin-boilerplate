@@ -25,6 +25,7 @@ use App\Http\Controllers\Admin\Products\ProductFeatureController;
 use App\Http\Controllers\Admin\Project\ProjectCategoryController;
 use App\Http\Controllers\Admin\Project\ProjectController;
 use App\Http\Controllers\Admin\AboutCompany\AboutCompanyController;
+use App\Http\Controllers\Admin\BatteryWater\BatteryWaterLeadController;
 use App\Http\Controllers\Admin\Contact\ContactController;
 use App\Http\Controllers\Admin\Lead\CollectLeadController;
 use App\Http\Controllers\Admin\Subscriber\SubscriberController;
@@ -502,4 +503,16 @@ Route::group(['middleware' => ['skip.permission','no.permission.sync']], functio
     Route::group(['prefix' => 'collect-leads', 'as' => 'collect.lead.'], function () {
         Route::get('collect-lead-delete/{id}', [CollectLeadController::class, 'destroy'])->name('delete');
         Route::post('publish', [CollectLeadController::class, 'collectLeadStatus'])->name('publish');
+    });
+
+    // Battery Water Leads
+    Route::resource('battery-water-leads', BatteryWaterLeadController::class)
+    ->except(['destroy'])
+    ->names([
+        'index'   => 'battery.water.lead.list',
+        'show' => 'battery.water.lead.show',
+    ]);
+    Route::group(['prefix' => 'battery-water-leads', 'as' => 'battery.water.lead.'], function () {
+        Route::get('battery-water-lead-delete/{id}', [BatteryWaterLeadController::class, 'destroy'])->name('delete');
+        Route::post('publish', [BatteryWaterLeadController::class, 'batteryWaterLeadStatus'])->name('publish');
     });

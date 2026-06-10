@@ -129,6 +129,11 @@ use App\Http\Services\Subscriber\SubscriberRepositoryInterface;
 use App\Http\Services\Subscriber\SubscriberService;
 use App\Http\Services\Subscriber\SubscriberServiceInterface;
 
+use App\Http\Services\BatteryWater\BatteryWaterLeadRepository;
+use App\Http\Services\BatteryWater\BatteryWaterLeadRepositoryInterface;
+use App\Http\Services\BatteryWater\BatteryWaterLeadService;
+use App\Http\Services\BatteryWater\BatteryWaterLeadServiceInterface;
+
 use Illuminate\Support\ServiceProvider;
 
 class ServiceLayerProvider extends ServiceProvider
@@ -225,6 +230,9 @@ class ServiceLayerProvider extends ServiceProvider
 
         $this->app->bind(SubscriberRepositoryInterface::class, SubscriberRepository::class);
         $this->app->bind(SubscriberServiceInterface::class, SubscriberService::class);
+
+        $this->app->bind(BatteryWaterLeadRepositoryInterface::class, BatteryWaterLeadRepository::class);
+        $this->app->bind(BatteryWaterLeadServiceInterface::class, BatteryWaterLeadService::class);
     }
 
     /**

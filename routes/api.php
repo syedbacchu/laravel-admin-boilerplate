@@ -18,6 +18,7 @@ use App\Http\Controllers\Api\Testimonials\TestimonialsController;
 use App\Http\Controllers\Api\User\ProfileController;
 use App\Http\Controllers\Api\Home\HomeController;
 use App\Http\Controllers\Api\AboutCompany\AboutCompanyController;
+use App\Http\Controllers\Api\BatteryWaterLead\BatteryWaterLeadsController;
 use App\Http\Controllers\Api\Settings\CompanyPolicyController;
 use App\Http\Controllers\Api\Faq\FaqController;
 use App\Http\Controllers\Api\Faq\FaqCategoryController;
@@ -151,4 +152,11 @@ Route::group(['prefix' => 'collect-leads', 'as' => 'apiCollectLead.'], function 
 Route::group(['prefix' => 'products', 'as' => 'apiProduct.'], function () {
     Route::get('/', [ProductController::class, 'index'])->name('list');
     Route::get('{identifier}', [ProductController::class, 'show'])->name('details');
+});
+
+Route::group(['prefix' => 'battery-water-leads', 'as' => 'apiBatteryWaterLead.'], function () {
+    Route::post('customer-information', [BatteryWaterLeadsController::class, 'submitCustomerInformation'])->name('customerInformation');
+    Route::post('company-details', [BatteryWaterLeadsController::class, 'submitCompanyDetails'])->name('companyDetails');
+    Route::get('/', [BatteryWaterLeadsController::class, 'index'])->name('index');
+    Route::get('detail', [BatteryWaterLeadsController::class, 'show'])->name('show');
 });
