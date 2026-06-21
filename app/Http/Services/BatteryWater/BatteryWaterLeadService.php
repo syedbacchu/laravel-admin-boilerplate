@@ -21,7 +21,7 @@ class BatteryWaterLeadService extends BaseService implements BatteryWaterLeadSer
         $this->batteryWaterLeadRepository = $repository;
     }
 
-    public function submitCustomerInformation(array $data): array
+    public function submitOrderInformation(array $data): array
     {
         $leadData = [
             'name'         => $data['name'],
@@ -35,7 +35,7 @@ class BatteryWaterLeadService extends BaseService implements BatteryWaterLeadSer
             'unit_price'   => $data['unit_price'] ?? 0.00,  
             'total_price'  => $data['total_price'] ?? 0.00, 
             'note'         => $data['note'] ?? null,
-            'status'       => $data['status'] ?? StatusEnum::PENDING,
+            'status'       => $data['status'] ?? StatusEnum::PENDING->value,
         ];
 
         $lead = $this->batteryWaterLeadRepository->createCustomerLead($leadData);
@@ -43,40 +43,6 @@ class BatteryWaterLeadService extends BaseService implements BatteryWaterLeadSer
         try {
             Mail::to('sazzad.reza@bio-xin.com')
                 ->send(new LeadSubmissionMail($lead->toArray(), 'customer'));
-        } catch (Exception $e) {
-            logStore('Lead email sending failed', $e->getMessage());
-        }
-
-        return $this->sendResponse(
-            true,
-            'Order submitted successfully',
-            $lead->toArray(),
-            201
-        );
-    }
-
-    public function submitCompanyDetails(array $data): array
-    {
-        $leadData = [
-            'name'         => $data['name'],
-            'phone'        => $data['phone'],
-            'email'        => $data['email'] ?? null,
-            'district'     => $data['district'] ?? null,
-            'thana'        => $data['thana'] ?? null,
-            'address'      => $data['address'] ?? null,
-            'bottle_size'  => $data['bottle_size'],
-            'quantity'     => $data['quantity'] ?? 1,
-            'unit_price'   => $data['unit_price'] ?? 0.00,  
-            'total_price'  => $data['total_price'] ?? 0.00, 
-            'note'         => $data['note'] ?? null,
-            'status'       => $data['status'] ?? StatusEnum::PENDING,
-        ];
-
-        $lead = $this->batteryWaterLeadRepository->createCompanyLead($leadData);
-
-        try {
-            Mail::to('sazzad.reza@bio-xin.com')
-                ->send(new LeadSubmissionMail($lead->toArray(), 'company'));
         } catch (Exception $e) {
             logStore('Lead email sending failed', $e->getMessage());
         }

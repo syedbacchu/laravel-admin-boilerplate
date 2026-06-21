@@ -21,15 +21,9 @@ class BatteryWaterLeadsController extends Controller
         $this->service = $service;
     }
 
-    public function submitCustomerInformation(BatteryWaterLeadInformationRequest $request): JsonResponse
+    public function submitOrderInformation(BatteryWaterLeadInformationRequest $request): JsonResponse
     {
-        $response = $this->service->submitCustomerInformation($request->validated());
-        return ResponseService::send($response);
-    }
-
-    public function submitCompanyDetails(BatteryWaterLeadCompanyDetailsRequest $request): JsonResponse
-    {
-        $response = $this->service->submitCompanyDetails($request->validated());
+        $response = $this->service->submitOrderInformation($request->validated());
         return ResponseService::send($response);
     }
 

@@ -155,8 +155,7 @@ Route::group(['prefix' => 'products', 'as' => 'apiProduct.'], function () {
 });
 
 Route::group(['prefix' => 'battery-water-leads', 'as' => 'apiBatteryWaterLead.'], function () {
-    Route::post('customer-information', [BatteryWaterLeadsController::class, 'submitCustomerInformation'])->name('customerInformation');
-    Route::post('company-details', [BatteryWaterLeadsController::class, 'submitCompanyDetails'])->name('companyDetails');
+    Route::post('buy', [BatteryWaterLeadsController::class, 'submitOrderInformation'])->name('orderInformation');
     Route::get('/', [BatteryWaterLeadsController::class, 'index'])->name('index');
     Route::get('detail', [BatteryWaterLeadsController::class, 'show'])->name('show');
 });

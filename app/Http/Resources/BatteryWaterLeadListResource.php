@@ -23,8 +23,6 @@ class BatteryWaterLeadListResource extends JsonResource
             'status'       => $this->status ?? 0,
             'note'         => $this->note,
             'admin_note'   => $this->admin_note,
-            'created_at'   => $this->created_at?->format('Y-m-d H:i:s'),
-            'updated_at'   => $this->updated_at?->format('Y-m-d H:i:s'),
         ];
     }
 }

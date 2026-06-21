@@ -21,11 +21,6 @@ class BatteryWaterLeadRepository extends BaseRepository implements BatteryWaterL
         return $this->model->create($data);
     }
 
-    public function createCompanyLead(array $data): Model
-    {
-        return $this->model->create($data);
-    }
-
     public function getLeadsByType(int $type): Collection
     {
         return $this->model->where('type', $type)
