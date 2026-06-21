@@ -25,6 +25,7 @@ use App\Http\Controllers\Api\Faq\FaqCategoryController;
 use App\Http\Controllers\Api\CollectLead\CollectLeadController;
 use App\Http\Controllers\Api\Product\ProductController;
 use App\Http\Controllers\Api\Contact\ContactController;
+use App\Http\Controllers\Api\Location\LocationController;
 use App\Http\Controllers\Api\Settings\CommonSettingController;
 use App\Http\Controllers\Api\Subscriber\SubscriberController;
 /*
@@ -158,4 +159,9 @@ Route::group(['prefix' => 'battery-water-leads', 'as' => 'apiBatteryWaterLead.']
     Route::post('buy', [BatteryWaterLeadsController::class, 'submitOrderInformation'])->name('orderInformation');
     Route::get('/', [BatteryWaterLeadsController::class, 'index'])->name('index');
     Route::get('detail', [BatteryWaterLeadsController::class, 'show'])->name('show');
+});
+
+Route::prefix('locations')->group(function () {
+    Route::get('districts', [LocationController::class, 'districts']);
+    Route::get('thanas/{districtCode}', [LocationController::class, 'thanas']);
 });
