@@ -163,5 +163,5 @@ Route::group(['prefix' => 'battery-water-leads', 'as' => 'apiBatteryWaterLead.']
 
 Route::prefix('locations')->group(function () {
     Route::get('districts', [LocationController::class, 'districts']);
-    Route::get('thanas/{districtCode}', [LocationController::class, 'thanas']);
+    Route::get('thanas', [LocationController::class, 'thanas']);
 });

@@ -2,33 +2,31 @@
 
 namespace App\Http\Controllers\Api\Location;
 
-use App\Models\District;
-use App\Models\Thana;
+use App\Enums\StatusEnum;
+use App\Http\Services\Home\HomeService;
+use App\Http\Services\Response\ResponseService;
 use Illuminate\Http\JsonResponse;
-
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
 class LocationController extends Controller
 {
-    public function districts(): JsonResponse
+    private $service;
+    function __construct()
     {
-        return response()->json([
-            'success' => true,
-            'data' => District::where('status', 1)
-                ->orderBy('name')
-                ->get(['id', 'code', 'name']),
-        ]);
+        $this->service = new HomeService();
+    }
+    public function districts(Request $request): JsonResponse
+    {
+        $request->merge(['status' => enum(StatusEnum::ACTIVE)]);
+        $response = $this->service->getDistrictList($request);
+        return ResponseService::send($response);
     }
 
-    public function thanas(string $districtCode): JsonResponse
+    public function thanas(Request $request): JsonResponse
     {
-        return response()->json([
-            'success' => true,
-            'data' => Thana::where('status', 1)
-                ->where('district_code', $districtCode)
-                ->orderBy('name')
-                ->get(['id', 'code', 'name', 'district_code']),
-        ]);
+        $request->merge(['status' => enum(StatusEnum::ACTIVE)]);
+        $response = $this->service->getThanaList($request);
+        return ResponseService::send($response);
     }
 }
