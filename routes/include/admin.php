@@ -4,6 +4,7 @@ use App\Http\Controllers\Admin\App\AppSliderController;
 use App\Http\Controllers\Admin\Attribute\AttributeController;
 use App\Http\Controllers\Admin\Attribute\AttributeValueController;
 use App\Http\Controllers\Admin\Audit\AuditSettingController;
+use App\Http\Controllers\Admin\Comparism\ComparismController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\Faq\FaqCategoryController;
 use App\Http\Controllers\Admin\Faq\FaqController;
@@ -26,6 +27,7 @@ use App\Http\Controllers\Admin\Project\ProjectCategoryController;
 use App\Http\Controllers\Admin\Project\ProjectController;
 use App\Http\Controllers\Admin\AboutCompany\AboutCompanyController;
 use App\Http\Controllers\Admin\BatteryWater\BatteryWaterLeadController;
+use App\Http\Controllers\Admin\Comparism\ComparismAreaController;
 use App\Http\Controllers\Admin\Contact\ContactController;
 use App\Http\Controllers\Admin\Lead\CollectLeadController;
 use App\Http\Controllers\Admin\Subscriber\SubscriberController;
@@ -515,4 +517,34 @@ Route::group(['middleware' => ['skip.permission','no.permission.sync']], functio
     Route::group(['prefix' => 'battery-water-leads', 'as' => 'battery.water.lead.'], function () {
         Route::get('battery-water-lead-delete/{id}', [BatteryWaterLeadController::class, 'destroy'])->name('delete');
         Route::post('publish', [BatteryWaterLeadController::class, 'batteryWaterLeadStatus'])->name('publish');
+    });
+
+    Route::resource('comparism', ComparismController::class)
+    ->except(['destroy'])
+    ->names([
+        'index'   => 'comparism.list',
+        'create'   => 'comparism.create',
+        'edit'   => 'comparism.edit',
+        'store'   => 'comparism.store',
+        'update'  => 'comparism.update',
+        'show' => 'comparism.show',
+    ]);
+    Route::group(['prefix' => 'comparism', 'as' => 'comparism.'], function () {
+        Route::get('comparism-delete/{id}', [ComparismController::class, 'destroy'])->name('delete');
+        Route::post('publish', [ComparismController::class, 'comparismStatus'])->name('publish');
+    });
+
+    Route::resource('comparism-area', ComparismAreaController::class)
+    ->except(['destroy'])
+    ->names([
+        'index'   => 'comparismArea.list',
+        'create'   => 'comparismArea.create',
+        'edit'   => 'comparismArea.edit',
+        'store'   => 'comparismArea.store',
+        'update'  => 'comparismArea.update',
+        'show' => 'comparismArea.show',
+    ]);
+    Route::group(['prefix' => 'comparism-area', 'as' => 'comparismArea.'], function () {
+        Route::get('comparism-area-delete/{id}', [ComparismAreaController::class, 'destroy'])->name('delete');
+        Route::post('publish', [ComparismAreaController::class, 'comparismAreaStatus'])->name('publish');
     });

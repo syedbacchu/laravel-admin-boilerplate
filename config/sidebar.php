@@ -330,6 +330,24 @@ return [
     ],
 
     [
+        'key' => 'comparism',
+        'label' => 'Comparism',
+        'icon' => 'project',
+        'permission' => null,
+        'children' => [
+            [
+                'label' => 'Comparism',
+                'route' => 'comparism.list',
+                'permission' => 'comparism.list',
+            ],
+            [
+                'label' => 'Comparism Area',
+                'route' => 'comparismArea.list',
+                'permission' => 'comparismArea.list',
+            ],
+        ],
+    ],
+    [
         'key' => 'file_manager',
         'label' => 'File Manager',
         'route' => 'fileManager.list',

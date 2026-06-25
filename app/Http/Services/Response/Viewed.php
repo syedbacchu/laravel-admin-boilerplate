@@ -147,6 +147,14 @@ class Viewed
             'list' => 'admin.battery_water.index',
             'show' => 'admin.battery_water.show',
         ],
+        'comparism' => [
+            'list' => 'admin.comparism.index',
+            'create' => 'admin.comparism.create',
+        ],
+        'comparismArea' => [
+            'list' => 'admin.comparism_area.index',
+            'create' => 'admin.comparism_area.create',
+        ],
 
     ];
 

@@ -134,6 +134,16 @@ use App\Http\Services\BatteryWater\BatteryWaterLeadRepositoryInterface;
 use App\Http\Services\BatteryWater\BatteryWaterLeadService;
 use App\Http\Services\BatteryWater\BatteryWaterLeadServiceInterface;
 
+use App\Http\Services\Comparism\ComparismRepository;
+use App\Http\Services\Comparism\ComparismRepositoryInterface;
+use App\Http\Services\Comparism\ComparismService;
+use App\Http\Services\Comparism\ComparismServiceInterface;
+
+use App\Http\Services\ComparismArea\ComparismAreaRepository;
+use App\Http\Services\ComparismArea\ComparismAreaRepositoryInterface;
+use App\Http\Services\ComparismArea\ComparismAreaService;
+use App\Http\Services\ComparismArea\ComparismAreaServiceInterface;
+
 use Illuminate\Support\ServiceProvider;
 
 class ServiceLayerProvider extends ServiceProvider
@@ -233,6 +243,12 @@ class ServiceLayerProvider extends ServiceProvider
 
         $this->app->bind(BatteryWaterLeadRepositoryInterface::class, BatteryWaterLeadRepository::class);
         $this->app->bind(BatteryWaterLeadServiceInterface::class, BatteryWaterLeadService::class);
+
+        $this->app->bind(ComparismRepositoryInterface::class, ComparismRepository::class);
+        $this->app->bind(ComparismServiceInterface::class, ComparismService::class);
+
+        $this->app->bind(ComparismAreaRepositoryInterface::class, ComparismAreaRepository::class);
+        $this->app->bind(ComparismAreaServiceInterface::class, ComparismAreaService::class);
     }
 
     /**

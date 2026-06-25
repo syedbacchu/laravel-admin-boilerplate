@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\Comparism\ComparismApiController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\AuthController;
@@ -164,4 +165,9 @@ Route::group(['prefix' => 'battery-water-leads', 'as' => 'apiBatteryWaterLead.']
 Route::prefix('locations')->group(function () {
     Route::get('districts', [LocationController::class, 'districts']);
     Route::get('thanas', [LocationController::class, 'thanas']);
+});
+
+Route::group(['prefix' => 'comparism', 'as' => 'apiComparism.'], function () {
+    Route::get('/', [ComparismApiController::class, 'index'])->name('list');
+    Route::get('{identifier}', [ComparismApiController::class, 'show'])->name('details');
 });
