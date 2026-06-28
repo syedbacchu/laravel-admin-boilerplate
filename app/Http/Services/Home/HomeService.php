@@ -4,6 +4,7 @@ namespace App\Http\Services\Home;
 
 use App\Http\Services\Feature\FeatureService;
 use App\Http\Services\Products\ProductsService;
+use App\Http\Services\ProductsCategory\ProductsCategoryService;
 use App\Http\Services\Project\ProjectService;
 use App\Http\Services\Service\ServiceService;
 use App\Http\Services\Testimonial\TestimonialService;
@@ -24,6 +25,7 @@ class HomeService
         $data['testimonial_list'] = app(TestimonialService::class)->getPublicList($request)['data']['data'];
         $data['stat_list'] = app(StatService::class)->getPublicList($request)['data']['data'];
         $data['product_list'] = app(ProductsService::class)->getHomeProductList($request)['data']['data'];
+        $data['category_list'] = app(ProductsCategoryService::class)->getHomeCategoryList($request)['data']['data'];
 
         return sendResponse(true, __('Data get successfully.'), $data);
     }

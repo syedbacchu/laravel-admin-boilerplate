@@ -105,6 +105,13 @@ class ProductsCategoryService extends BaseService implements ProductsCategorySer
         return $this->sendResponse(true, __('Data get successfully.'), $data);
     }
 
+    public function getHomeCategoryList(Request $request): array
+    {
+        $request->merge(['status' => $request->status ?? 1, 'per_page' => 6 , 'is_featured' => enum(StatusEnum::ACTIVE)]);
+        $data = $this->productsCategoryRepository->dataList($request);
+        return $this->sendResponse(true, __('Data get successfully.'), $data);
+    }
+
     public function getPublicDetails(string $identifier): array
     {
         $item = $this->productsCategoryRepository->findPublicByIdentifier($identifier);
