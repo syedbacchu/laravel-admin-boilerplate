@@ -38,6 +38,7 @@
                 ['data' => 'slug', 'name' => 'slug', 'title' => 'Slug'],
                 ['data' => 'sort_order', 'name' => 'sort_order', 'title' => 'Sort'],
                 ['data' => 'status_toggle', 'name' => 'status', 'title' => 'Status', 'orderable' => false],
+                ['data' => 'is_featured_toggle', 'name' => 'is_featured', 'title' => 'Featured', 'orderable' => false, 'searchable' => false],
                 [
                     'data' => 'actions',
                     'title' => 'Actions',

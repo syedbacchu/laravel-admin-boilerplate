@@ -43,6 +43,11 @@ class ProductCategoryController extends Controller
                         $item->id,
                         $item->status === 1
                     ),
+                    'is_featured_toggle' => fn($item) => toggle_column(
+                        route('product.category.featured'),
+                        $item->id,
+                        $item->is_featured === 1
+                    ),
                     'actions' => function ($item) {
                         $buttons = [
                             edit_column(route('product.category.edit', $item->id)),
@@ -52,7 +57,7 @@ class ProductCategoryController extends Controller
                         return action_buttons($buttons);
                     },
                 ],
-                rawColumns: ['image', 'status_toggle', 'actions']
+                rawColumns: ['image', 'status_toggle','is_featured_toggle', 'actions']
             );
         }
 
@@ -132,6 +137,17 @@ class ProductCategoryController extends Controller
             return response()->json($response);
         } catch (\Exception $e) {
             logStore('productCategoryStatus', $e->getMessage());
+            return response()->json(['success' => false, 'message' => somethingWrong()]);
+        }
+    }
+
+    public function featuredCategoryStatus(Request $request): JsonResponse
+    {
+        try {
+            $response = $this->productCategory->featured($request->id, $request->status);
+            return response()->json($response);
+        } catch (\Exception $e) {
+            logStore('featuredCategoryStatus', $e->getMessage());
             return response()->json(['success' => false, 'message' => somethingWrong()]);
         }
     }

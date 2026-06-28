@@ -34,7 +34,7 @@ class ProductsCategoryService extends BaseService implements ProductsCategorySer
             'meta_description' => $request->meta_description,
             'sort_order' => $request->sort_order ?? 0,
             'status' => $request->status ?? StatusEnum::ACTIVE,
-            'is_featured' => $request->is_featured ?? false,
+            'is_featured' => $request->is_featured ?? 0,
             'site_type' => $request->site_type ?? 1,
         ];
 
