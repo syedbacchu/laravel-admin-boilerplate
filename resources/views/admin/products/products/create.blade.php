@@ -375,6 +375,14 @@
                                class="form-input"
                                placeholder="0.00">
                     </div>
+                    <div>
+                        <label class="form-label">Minimum Quantity</label>
+                        <input type="number" step="0.01" min="0"
+                               name="minimum_quantity"
+                               value="{{ old('minimum_quantity', $item->minimum_quantity ?? '') }}"
+                               class="form-input"
+                               placeholder="0.00">
+                    </div>
 
                     <div class="grid grid-cols-2 gap-3">
                         <div>

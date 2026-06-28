@@ -42,6 +42,7 @@ class Product extends Model
         'site_type',
         'created_by',
         'updated_by',
+        'minimum_quantity'
     ];
 
     /*

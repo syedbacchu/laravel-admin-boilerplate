@@ -47,6 +47,7 @@ class ProductsService extends BaseService implements ProductsServiceInterface
 
                 // PRICING
                 'price'         => $request->price,
+                'minimum_quantity'   => $request->minimum_quantity ?? 0,
                 'discount'      => $request->discount,
                 'discount_type' => $request->discount_type,
 

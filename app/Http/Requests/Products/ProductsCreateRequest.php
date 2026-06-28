@@ -56,6 +56,7 @@ class ProductsCreateRequest extends FormRequest
             |------------------------------------------------------------------
             */
             'price'         => ['nullable', 'numeric', 'min:0'],
+            'minimum_quantity' => ['nullable', 'integer', 'min:0'],
             'discount'      => ['nullable', 'numeric', 'min:0'],
             'discount_type' => ['nullable', 'in:percent,flat'],
 

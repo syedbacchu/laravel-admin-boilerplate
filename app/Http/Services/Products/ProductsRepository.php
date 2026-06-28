@@ -91,6 +91,7 @@ class ProductsRepository extends BaseRepository implements ProductsRepositoryInt
                 'tagline',
                 'image',
                 'price',
+                'minimum_quantity',
                 'discount',
                 'discount_type',
                 'stock',
