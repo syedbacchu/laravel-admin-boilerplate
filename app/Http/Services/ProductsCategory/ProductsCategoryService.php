@@ -34,6 +34,8 @@ class ProductsCategoryService extends BaseService implements ProductsCategorySer
             'meta_description' => $request->meta_description,
             'sort_order' => $request->sort_order ?? 0,
             'status' => $request->status ?? StatusEnum::ACTIVE,
+            'is_featured' => $request->is_featured ?? false,
+            'site_type' => $request->site_type ?? 1,
         ];
 
         if ($editId) {
@@ -68,6 +70,17 @@ class ProductsCategoryService extends BaseService implements ProductsCategorySer
 
         $this->productsCategoryRepository->update($id, ['status' => (int) $status]);
         return $this->sendResponse(true, __('Status updated successfully'));
+    }
+
+    public function featured($id, $isFeatured): array
+    {
+        $item = $this->productsCategoryRepository->find($id);
+        if (!$item) {
+            return $this->sendResponse(false, __('Data not found'));
+        }
+
+        $this->productsCategoryRepository->update($id, ['is_featured' => (bool) $isFeatured]);
+        return $this->sendResponse(true, __('Featured status updated successfully'));
     }
 
     public function getDataTableData($request): array

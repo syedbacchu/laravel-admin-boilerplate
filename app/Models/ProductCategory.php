@@ -22,6 +22,9 @@ class ProductCategory extends Model
         'status',
         'created_by',
         'updated_by',
+        'is_featured',
+        'site_type',
+
     ];
 
     /*

@@ -44,6 +44,7 @@ class ProductsCategoryRepository extends BaseRepository implements ProductsCateg
                 'image',
                 'sort_order',
                 'status',
+                'is_featured',
             ],
         );
     }

@@ -26,28 +26,21 @@ class ProductsCategoryCreateRequest extends FormRequest
 
     return [
         'name' => ['required', 'string', 'max:255'],
-
         'slug' => [
             'nullable',
             'string',
             'max:255',
             Rule::unique('product_categories', 'slug')->ignore($id),
         ],
-
-        'parent_id' => [
-            'nullable',
-            'exists:product_categories,id'
-        ],
-
+        'parent_id' => ['nullable','exists:product_categories,id'],
         'image' => ['nullable', 'string'],
         'cover_image' => ['nullable', 'string'],
-
         'meta_title' => ['nullable', 'string', 'max:255'],
         'meta_description' => ['nullable', 'string'],
-
         'sort_order' => ['nullable', 'integer'],
-
         'status' => ['required', 'boolean'],
+        'is_featured' => ['nullable','integer','in:0,1',],
+        'site_type' => ['nullable'],
     ];
 }
 }

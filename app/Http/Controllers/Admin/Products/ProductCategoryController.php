@@ -43,7 +43,6 @@ class ProductCategoryController extends Controller
                         $item->id,
                         $item->status === 1
                     ),
-
                     'actions' => function ($item) {
                         $buttons = [
                             edit_column(route('product.category.edit', $item->id)),
