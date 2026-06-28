@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\Comparism\ComparismApiController;
+use App\Http\Controllers\Api\Dropshipping\DropshippingApiController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\AuthController;
@@ -170,4 +171,11 @@ Route::prefix('locations')->group(function () {
 Route::group(['prefix' => 'comparism', 'as' => 'apiComparism.'], function () {
     Route::get('/', [ComparismApiController::class, 'index'])->name('list');
     Route::get('{identifier}', [ComparismApiController::class, 'show'])->name('details');
+});
+
+
+Route::group(['prefix' => 'dropshippings', 'as' => 'apiDropshipping.'], function () {
+    Route::post('buy', [DropshippingApiController::class, 'submitOrderInformation'])->name('orderInformation');
+    Route::get('/', [DropshippingApiController::class, 'index'])->name('index');
+    Route::get('detail', [DropshippingApiController::class, 'show'])->name('show');
 });

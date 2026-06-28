@@ -326,6 +326,11 @@ return [
                 'route' => 'battery.water.lead.list',
                 'permission' => 'battery.water.lead.list',
             ],
+            [
+                'label' => 'Dropshipping Leads',
+                'route' => 'dropshipping.lead.list',
+                'permission' => 'dropshipping.lead.list',
+            ],
         ],
     ],
 

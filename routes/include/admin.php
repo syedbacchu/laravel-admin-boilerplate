@@ -29,6 +29,7 @@ use App\Http\Controllers\Admin\AboutCompany\AboutCompanyController;
 use App\Http\Controllers\Admin\BatteryWater\BatteryWaterLeadController;
 use App\Http\Controllers\Admin\Comparism\ComparismAreaController;
 use App\Http\Controllers\Admin\Contact\ContactController;
+use App\Http\Controllers\Admin\Dropshipping\DropshippingLeadController;
 use App\Http\Controllers\Admin\Lead\CollectLeadController;
 use App\Http\Controllers\Admin\Subscriber\SubscriberController;
 use App\Http\Controllers\Admin\Products\ProductController;
@@ -548,4 +549,16 @@ Route::group(['middleware' => ['skip.permission','no.permission.sync']], functio
     Route::group(['prefix' => 'comparism-area', 'as' => 'comparismArea.'], function () {
         Route::get('comparism-area-delete/{id}', [ComparismAreaController::class, 'destroy'])->name('delete');
         Route::post('publish', [ComparismAreaController::class, 'comparismAreaStatus'])->name('publish');
+    });
+
+    // Battery Water Leads
+    Route::resource('dropshipping', DropshippingLeadController::class)
+    ->except(['destroy'])
+    ->names([
+        'index'   => 'dropshipping.lead.list',
+        'show' => 'dropshipping.lead.show',
+    ]);
+    Route::group(['prefix' => 'dropshipping', 'as' => 'dropshipping.'], function () {
+        Route::get('dropshipping-delete/{id}', [DropshippingLeadController::class, 'destroy'])->name('delete');
+        Route::post('publish', [DropshippingLeadController::class, 'dropshippingStatus'])->name('publish');
     });

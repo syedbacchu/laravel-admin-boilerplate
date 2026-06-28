@@ -155,6 +155,10 @@ class Viewed
             'list' => 'admin.comparism_area.index',
             'create' => 'admin.comparism_area.create',
         ],
+        'dropshipping' => [
+            'list' => 'admin.dropshipping.index',
+            'show' => 'admin.dropshipping.show',
+        ],
 
     ];
 

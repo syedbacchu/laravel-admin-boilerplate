@@ -144,6 +144,10 @@ use App\Http\Services\ComparismArea\ComparismAreaRepositoryInterface;
 use App\Http\Services\ComparismArea\ComparismAreaService;
 use App\Http\Services\ComparismArea\ComparismAreaServiceInterface;
 
+use App\Http\Services\Dropshipping\DropshippingLeadRepository;
+use App\Http\Services\Dropshipping\DropshippingLeadRepositoryInterface;
+use App\Http\Services\Dropshipping\DropshippingLeadService;
+use App\Http\Services\Dropshipping\DropshippingLeadServiceInterface;
 use Illuminate\Support\ServiceProvider;
 
 class ServiceLayerProvider extends ServiceProvider
@@ -249,6 +253,9 @@ class ServiceLayerProvider extends ServiceProvider
 
         $this->app->bind(ComparismAreaRepositoryInterface::class, ComparismAreaRepository::class);
         $this->app->bind(ComparismAreaServiceInterface::class, ComparismAreaService::class);
+
+        $this->app->bind(DropshippingLeadServiceInterface::class, DropshippingLeadService::class);
+        $this->app->bind(DropshippingLeadRepositoryInterface::class, DropshippingLeadRepository::class);
     }
 
     /**
