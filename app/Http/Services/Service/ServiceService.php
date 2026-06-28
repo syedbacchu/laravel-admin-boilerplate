@@ -39,6 +39,7 @@ class ServiceService extends BaseService implements ServiceServiceInterface
             'meta_description' => $request->meta_description ?: $request->short_description,
             'meta_image' => $request->meta_image,
             'site_type' => $request->site_type ?? 1,
+            'feature_list' => $request->input('feature_list', []),
         ];
 
         if ($editId) {

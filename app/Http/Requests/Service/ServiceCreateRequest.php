@@ -31,6 +31,12 @@ class ServiceCreateRequest extends FormRequest
             'meta_keywords' => ['nullable', 'string'],
             'meta_description' => ['nullable', 'string'],
             'meta_image' => ['nullable', 'string', 'max:500'],
+
+            'feature_list' => ['nullable', 'array'],
+            'feature_list.*.title' => ['required', 'string', 'max:255'],
+            'feature_list.*.description' => ['nullable', 'string'],
+            'feature_list.*.image' => ['nullable', 'string'],
+            'feature_list.*.sort_order' => ['nullable', 'integer', 'min:0'],
         ];
     }
 

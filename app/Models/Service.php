@@ -28,12 +28,15 @@ class Service extends Model
         'meta_description',
         'meta_image',
         'site_type',
+        'feature_list'
     ];
 
     protected $casts = [
         'is_featured' => 'boolean',
         'sort_order' => 'integer',
         'category_id' => 'integer',
+        'feature_list' => 'array',
+
     ];
 
     public function category()

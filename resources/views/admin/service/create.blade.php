@@ -96,6 +96,113 @@
                         @customFields(\App\Models\Service::class)
                     @endif
                 </div>
+
+                <div x-data="{
+                    featureList: {{ old('feature_list', isset($item) && $item->feature_list ? json_encode($item->feature_list) : '[]') }}
+                }">
+                    <div class="flex items-center justify-between mb-3">
+                        <label class="text-xs uppercase font-semibold text-gray-500">
+                            {{ __('Feature List') }}
+                        </label>
+
+                        <button
+                            type="button"
+                            class="btn btn-primary btn-sm"
+                            @click="featureList.push({
+                                title: '',
+                                description: '',
+                                image: '',
+                                sort_order: featureList.length + 1
+                            })"
+                        >
+                            + Add Feature
+                        </button>
+                    </div>
+
+                    <template x-for="(feature, index) in featureList" :key="index">
+                        <div class="border rounded-lg p-4 mb-4 space-y-3">
+
+                            <div class="flex justify-between items-center">
+                                <h5 class="font-semibold">
+                                    Feature <span x-text="index + 1"></span>
+                                </h5>
+
+                                <button
+                                    type="button"
+                                    class="text-red-600"
+                                    @click="featureList.splice(index,1)"
+                                >
+                                    Remove
+                                </button>
+                            </div>
+
+                            <div>
+                                <label class="text-xs uppercase text-gray-500">Title</label>
+                                <input
+                                    type="text"
+                                    class="form-input mt-1"
+                                    :name="'feature_list['+index+'][title]'"
+                                    x-model="feature.title"
+                                >
+                            </div>
+
+                            <div>
+                                <label class="text-xs uppercase text-gray-500">Description</label>
+                                <textarea
+                                    rows="3"
+                                    class="form-textarea mt-1"
+                                    :name="'feature_list['+index+'][description]'"
+                                    x-model="feature.description"
+                                ></textarea>
+                            </div>
+
+                            <div
+                                x-data="fileManager(feature.image ?? '', 'feature_image_'+index)"
+                                x-init="
+                                    $watch('fileUrl', value => {
+                                        feature.image = value;
+                                    });
+                                "
+                            >
+                                <label class="text-xs uppercase text-gray-500">Image</label>
+
+                                <button
+                                    type="button"
+                                    class="btn btn-outline-primary btn-sm w-full"
+                                    @click="$dispatch('open-file-manager',{callback:callbackName})"
+                                >
+                                    Choose Image
+                                </button>
+
+                                <input
+                                    type="hidden"
+                                    :name="'feature_list['+index+'][image]'"
+                                    x-model="fileUrl"
+                                >
+
+                                <template x-if="filePreview">
+                                    <img
+                                        :src="filePreview"
+                                        class="rounded-lg border mt-2 object-cover w-20"
+                                    >
+                                </template>
+                            </div>
+
+                            <div>
+                                <label class="text-xs uppercase text-gray-500">Sort Order</label>
+
+                                <input
+                                    type="number"
+                                    class="form-input mt-1"
+                                    :name="'feature_list['+index+'][sort_order]'"
+                                    x-model="feature.sort_order"
+                                >
+                            </div>
+
+                        </div>
+                    </template>
+                </div>
+
             </div>
 
             <div class="space-y-6 xl:sticky xl:top-20 self-start">

@@ -37,6 +37,8 @@ return new class extends Migration
             $table->foreign('category_id')->references('id')->on('service_categories')->onDelete('set null');
             $table->foreign('added_by')->references('id')->on('users')->onDelete('set null');
             $table->foreign('updated_by')->references('id')->on('users')->onDelete('set null');
+            $table->json('feature_list')->nullable();
+
         });
     }
 
