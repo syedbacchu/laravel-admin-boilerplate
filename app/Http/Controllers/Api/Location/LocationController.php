@@ -18,14 +18,16 @@ class LocationController extends Controller
     }
     public function districts(Request $request): JsonResponse
     {
-        $request->merge(['status' => enum(StatusEnum::ACTIVE)]);
+        $request->merge(['status' => enum(StatusEnum::ACTIVE),
+        'list_size' => 'all',]);
         $response = $this->service->getDistrictList($request);
         return ResponseService::send($response);
     }
 
     public function thanas(Request $request): JsonResponse
     {
-        $request->merge(['status' => enum(StatusEnum::ACTIVE)]);
+        $request->merge(['status' => enum(StatusEnum::ACTIVE),
+        'list_size' => 'all',]);
         $response = $this->service->getThanaList($request);
         return ResponseService::send($response);
     }
