@@ -26,6 +26,7 @@ use App\Http\Controllers\Api\Faq\FaqController;
 use App\Http\Controllers\Api\Faq\FaqCategoryController;
 use App\Http\Controllers\Api\CollectLead\CollectLeadController;
 use App\Http\Controllers\Api\Product\ProductController;
+use App\Http\Controllers\Api\Product\ProductCategoryController;
 use App\Http\Controllers\Api\Contact\ContactController;
 use App\Http\Controllers\Api\Location\LocationController;
 use App\Http\Controllers\Api\Settings\CommonSettingController;
@@ -152,6 +153,10 @@ Route::group(['prefix' => 'collect-leads', 'as' => 'apiCollectLead.'], function 
     Route::get('detail', [CollectLeadController::class, 'show'])->name('show');
 });
 
+Route::group(['prefix' => 'product-category', 'as' => 'apiCategory.'], function () {
+    Route::get('/', [ProductCategoryController::class, 'index'])->name('list');
+    Route::get('{identifier}', [ProductCategoryController::class, 'show'])->name('details');
+});
 Route::group(['prefix' => 'products', 'as' => 'apiProduct.'], function () {
     Route::get('/', [ProductController::class, 'index'])->name('list');
     Route::get('{identifier}', [ProductController::class, 'show'])->name('details');

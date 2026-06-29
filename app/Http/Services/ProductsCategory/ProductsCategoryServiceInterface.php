@@ -16,5 +16,6 @@ interface ProductsCategoryServiceInterface extends BaseServiceInterface
     public function editData($id): array;
     public function createData(Request $request): array;
     public function getPublicList(Request $request): array;
+    public function getHomeCategoryList(Request $request): array;
     public function getPublicDetails(string $identifier): array;
 }
