@@ -17,6 +17,7 @@ class DropshippingLeadDetailResource extends JsonResource
             'district'      => $this->district,
             'thana'         => $this->thana,
             'address'       => $this->address,
+            'country'       => $this->country,
 
             'product'       => optional($this->product)->name,
             'product_range' => $this->product_range,

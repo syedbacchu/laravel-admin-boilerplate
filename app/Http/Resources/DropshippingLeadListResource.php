@@ -16,6 +16,7 @@ class DropshippingLeadListResource extends JsonResource
             'email'         => $this->email,
             'district'      => $this->district,
             'thana'         => $this->thana,
+            'country'       => $this->country,
 
             'product'       => optional($this->product)->name,
             'product_range' => $this->product_range,

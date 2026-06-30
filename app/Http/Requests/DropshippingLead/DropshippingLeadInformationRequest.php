@@ -22,6 +22,7 @@ class DropshippingLeadInformationRequest extends BaseFormRequest
             'district'      => 'nullable|string|max:255',
             'thana'         => 'nullable|string|max:255',
             'address'       => 'nullable|string',
+            'country'       => 'required|nullable|string',
 
             'product_id'    => 'nullable|integer|exists:products,id',
             'product_range' => 'nullable|string|max:255',

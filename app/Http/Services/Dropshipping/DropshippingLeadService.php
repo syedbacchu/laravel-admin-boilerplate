@@ -30,6 +30,7 @@ class DropshippingLeadService extends BaseService implements DropshippingLeadSer
             'district'      => $data['district'] ?? null,
             'thana'         => $data['thana'] ?? null,
             'address'       => $data['address'] ?? null,
+            'country'       => $data['country'] ?? null,
 
             'product_id'    => $data['product_id'] ?? null,
             'product_range' => $data['product_range'] ?? null,
@@ -70,7 +71,7 @@ class DropshippingLeadService extends BaseService implements DropshippingLeadSer
             return $this->sendResponse(false, 'Lead not found', [], 404);
         }
 
-        return $this->sendResponse(true, 'Lead retrieved successfully', $lead, 200);
+        return $this->sendResponse(true, 'Lead retrieved successfully', $lead);
     }
 
     public function updateStatus($id, $status): array

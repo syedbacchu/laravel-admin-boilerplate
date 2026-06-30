@@ -21,11 +21,9 @@ class DropshippingLeadRepository extends BaseRepository implements DropshippingL
         return $this->model->create($data);
     }
 
-    public function getLeadById(int $type): ?Model
+    public function getLeadById(int $id): ?Model
     {
-        return $this->model->where('type', $type)
-            ->orderBy('created_at', 'desc')
-            ->get();
+        return $this->model->with('product')->find($id);
     }
 
     public function leadList(Request $request): array
@@ -42,6 +40,7 @@ class DropshippingLeadRepository extends BaseRepository implements DropshippingL
                 'address',
                 'product_range',
                 'note',
+                'country'
             ],
             select: [
                 'id',
@@ -57,6 +56,7 @@ class DropshippingLeadRepository extends BaseRepository implements DropshippingL
                 'note',
                 'created_at',
                 'updated_at',
+                'country',
             ],
         );
     }
