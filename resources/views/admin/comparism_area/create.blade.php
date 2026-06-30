@@ -56,49 +56,35 @@
                     </div>
 
                     <div id="repeater">
-
-                        @if(isset($item))
-
+                        @forelse(($areas ?? collect()) as $area)
                             <div class="grid grid-cols-3 gap-3 mb-3 repeater-row items-center">
+                                <input type="hidden" name="area_ids[]" value="{{ $area->id }}">
 
-                                <input type="text" name="left_side[]" value="{{ old('left_side.0', $item->left_side) }}"
+                                <input type="text" name="left_side[]" value="{{ old('left_side.'.$loop->index, $area->left_side) }}"
                                     class="form-input" placeholder="Left Side">
 
-                                <input type="text" name="right_side[]" value="{{ old('right_side.0', $item->right_side) }}"
+                                <input type="text" name="right_side[]" value="{{ old('right_side.'.$loop->index, $area->right_side) }}"
                                     class="form-input" placeholder="Right Side">
 
                                 <div class="flex gap-2">
                                     <input type="number" name="sort_order[]"
-                                        value="{{ old('sort_order.0', $item->sort_order) }}" class="form-input"
+                                        value="{{ old('sort_order.'.$loop->index, $area->sort_order) }}" class="form-input"
                                         placeholder="Sort">
 
-                                    <button type="button" class="removeRow btn btn-sm btn-outline-danger">
-                                        &times;
-                                    </button>
+                                    <button type="button" class="removeRow btn btn-sm btn-outline-danger">&times;</button>
                                 </div>
-
                             </div>
-
-                        @else
-
+                        @empty
                             <div class="grid grid-cols-3 gap-3 mb-3 repeater-row items-center">
-
+                                <input type="hidden" name="area_ids[]" value="">
                                 <input type="text" name="left_side[]" class="form-input" placeholder="Left Side">
-
                                 <input type="text" name="right_side[]" class="form-input" placeholder="Right Side">
-
                                 <div class="flex gap-2">
                                     <input type="number" name="sort_order[]" class="form-input" placeholder="Sort">
-
-                                    <button type="button" class="removeRow btn btn-sm btn-outline-danger">
-                                        &times;
-                                    </button>
+                                    <button type="button" class="removeRow btn btn-sm btn-outline-danger">&times;</button>
                                 </div>
-
                             </div>
-
-                        @endif
-
+                        @endforelse
                     </div>
 
                 </div>
@@ -135,26 +121,19 @@
         document.getElementById('addRow').addEventListener('click', function () {
             let row = `
         <div class="grid grid-cols-3 gap-3 mb-3 repeater-row items-center">
-
+            <input type="hidden" name="area_ids[]" value="">
             <input type="text" name="left_side[]" class="form-input" placeholder="Left Side">
-
             <input type="text" name="right_side[]" class="form-input" placeholder="Right Side">
-
             <div class="flex gap-2">
                 <input type="number" name="sort_order[]" class="form-input" placeholder="Sort">
-
-                <button type="button" class="removeRow btn btn-sm btn-outline-danger">
-                    &times;
-                </button>
+                <button type="button" class="removeRow btn btn-sm btn-outline-danger">&times;</button>
             </div>
-
-        </div>
-    `;
+        </div>`;
             document.getElementById('repeater').insertAdjacentHTML('beforeend', row);
         });
 
         document.getElementById('repeater').addEventListener('click', function (e) {
-            if (e.target.classList.contains('removeRow')) {
+            if (e.target.classList.contains('removeRow')) { 
                 let rows = document.querySelectorAll('#repeater .repeater-row');
                 if (rows.length > 1) {
                     e.target.closest('.repeater-row').remove();
