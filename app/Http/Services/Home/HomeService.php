@@ -26,6 +26,7 @@ class HomeService
         $data['stat_list'] = app(StatService::class)->getPublicList($request)['data']['data'];
         $data['product_list'] = app(ProductsService::class)->getHomeProductList($request)['data']['data'];
         $data['category_list'] = app(ProductsCategoryService::class)->getHomeCategoryList($request)['data']['data'];
+        $data['package_list'] = [];
 
         return sendResponse(true, __('Data get successfully.'), $data);
     }
