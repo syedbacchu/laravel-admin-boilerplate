@@ -29,6 +29,7 @@ use App\Http\Controllers\Api\Product\ProductController;
 use App\Http\Controllers\Api\Product\ProductCategoryController;
 use App\Http\Controllers\Api\Contact\ContactController;
 use App\Http\Controllers\Api\Location\LocationController;
+use App\Http\Controllers\Api\Package\PackageApiController;
 use App\Http\Controllers\Api\Settings\CommonSettingController;
 use App\Http\Controllers\Api\Subscriber\SubscriberController;
 /*
@@ -183,4 +184,9 @@ Route::group(['prefix' => 'dropshippings', 'as' => 'apiDropshipping.'], function
     Route::post('buy', [DropshippingApiController::class, 'submitOrderInformation'])->name('orderInformation');
     Route::get('/', [DropshippingApiController::class, 'index'])->name('index');
     Route::get('detail', [DropshippingApiController::class, 'show'])->name('show');
+});
+
+Route::group(['prefix' => 'package', 'as' => 'apiPackage.'], function () {
+    Route::get('/', [PackageApiController::class, 'index'])->name('list');
+    Route::get('{identifier}', [PackageApiController::class, 'show'])->name('details');
 });

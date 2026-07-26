@@ -148,6 +148,10 @@ use App\Http\Services\Dropshipping\DropshippingLeadRepository;
 use App\Http\Services\Dropshipping\DropshippingLeadRepositoryInterface;
 use App\Http\Services\Dropshipping\DropshippingLeadService;
 use App\Http\Services\Dropshipping\DropshippingLeadServiceInterface;
+use App\Http\Services\Package\PackageRepository;
+use App\Http\Services\Package\PackageRepositoryInterface;
+use App\Http\Services\Package\PackageService;
+use App\Http\Services\Package\PackageServiceInterface;
 use Illuminate\Support\ServiceProvider;
 
 class ServiceLayerProvider extends ServiceProvider
@@ -256,6 +260,9 @@ class ServiceLayerProvider extends ServiceProvider
 
         $this->app->bind(DropshippingLeadServiceInterface::class, DropshippingLeadService::class);
         $this->app->bind(DropshippingLeadRepositoryInterface::class, DropshippingLeadRepository::class);
+
+        $this->app->bind(PackageServiceInterface::class, PackageService::class);
+        $this->app->bind(PackageRepositoryInterface::class, PackageRepository::class);
     }
 
     /**

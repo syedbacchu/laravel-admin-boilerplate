@@ -31,6 +31,7 @@ use App\Http\Controllers\Admin\Comparism\ComparismAreaController;
 use App\Http\Controllers\Admin\Contact\ContactController;
 use App\Http\Controllers\Admin\Dropshipping\DropshippingLeadController;
 use App\Http\Controllers\Admin\Lead\CollectLeadController;
+use App\Http\Controllers\Admin\Package\PackageController;
 use App\Http\Controllers\Admin\Subscriber\SubscriberController;
 use App\Http\Controllers\Admin\Products\ProductController;
 use App\Http\Controllers\Admin\Stat\StatController;
@@ -562,3 +563,20 @@ Route::group(['middleware' => ['skip.permission','no.permission.sync']], functio
         Route::get('dropshipping-delete/{id}', [DropshippingLeadController::class, 'destroy'])->name('delete');
         Route::post('publish', [DropshippingLeadController::class, 'dropshippingStatus'])->name('publish');
     });
+
+    Route::resource('packages', PackageController::class)
+        ->except(['destroy'])
+        ->names([
+            'index'  => 'package.list',
+            'create' => 'package.create',
+            'edit'   => 'package.edit',
+            'store'  => 'package.store',
+            'update' => 'package.update',
+            'show'   => 'package.show',
+        ]);
+    
+    Route::group(['prefix' => 'packages', 'as' => 'package.'], function () {
+        Route::get('package-delete/{id}', [PackageController::class, 'destroy'])->name('delete');
+        Route::post('publish', [PackageController::class, 'packageStatus'])->name('publish');
+    });
+    

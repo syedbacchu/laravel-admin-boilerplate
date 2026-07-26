@@ -159,6 +159,10 @@ class Viewed
             'list' => 'admin.dropshipping.index',
             'show' => 'admin.dropshipping.show',
         ],
+        'package' => [
+            'list' => 'admin.package.index',
+            'create' => 'admin.package.create',
+        ],
 
     ];
 

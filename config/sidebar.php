@@ -282,6 +282,24 @@ return [
         ],
     ],
     [
+        'key' => 'package',
+        'label' => 'Packages',
+        'icon' => 'package',
+        'permission' => null,
+        'children' => [
+            [
+                'label' => 'Packages List',
+                'route' => 'package.list',
+                'permission' => 'package.list',
+            ],
+            [
+                'label' => 'Create Package',
+                'route' => 'package.create',
+                'permission' => 'package.create',
+            ],
+        ],
+    ],
+    [
         'key' => 'project',
         'label' => 'Projects',
         'icon' => 'project',
