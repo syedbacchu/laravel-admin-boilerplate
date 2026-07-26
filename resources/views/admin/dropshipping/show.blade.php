@@ -75,6 +75,11 @@
                         </div>
 
                         <div>
+                            <span class="text-xs text-gray-400">Country</span>
+                            <p>{{ $lead->country ?? 'N/A' }}</p>
+                        </div>
+
+                        <div>
                             <span class="text-xs text-gray-400">Thana</span>
                             <p>{{ $lead->thana ?? 'N/A' }}</p>
                         </div>

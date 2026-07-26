@@ -23,35 +23,43 @@ class ComparismAreaService extends BaseService implements ComparismAreaServiceIn
 
     public function storeOrUpdate(ComparismAreaCreateRequest $request): array
     {
-        $editId = $request->edit_id;
+        $compareId = $request->compare_id;
+        $areaIds   = $request->area_ids ?? [];
+        $isEdit    = collect($areaIds)->filter()->isNotEmpty();
 
-        if ($editId) {
-
-            $item = $this->comparismRepository->find($editId);
-
-            $item->update([
-                'compare_id' => $request->compare_id,
-                'left_side'  => $request->left_side[0] ?? '',
-                'right_side' => $request->right_side[0] ?? '',
-                'sort_order' => (int) ($request->sort_order[0] ?? 0),
-                'status'     => $request->status ?? StatusEnum::ACTIVE,
-                'updated_by' => auth()->id(),
-            ]);
-
-            return $this->sendResponse(true, __('Updated successfully'));
-        }
+        $keptIds = [];
 
         foreach ($request->left_side as $key => $leftSide) {
-            ComparismArea::create([
-                'compare_id' => $request->compare_id,
+            $rowId = $areaIds[$key] ?? null;
+
+            $payload = [
+                'compare_id' => $compareId,
                 'left_side'  => $leftSide,
                 'right_side' => $request->right_side[$key] ?? '',
                 'sort_order' => (int) ($request->sort_order[$key] ?? 0),
-                'status'     => $request->status ?? 1,
-            ]);
+                'status'     => $request->status ?? StatusEnum::ACTIVE,
+            ];
+
+            if ($rowId) {
+                $row = $this->comparismRepository->find($rowId);
+                if ($row) {
+                    $row->update($payload + ['updated_by' => auth()->id()]);
+                    $keptIds[] = $row->id;
+                    continue;
+                }
+            }
+
+            $new = ComparismArea::create($payload);
+            $keptIds[] = $new->id;
         }
 
-        return $this->sendResponse(true, __('Created successfully'));
+        // form e thakte na thakte (user delete kore disile) ai compare_id er baki row gula delete
+        ComparismArea::query()
+            ->where('compare_id', $compareId)
+            ->whereNotIn('id', $keptIds)
+            ->delete();
+
+        return $this->sendResponse(true, $isEdit ? __('Updated successfully') : __('Created successfully'));
     }
     public function deleteData($id): array
     {
@@ -88,9 +96,16 @@ class ComparismAreaService extends BaseService implements ComparismAreaServiceIn
             return $this->sendResponse(false, __('Data not found'));
         }
 
-        return $this->sendResponse(true, '', $item);
-    }
+        $areas = ComparismArea::query()
+            ->where('compare_id', $item->compare_id)
+            ->orderBy('sort_order')
+            ->get();
 
+        return $this->sendResponse(true, '', [
+            'item'  => $item,
+            'areas' => $areas,
+        ]);
+    }
     public function createData(Request $request): array
     {
         $items = Comparism::query()

@@ -112,7 +112,8 @@ class ComparismAreaController extends Controller
         $data = [
             'pageTitle'     => __('Update Comparism Area'),
             'function_type' => 'update',
-            'item'          => $response['data'],
+            'item'          => $response['data']['item'],
+            'areas'         => $response['data']['areas'],
             'items'         => $setup['items'] ?? [],
             'comparisms'    => $setup['items'] ?? [],
         ];

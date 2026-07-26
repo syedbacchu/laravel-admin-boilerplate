@@ -22,6 +22,7 @@ class Dropshipping extends Model
         'product_range',
         'status',
         'note',
+        'country',
     ];
 
     /**

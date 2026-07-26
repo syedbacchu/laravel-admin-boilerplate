@@ -23,6 +23,7 @@ return new class extends Migration
             $table->string('product_range')->nullable();
             $table->tinyInteger('status')->default(0);
             $table->text('note')->nullable();
+            $table->string('country');
             $table->timestamps();
         });
     }

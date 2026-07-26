@@ -36,6 +36,7 @@ class DropshippingLeadController extends Controller
                     'email' => fn($item) => $item->email ?? '-',
                     'district' => fn($item) => $item->district ?? '-',
                     'thana' => fn($item) => $item->thana ?? '-',
+                    'country'=>fn($item) => $item->country ?? '-',
                     'product' => fn($item) => optional($item->product)->name ?? '-',
                     'product_range' => fn($item) => $item->product_range ?? '-',
                     'status_badge' => fn($item) => toggle_column(
