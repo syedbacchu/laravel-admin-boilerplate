@@ -44,7 +44,7 @@ class ProductController extends Controller
                         ? '<img src="' . $item->image . '" class="h-12 w-12 rounded object-cover">'
                         : '<span class="text-gray-400">-</span>',
 
-                    'category' => fn($item) => $item->category?->name ?? '-',
+                    'category' => fn($item) => $item->categories->first()?->name ?? '-',
                     'slug'     => fn($item) => $item->slug ?? '-',
 
                     'is_featured_toggle' => fn($item) => toggle_column(

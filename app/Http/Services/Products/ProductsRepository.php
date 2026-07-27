@@ -24,7 +24,7 @@ class ProductsRepository extends BaseRepository implements ProductsRepositoryInt
     {
         return DataListManager::list(
             request: $request,
-            query: Product::with('category', 'categories', 'variations.attributeValue.attribute'),
+            query: Product::with('categories', 'variations.attributeValue.attribute'),
 
             searchable: [
                 'name',

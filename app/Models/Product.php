@@ -20,7 +20,6 @@ class Product extends Model
         'video_img',
         'price',
         'brand_id',
-        'category_id',
         'attributes',
         'features',
         'short_description',
@@ -66,12 +65,6 @@ class Product extends Model
     | RELATIONSHIPS
     |--------------------------------------------------------------------------
     */
-
-    // Single Category (backward compatibility)
-    public function category()
-    {
-        return $this->belongsTo(ProductCategory::class, 'category_id');
-    }
 
     // Multiple Categories (many-to-many)
     public function categories()

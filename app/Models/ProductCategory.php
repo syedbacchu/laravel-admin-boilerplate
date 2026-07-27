@@ -51,4 +51,22 @@ class ProductCategory extends Model
         return $this->belongsToMany(Product::class, 'product_category_mappings', 'category_id', 'product_id')
             ->withTimestamps();
     }
+
+    /*
+    |--------------------------------------------------------------------------
+    | SCOPES
+    |--------------------------------------------------------------------------
+    */
+
+    // Get categories that have at least one product
+    public function scopeHasProducts($query)
+    {
+        return $query->whereHas('products');
+    }
+
+    // Get categories with product count
+    public function scopeWithProductCount($query)
+    {
+        return $query->withCount('products');
+    }
 }

@@ -23,11 +23,14 @@ class CategoryProductRepository extends BaseRepository implements CategoryProduc
     */
     public function dataList(Request $request): array
     {
-        return DataListManager::list(
+        $query = ProductCategory::query()
+            ->with(['parent'])
+            ->hasProducts() // Only categories with at least one product
+            ->withCount('products as product_count');
+
+        $result = DataListManager::list(
             request: $request,
-            query: ProductCategory::query()
-                ->withCount('products') // Load products count
-                ->whereHas('products'), // Only categories with at least one product
+            query: $query,
 
             searchable: [
                 'name',
@@ -54,6 +57,8 @@ class CategoryProductRepository extends BaseRepository implements CategoryProduc
                 'meta_description',
             ],
         );
+
+        return $result;
     }
 
     /*
@@ -64,8 +69,8 @@ class CategoryProductRepository extends BaseRepository implements CategoryProduc
     public function findCategoryWithProducts(string $id): ?ProductCategory
     {
         return ProductCategory::query()
-            ->withCount('products')
             ->with(['parent', 'children'])
+            ->withCount('products as product_count')
             ->find($id);
     }
 

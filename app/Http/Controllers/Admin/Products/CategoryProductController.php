@@ -26,7 +26,6 @@ class CategoryProductController extends Controller
     public function index(Request $request)
     {
         $data['pageTitle'] = __('Category Product List');
-
         if ($request->ajax()) {
             return DataListManager::dataTableHandle(
                 request: $request,
@@ -66,7 +65,7 @@ class CategoryProductController extends Controller
 
         return ResponseService::send([
             'data' => $data,
-        ], null, \App\Http\Services\Response\Viewed::get('category_product', 'list'));
+        ], null, viewss('category_product', 'list'));
     }
 
     /*
@@ -91,7 +90,7 @@ class CategoryProductController extends Controller
 
         return ResponseService::send([
             'data' => $data,
-        ], null, \App\Http\Services\Response\Viewed::get('category_product', 'show'));
+        ], null, viewss('category_product', 'show'));
     }
 
     /*
