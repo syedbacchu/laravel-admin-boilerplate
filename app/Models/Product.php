@@ -70,7 +70,8 @@ class Product extends Model
     public function categories()
     {
         return $this->belongsToMany(ProductCategory::class, 'product_category_mappings', 'product_id', 'category_id')
-            ->withTimestamps();
+            ->withTimestamps()
+            ->withPivot('sort_order');
     }
 
     // Brand

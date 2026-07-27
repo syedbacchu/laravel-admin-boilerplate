@@ -186,9 +186,64 @@
                             <span class="h-2 w-2 rounded-full bg-green-500"></span>
                             Products in "{{ $category->name }}"
                         </h3>
-                        <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-sm font-bold bg-blue-50 text-blue-700">
-                            {{ count($products) }} Products
-                        </span>
+                        <div class="flex items-center gap-2">
+                            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-sm font-bold bg-blue-50 text-blue-700">
+                                {{ count($products) }} Products
+                            </span>
+                            <button type="button" class="inline-flex items-center gap-2 px-4 py-2 bg-green-600 text-white text-sm font-medium rounded-lg hover:bg-green-700 transition" onclick="toggleAddProductForm()">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                                </svg>
+                                Add Product
+                            </button>
+                        </div>
+                    </div>
+
+                    {{-- ── ADD PRODUCT FORM ── --}}
+                    <div id="addProductForm" class="hidden border-b border-gray-200 bg-gray-50 px-6 py-4">
+                        <h4 class="font-semibold text-gray-800 mb-4">Add Product to Category</h4>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            {{-- Product Search --}}
+                            <div class="md:col-span-2">
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Search Products</label>
+                                <div class="relative">
+                                    <input type="text" id="productSearch" placeholder="Type to search products..."
+                                           class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                                    <div id="searchResults" class="absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded-lg shadow-lg max-h-60 overflow-y-auto hidden"></div>
+                                </div>
+                            </div>
+
+                            {{-- Sort Order --}}
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Sort Order</label>
+                                <input type="number" id="sortOrder" value="0" min="0"
+                                       class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                            </div>
+
+                            {{-- Selected Product Display --}}
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Selected Product</label>
+                                <div id="selectedProduct" class="w-full px-4 py-2 bg-gray-100 border border-gray-300 rounded-lg text-gray-500">
+                                    No product selected
+                                </div>
+                            </div>
+
+                            {{-- Hidden fields --}}
+                            <input type="hidden" id="selectedProductId" value="">
+
+                            {{-- Actions --}}
+                            <div class="md:col-span-2 flex items-center gap-2">
+                                <button type="button" onclick="addProductToCategory()"
+                                        class="px-6 py-2 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition">
+                                    Add Product
+                                </button>
+                                <button type="button" onclick="toggleAddProductForm()"
+                                        class="px-6 py-2 bg-gray-200 text-gray-700 font-medium rounded-lg hover:bg-gray-300 transition">
+                                    Cancel
+                                </button>
+                            </div>
+                        </div>
                     </div>
 
                     {{-- ── PRODUCTS LIST ── --}}
@@ -259,13 +314,35 @@
                                             </div>
 
                                             {{-- Actions --}}
-                                            <div class="flex-shrink-0">
+                                            <div class="flex-shrink-0 flex items-center gap-2">
+                                                {{-- Sort Order Input --}}
+                                                <div class="flex items-center gap-1">
+                                                    <input type="number"
+                                                           value="{{ $product['pivot']['sort_order'] ?? 0 }}"
+                                                           min="0"
+                                                           class="w-16 px-2 py-1 text-xs border border-gray-300 rounded focus:ring-2 focus:ring-blue-500"
+                                                           onchange="updateProductSortOrder({{ $product['id'] }}, this.value)">
+                                                    <span class="text-xs text-gray-500">Sort</span>
+                                                </div>
+
+                                                {{-- Edit Button --}}
                                                 <a href="{{ route('product.edit', $product['id']) }}"
-                                                   class="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-gray-100 text-gray-600 hover:bg-gray-200 transition">
+                                                   class="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-gray-100 text-gray-600 hover:bg-gray-200 transition"
+                                                   title="Edit Product">
                                                     <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
                                                     </svg>
                                                 </a>
+
+                                                {{-- Remove Button --}}
+                                                <button type="button"
+                                                        onclick="removeProductFromCategory({{ $product['id'] }})"
+                                                        class="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-red-100 text-red-600 hover:bg-red-200 transition"
+                                                        title="Remove from Category">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-4v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                                    </svg>
+                                                </button>
                                             </div>
                                         </div>
 
@@ -316,4 +393,214 @@
     @endif
 
 </div>
+
+{{-- ── JAVASCRIPT ───────────────────────────────────────────────────── --}}
+<script>
+let categoryId = {{ $category->id ?? 0 }};
+let searchTimeout;
+
+// Toggle add product form
+function toggleAddProductForm() {
+    const form = document.getElementById('addProductForm');
+    form.classList.toggle('hidden');
+}
+
+// Product search functionality
+document.getElementById('productSearch').addEventListener('input', function(e) {
+    const searchTerm = e.target.value;
+
+    if (searchTerm.length < 2) {
+        document.getElementById('searchResults').classList.add('hidden');
+        return;
+    }
+
+    clearTimeout(searchTimeout);
+
+    searchTimeout = setTimeout(() => {
+        searchProducts(searchTerm);
+    }, 300);
+});
+
+function searchProducts(searchTerm) {
+    fetch('{{ route('category-product.search-products') }}', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': '{{ csrf_token() }}'
+        },
+        body: JSON.stringify({
+            search: searchTerm,
+            category_id: categoryId
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        displaySearchResults(data);
+    })
+    .catch(error => {
+        console.error('Error searching products:', error);
+    });
+}
+
+function displaySearchResults(data) {
+    const resultsContainer = document.getElementById('searchResults');
+
+    if (!data.success || !data.data || data.data.length === 0) {
+        resultsContainer.innerHTML = '<div class="p-3 text-gray-500">No products found</div>';
+        resultsContainer.classList.remove('hidden');
+        return;
+    }
+
+    let html = '';
+    data.data.forEach(product => {
+        html += `
+            <div class="p-3 hover:bg-gray-100 cursor-pointer border-b border-gray-100 last:border-b-0"
+                 onclick="selectProduct(${product.id}, '${product.name}', '${product.image || ''}')">
+                <div class="flex items-center gap-3">
+                    ${product.image ?
+                        `<img src="${product.image}" class="w-10 h-10 object-cover rounded">` :
+                        `<div class="w-10 h-10 bg-gray-200 rounded flex items-center justify-center">
+                            <svg class="w-6 h-6 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                            </svg>
+                        </div>`
+                    }
+                    <div>
+                        <div class="font-medium text-gray-900">${product.name}</div>
+                        ${product.price ? `<div class="text-sm text-green-600">${parseFloat(product.price).toFixed(2)}</div>` : ''}
+                    </div>
+                </div>
+            </div>
+        `;
+    });
+
+    resultsContainer.innerHTML = html;
+    resultsContainer.classList.remove('hidden');
+}
+
+function selectProduct(productId, productName, productImage) {
+    document.getElementById('selectedProductId').value = productId;
+    document.getElementById('selectedProduct').innerHTML = `
+        <div class="flex items-center gap-2">
+            ${productImage ?
+                `<img src="${productImage}" class="w-8 h-8 object-cover rounded">` :
+                `<div class="w-8 h-8 bg-gray-200 rounded flex items-center justify-center">
+                    <svg class="w-4 h-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                    </svg>
+                </div>`
+            }
+            <span class="font-medium text-gray-900">${productName}</span>
+        </div>
+    `;
+    document.getElementById('searchResults').classList.add('hidden');
+    document.getElementById('productSearch').value = '';
+}
+
+function addProductToCategory() {
+    const productId = document.getElementById('selectedProductId').value;
+    const sortOrder = document.getElementById('sortOrder').value;
+
+    if (!productId) {
+        alert('Please select a product first');
+        return;
+    }
+
+    fetch('{{ route('category-product.add-product') }}', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': '{{ csrf_token() }}'
+        },
+        body: JSON.stringify({
+            category_id: categoryId,
+            product_id: productId,
+            sort_order: sortOrder
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            alert(data.message);
+            location.reload();
+        } else {
+            alert(data.message || 'Error adding product to category');
+        }
+    })
+    .catch(error => {
+        console.error('Error adding product:', error);
+        alert('Error adding product to category');
+    });
+}
+
+function removeProductFromCategory(productId) {
+    if (!confirm('Are you sure you want to remove this product from the category?')) {
+        return;
+    }
+
+    fetch('{{ route('category-product.remove-product') }}', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': '{{ csrf_token() }}'
+        },
+        body: JSON.stringify({
+            category_id: categoryId,
+            product_id: productId
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            alert(data.message);
+            location.reload();
+        } else {
+            alert(data.message || 'Error removing product from category');
+        }
+    })
+    .catch(error => {
+        console.error('Error removing product:', error);
+        alert('Error removing product from category');
+    });
+}
+
+function updateProductSortOrder(productId, sortOrder) {
+    fetch('{{ route('category-product.update-sort-order') }}', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': '{{ csrf_token() }}'
+        },
+        body: JSON.stringify({
+            category_id: categoryId,
+            product_id: productId,
+            sort_order: sortOrder
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            // Show success message
+            console.log('Sort order updated successfully');
+        } else {
+            alert(data.message || 'Error updating sort order');
+        }
+    })
+    .catch(error => {
+        console.error('Error updating sort order:', error);
+        alert('Error updating sort order');
+    });
+}
+
+// Close search results when clicking outside
+document.addEventListener('click', function(e) {
+    const searchResults = document.getElementById('searchResults');
+    const searchInput = document.getElementById('productSearch');
+
+    if (!searchResults.contains(e.target) && e.target !== searchInput) {
+        searchResults.classList.add('hidden');
+    }
+});
+</script>
+
 </x-layout.default>

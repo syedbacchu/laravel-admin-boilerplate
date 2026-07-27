@@ -49,7 +49,9 @@ class ProductCategory extends Model
     public function products()
     {
         return $this->belongsToMany(Product::class, 'product_category_mappings', 'category_id', 'product_id')
-            ->withTimestamps();
+            ->withTimestamps()
+            ->withPivot('sort_order')
+            ->orderBy('pivot_sort_order');
     }
 
     /*

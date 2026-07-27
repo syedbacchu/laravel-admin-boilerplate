@@ -503,6 +503,10 @@ Route::group(['middleware' => ['skip.permission','no.permission.sync']], functio
     Route::get('category-products/{id}', [CategoryProductController::class, 'show'])->name('category-product.show');
     Route::group(['prefix' => 'category-products', 'as' => 'category-product.'], function () {
         Route::post('publish', [CategoryProductController::class, 'categoryStatus'])->name('publish');
+        Route::post('search-products', [CategoryProductController::class, 'searchProducts'])->name('search-products');
+        Route::post('add-product', [CategoryProductController::class, 'addProductToCategory'])->name('add-product');
+        Route::post('remove-product', [CategoryProductController::class, 'removeProductFromCategory'])->name('remove-product');
+        Route::post('update-sort-order', [CategoryProductController::class, 'updateProductSortOrder'])->name('update-sort-order');
     });
 
 

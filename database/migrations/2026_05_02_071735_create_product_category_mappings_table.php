@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('product_id');
             $table->unsignedBigInteger('category_id');
+            $table->bigInteger('sort_order')->default(0);
             $table->timestamps();
         });
     }

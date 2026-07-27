@@ -108,4 +108,68 @@ class CategoryProductController extends Controller
             return response()->json(['success' => false, 'message' => somethingWrong()]);
         }
     }
+
+    /*
+    |--------------------------------------------------------------------------
+    | SEARCH PRODUCTS (AJAX)
+    |--------------------------------------------------------------------------
+    */
+    public function searchProducts(Request $request): JsonResponse
+    {
+        try {
+            $response = $this->categoryProduct->searchProducts($request);
+            return response()->json($response);
+        } catch (\Exception $e) {
+            logStore('searchProducts', $e->getMessage());
+            return response()->json(['success' => false, 'message' => somethingWrong()]);
+        }
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | ADD PRODUCT TO CATEGORY (AJAX)
+    |--------------------------------------------------------------------------
+    */
+    public function addProductToCategory(Request $request): JsonResponse
+    {
+        try {
+            $response = $this->categoryProduct->addProductToCategory($request);
+            return response()->json($response);
+        } catch (\Exception $e) {
+            logStore('addProductToCategory', $e->getMessage());
+            return response()->json(['success' => false, 'message' => somethingWrong()]);
+        }
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | REMOVE PRODUCT FROM CATEGORY (AJAX)
+    |--------------------------------------------------------------------------
+    */
+    public function removeProductFromCategory(Request $request): JsonResponse
+    {
+        try {
+            $response = $this->categoryProduct->removeProductFromCategory($request);
+            return response()->json($response);
+        } catch (\Exception $e) {
+            logStore('removeProductFromCategory', $e->getMessage());
+            return response()->json(['success' => false, 'message' => somethingWrong()]);
+        }
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | UPDATE PRODUCT SORT ORDER (AJAX)
+    |--------------------------------------------------------------------------
+    */
+    public function updateProductSortOrder(Request $request): JsonResponse
+    {
+        try {
+            $response = $this->categoryProduct->updateProductSortOrder($request);
+            return response()->json($response);
+        } catch (\Exception $e) {
+            logStore('updateProductSortOrder', $e->getMessage());
+            return response()->json(['success' => false, 'message' => somethingWrong()]);
+        }
+    }
 }
