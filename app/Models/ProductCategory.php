@@ -44,4 +44,11 @@ class ProductCategory extends Model
     {
         return $this->hasMany(ProductCategory::class, 'parent_id');
     }
+
+    // Products in this category (many-to-many)
+    public function products()
+    {
+        return $this->belongsToMany(Product::class, 'product_category_mappings', 'category_id', 'product_id')
+            ->withTimestamps();
+    }
 }

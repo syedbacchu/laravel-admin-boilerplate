@@ -237,7 +237,7 @@ return [
                 'permission' => 'attribute.value.list',
             ],
             [
-                'label' => 'Products Categories',
+                'label' => 'Categories',
                 'route' => 'product.category.list',
                 'permission' => 'products_category.list',
             ],
@@ -250,6 +250,11 @@ return [
                 'label' => 'Products',
                 'route' => 'product.list',
                 'permission' => 'products.list',
+            ],
+            [
+                'label' => 'Category Products',
+                'route' => 'category-product.list',
+                'permission' => 'category-product.list',
             ],
         ],
     ],

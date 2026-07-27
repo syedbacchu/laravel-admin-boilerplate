@@ -22,6 +22,7 @@ use App\Http\Controllers\Admin\Service\ServiceController;
 use App\Http\Controllers\Admin\Feature\FeatureCategoryController;
 use App\Http\Controllers\Admin\Feature\FeatureController;
 use App\Http\Controllers\Admin\Products\ProductCategoryController;
+use App\Http\Controllers\Admin\Products\CategoryProductController;
 use App\Http\Controllers\Admin\Products\ProductFeatureController;
 use App\Http\Controllers\Admin\Project\ProjectCategoryController;
 use App\Http\Controllers\Admin\Project\ProjectController;
@@ -495,6 +496,13 @@ Route::group(['middleware' => ['skip.permission','no.permission.sync']], functio
         Route::get('product-delete/{id}', [ProductController::class, 'destroy'])->name('delete');
         Route::post('publish', [ProductController::class, 'productStatus'])->name('publish');
         Route::post('featured', [ProductController::class, 'productFeatured'])->name('featured');
+    });
+
+    // Category Products (Categories with products)
+    Route::get('category-products', [CategoryProductController::class, 'index'])->name('category-product.list');
+    Route::get('category-products/{id}', [CategoryProductController::class, 'show'])->name('category-product.show');
+    Route::group(['prefix' => 'category-products', 'as' => 'category-product.'], function () {
+        Route::post('publish', [CategoryProductController::class, 'categoryStatus'])->name('publish');
     });
 
 

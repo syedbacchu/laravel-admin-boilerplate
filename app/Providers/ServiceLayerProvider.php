@@ -110,6 +110,11 @@ use App\Http\Services\ProductFeature\ProductFeatureRepositoryInterface;
 use App\Http\Services\ProductFeature\ProductFeatureService;
 use App\Http\Services\ProductFeature\ProductFeatureServiceInterface;
 
+use App\Http\Services\CategoryProduct\CategoryProductRepository;
+use App\Http\Services\CategoryProduct\CategoryProductRepositoryInterface;
+use App\Http\Services\CategoryProduct\CategoryProductService;
+use App\Http\Services\CategoryProduct\CategoryProductServiceInterface;
+
 use App\Http\Services\AboutCompany\AboutCompanyService;
 use App\Http\Services\AboutCompany\AboutCompanyServiceInterface;
 use App\Http\Services\AboutCompany\AboutCompanyRepository;
@@ -239,6 +244,9 @@ class ServiceLayerProvider extends ServiceProvider
 
         $this->app->bind(ProductFeatureRepositoryInterface::class, ProductFeatureRepository::class);
         $this->app->bind(ProductFeatureServiceInterface::class, ProductFeatureService::class);
+
+        $this->app->bind(CategoryProductRepositoryInterface::class, CategoryProductRepository::class);
+        $this->app->bind(CategoryProductServiceInterface::class, CategoryProductService::class);
 
         $this->app->bind(CollectLeadRepositoryInterface::class, CollectLeadRepository::class);
         $this->app->bind(CollectLeadServiceInterface::class, CollectLeadService::class);
