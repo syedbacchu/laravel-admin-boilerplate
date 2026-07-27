@@ -42,6 +42,7 @@ return new class extends Migration
             $table->unsignedBigInteger('created_by')->nullable();
             $table->unsignedBigInteger('updated_by')->nullable();
             $table->integer('minimum_quantity')->default(0);
+            $table->tinyInteger('site_type')->default(1);
             $table->timestamps();
         });
     }

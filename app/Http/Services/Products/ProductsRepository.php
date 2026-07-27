@@ -47,10 +47,6 @@ class ProductsRepository extends BaseRepository implements ProductsRepositoryInt
                     'column' => 'site_type',
                     'type' => 'basic',
                 ],
-                'category_id' => [
-                    'column' => 'category_id',
-                    'type' => 'basic',
-                ],
                 'brand_id' => [
                     'column' => 'brand_id',
                     'type' => 'basic',
@@ -99,7 +95,6 @@ class ProductsRepository extends BaseRepository implements ProductsRepositoryInt
                 'is_featured',
                 'status',
                 'features',
-                'category_id',
                 'created_at',
             ],
         );

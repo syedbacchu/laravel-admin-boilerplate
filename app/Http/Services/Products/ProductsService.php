@@ -2,6 +2,7 @@
 
 namespace App\Http\Services\Products;
 
+use App\Enums\SliderSiteType;
 use App\Enums\StatusEnum;
 use App\Http\Requests\Products\ProductsCreateRequest;
 use App\Http\Services\BaseService;
@@ -57,7 +58,6 @@ class ProductsService extends BaseService implements ProductsServiceInterface
 
                 // RELATIONS
                 'brand_id'    => $request->brand_id,
-                'category_id' => $request->category_id ?? null, // Primary category for backward compatibility
 
                 // STOCK
                 'stock' => $request->stock,
@@ -81,7 +81,7 @@ class ProductsService extends BaseService implements ProductsServiceInterface
                 // FLAGS
                 'is_featured' => $request->is_featured ?? 0,
                 'status'      => $request->status ?? StatusEnum::ACTIVE,
-                'site_type'      => $request->site_type ,
+                'site_type'      => $request->site_type ?? SliderSiteType::GENERAL ,
             ];
 
             /*
