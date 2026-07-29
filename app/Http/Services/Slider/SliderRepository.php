@@ -16,31 +16,73 @@ class SliderRepository extends BaseRepository implements SliderRepositoryInterfa
         parent::__construct($model);
     }
 
+    // public function dataList($request): array
+    // {
+    //     // Force fresh query with no cache
+    //     $query = Slider::query()->latest();
+
+    //     // Add conditions
+    //     if ($request->has('status')) {
+    //         $query->where('status', $request->status);
+    //     }
+
+    //     if ($request->has('type')) {
+    //         $query->where('type', $request->type);
+    //     }
+
+    //     if ($request->has('site_type')) {
+    //         $query->where('site_type', $request->site_type);
+    //     }
+
+    //     // Get fresh data without any cache
+    //     $data = $query->get();
+
+    //     return [
+    //         'total_count' => $data->count(),
+    //         'data' => $data,
+    //     ];
+    // }
+
     public function dataList($request): array
     {
-        // Force fresh query with no cache
-        $query = Slider::query()->latest();
+        return DataListManager::list(
+            request: $request,
+            query: Slider::query(),
 
-        // Add conditions
-        if ($request->has('status')) {
-            $query->where('status', $request->status);
-        }
+            searchable: [
+                'title',
+                'subtitle',
+            ],
 
-        if ($request->has('type')) {
-            $query->where('type', $request->type);
-        }
+            filters: [
+                'status' => [
+                    'column' => 'status'
+                ],
+                'type' => [
+                    'column' => 'type'
+                ],
+                'site_type' => [
+                    'column' => 'site_type'
+                ],
+            ],
 
-        if ($request->has('site_type')) {
-            $query->where('site_type', $request->site_type);
-        }
-
-        // Get fresh data without any cache
-        $data = $query->get();
-
-        return [
-            'total_count' => $data->count(),
-            'data' => $data,
-        ];
+            select: [
+                'photo',
+                'title',
+                'subtitle',
+                'description',
+                'tagline',
+                'status',
+                'link',
+                'mobile_banner',
+                'type',
+                'serial',
+                'video_link',
+                'page',
+                'cta_button',
+                'stat',
+            ],
+        );
     }
 
     public function createSlider(array $data): Model
