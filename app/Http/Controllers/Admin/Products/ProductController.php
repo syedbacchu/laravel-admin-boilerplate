@@ -62,7 +62,7 @@ class ProductController extends Controller
                     'actions' => function ($item) {
                         $buttons = [
                             edit_column(route('product.edit', $item->id)),
-                            delete_column(route('product.product-delete', $item->id)),
+                            delete_column(route('product.delete', $item->id)),
                         ];
                         return action_buttons($buttons);
                     },
