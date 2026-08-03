@@ -110,9 +110,28 @@ class ProductsService extends BaseService implements ProductsServiceInterface
                 }
 
                 foreach ($request->variations as $var) {
-                    if (!empty($var['attribute_value_id'])) {
+                    // Support both single attribute and multiple attributes
+                    $attributeValueId = $var['attribute_value_id'] ?? null;
+                    $attributes = $var['attributes'] ?? [];
+
+                    // If using new multi-attribute format, use attributes array
+                    if (!empty($attributes) && is_array($attributes)) {
+                        $variation = $product->variations()->create([
+                            'attributes' => $attributes,
+                            'name'       => $this->generateVariationName($attributes),
+                            'sku'        => $var['sku'] ?? 'VAR-' . strtoupper(uniqid()),
+                            'price'      => $var['price'] ?? $request->price ?? 0,
+                            'stock'      => $var['stock'] ?? 0,
+                            'status'     => $var['status'] ?? 1,
+                        ]);
+
+                        // Sync attribute values to pivot table
+                        $variation->attributeValues()->sync($attributes);
+                    }
+                    // Backward compatibility: single attribute_value_id
+                    elseif (!empty($attributeValueId)) {
                         $product->variations()->create([
-                            'attribute_value_id' => $var['attribute_value_id'],
+                            'attribute_value_id' => $attributeValueId,
                             'sku'                => $var['sku'] ?? 'VAR-' . strtoupper(uniqid()),
                             'price'              => $var['price'] ?? $request->price ?? 0,
                             'stock'              => $var['stock'] ?? 0,
@@ -232,7 +251,7 @@ class ProductsService extends BaseService implements ProductsServiceInterface
             return $this->sendResponse(false, __('Data not found'));
         }
 
-        $item->load('variations.attributeValue.attribute', 'categories');
+        $item->load('variations.attributeValue.attribute', 'variations.attributeValues.attribute', 'categories');
 
         return $this->sendResponse(true, '', $item);
     }
@@ -296,6 +315,36 @@ class ProductsService extends BaseService implements ProductsServiceInterface
         }
 
         return make_unique_slug($base, 'products');
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | VARIATION NAME GENERATOR
+    |--------------------------------------------------------------------------
+    */
+    protected function generateVariationName(array $attributeIds): string
+    {
+        if (empty($attributeIds)) {
+            return '';
+        }
+
+        // Load attribute values with their relationships
+        $attributeValues = AttributeValue::with('attribute')
+            ->whereIn('id', $attributeIds)
+            ->get();
+
+        // Group by attribute type and build readable name
+        $groups = [];
+        foreach ($attributeIds as $id) {
+            $av = $attributeValues->firstWhere('id', $id);
+            if ($av && $av->attribute) {
+                $attrName = $av->attribute->name;
+                $valueName = $av->value;
+                $groups[] = "{$attrName}: {$valueName}";
+            }
+        }
+
+        return implode(' - ', $groups);
     }
 
     protected function normalizeProductFeatures(?array $features): ?array

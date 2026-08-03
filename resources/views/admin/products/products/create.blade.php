@@ -87,7 +87,8 @@
 
                 {{-- PRODUCT VARIATIONS --}}
                 <div class="panel border rounded-xl p-5 bg-white shadow-sm">
-                    <h3 class="font-bold text-gray-700 border-b pb-2 mb-4">🎨 Product Variations</h3>
+                    <h3 class="font-bold text-gray-700 border-b pb-2 mb-4">🎨 Product Variations (Multi-Attribute)</h3>
+                    <p class="text-sm text-gray-500 mb-4">Select multiple attributes to create variation combinations (e.g., Color + Size + Unit)</p>
 
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4 bg-gray-50 p-3 rounded-lg border">
                         <div>
@@ -101,16 +102,32 @@
                         </div>
                         <div>
                             <label class="form-label">Attribute Value</label>
-                            <select id="attr-value" class="form-select">
+                            <select id="attr-value" class="form-select" onchange="addAttributeToBuffer()">
                                 <option value="">— Select Value —</option>
                             </select>
                         </div>
                     </div>
 
+                    {{-- Selected Attributes Buffer --}}
+                    <div id="attribute-buffer" class="mb-4 hidden">
+                        <label class="form-label">Selected Attributes for Variation:</label>
+                        <div id="selected-attributes" class="flex flex-wrap gap-2 p-3 bg-blue-50 rounded-lg border"></div>
+                        <button type="button"
+                                onclick="createVariationFromBuffer()"
+                                class="btn btn-sm btn-primary mt-2">
+                            ✅ Create Variation with These Attributes
+                        </button>
+                        <button type="button"
+                                onclick="clearAttributeBuffer()"
+                                class="btn btn-sm btn-outline-danger mt-2 ml-2">
+                            Clear
+                        </button>
+                    </div>
+
                     <button type="button"
                             onclick="addVariation()"
                             class="btn btn-sm btn-secondary mb-4">
-                        + Add Variation
+                        + Quick Add Single Attribute
                     </button>
 
                     <div id="variation-wrapper" class="space-y-3"></div>
@@ -652,6 +669,7 @@
         let qIndex = 0;
 
         const attributeValues = @json($attributeValues);
+        let attributeBuffer = []; // Store selected attribute IDs for multi-attribute variations
 
         /*
         |------------------------------------------------------------------
@@ -675,52 +693,191 @@
 
         /*
         |------------------------------------------------------------------
-        | Add Variation Row
+        | Add attribute to buffer (for multi-attribute variations)
         |------------------------------------------------------------------
         */
-        function addVariation(data = null) {
-            const wrapper = document.getElementById('variation-wrapper');
-            let valId, sku, price, stock, variationLabel;
+        function addAttributeToBuffer() {
+            const valEl = document.getElementById('attr-value');
+            const valId = parseInt(valEl.value);
 
+            if (!valId) {
+                alert('Please select an attribute value first.');
+                return;
+            }
+
+            // Check if already in buffer
+            if (attributeBuffer.includes(valId)) {
+                alert('This attribute is already selected!');
+                return;
+            }
+
+            attributeBuffer.push(valId);
+            updateAttributeBufferDisplay();
+            valEl.value = ''; // Reset selection
+        }
+
+        /*
+        |------------------------------------------------------------------
+        | Update attribute buffer display
+        |------------------------------------------------------------------
+        */
+        function updateAttributeBufferDisplay() {
+            const buffer = document.getElementById('attribute-buffer');
+            const display = document.getElementById('selected-attributes');
+
+            if (attributeBuffer.length === 0) {
+                buffer.classList.add('hidden');
+                return;
+            }
+
+            buffer.classList.remove('hidden');
+            display.innerHTML = '';
+
+            attributeBuffer.forEach(id => {
+                const av = attributeValues.find(v => v.id === id);
+                if (av) {
+                    const tag = document.createElement('span');
+                    tag.className = 'inline-flex items-center bg-white border rounded-full px-3 py-1 text-sm';
+                    tag.innerHTML = `
+                        <span class="font-medium text-gray-700">${av.attribute?.name || 'Attribute'}:</span>
+                        <span class="text-blue-600 ml-1">${av.value}</span>
+                        <button type="button" onclick="removeFromBuffer(${id})" class="ml-2 text-red-500 hover:text-red-700 font-bold">×</button>
+                    `;
+                    display.appendChild(tag);
+                }
+            });
+        }
+
+        /*
+        |------------------------------------------------------------------
+        | Remove attribute from buffer
+        |------------------------------------------------------------------
+        */
+        function removeFromBuffer(id) {
+            attributeBuffer = attributeBuffer.filter(item => item !== id);
+            updateAttributeBufferDisplay();
+        }
+
+        /*
+        |------------------------------------------------------------------
+        | Clear attribute buffer
+        |------------------------------------------------------------------
+        */
+        function clearAttributeBuffer() {
+            attributeBuffer = [];
+            updateAttributeBufferDisplay();
+        }
+
+        /*
+        |------------------------------------------------------------------
+        | Create variation from buffer (multi-attribute)
+        |------------------------------------------------------------------
+        */
+        function createVariationFromBuffer() {
+            if (attributeBuffer.length === 0) {
+                alert('Please select at least one attribute value.');
+                return;
+            }
+
+            addVariation(null, attributeBuffer);
+            clearAttributeBuffer();
+        }
+
+        /*
+        |------------------------------------------------------------------
+        | Add Variation Row (supports both single and multi-attribute)
+        |------------------------------------------------------------------
+        */
+        function addVariation(data = null, attributes = null) {
+            const wrapper = document.getElementById('variation-wrapper');
+            let sku, price, stock, variationData = [];
+
+            // Handle data from edit mode or manual creation
             if (data) {
-                valId = data.attribute_value_id ?? '';
-                sku   = data.sku ?? '';
+                // Backward compatibility: if using old attribute_value_id
+                if (data.attribute_value_id && !data.attributes) {
+                    attributes = [data.attribute_value_id];
+                } else if (data.attributes && Array.isArray(data.attributes)) {
+                    attributes = data.attributes;
+                }
+
+                sku = data.sku ?? '';
                 price = data.price ?? '';
                 stock = data.stock ?? '';
-                const attributeName = data.attribute_value?.attribute?.name ?? 'Attribute';
-                const valueName = data.attribute_value?.value ?? data.attribute_value?.name ?? `ID: ${valId}`;
-                variationLabel = `${attributeName}: ${valueName}`;
+
+                // Build variation data for display
+                if (data.attribute_values && Array.isArray(data.attribute_values)) {
+                    // New format with loaded relationships
+                    variationData = data.attribute_values.map(av => ({
+                        id: av.id,
+                        name: av.attribute?.name || 'Attribute',
+                        value: av.value
+                    }));
+                } else if (data.attribute_value) {
+                    // Old format with single relationship
+                    variationData = [{
+                        id: data.attribute_value.id,
+                        name: data.attribute_value.attribute?.name || 'Attribute',
+                        value: data.attribute_value.value
+                    }];
+                }
+            } else if (attributes && Array.isArray(attributes)) {
+                // New multi-attribute creation
+                variationData = attributes.map(id => {
+                    const av = attributeValues.find(v => v.id === id);
+                    return {
+                        id: av.id,
+                        name: av.attribute?.name || 'Attribute',
+                        value: av.value
+                    };
+                });
             } else {
+                // Fallback to single attribute from dropdown
                 const typeEl = document.getElementById('attr-type');
-                const valEl  = document.getElementById('attr-value');
+                const valEl = document.getElementById('attr-value');
 
                 if (!valEl.value) {
                     alert('Please select an attribute value first.');
                     return;
                 }
 
-                const typeName = typeEl.options[typeEl.selectedIndex].text;
-                const valText  = valEl.options[valEl.selectedIndex].text;
+                attributes = [parseInt(valEl.value)];
+                const typeName = typeEl.options[typeEl.selectedIndex]?.text || 'Attribute';
+                const valText = valEl.options[valEl.selectedIndex]?.text || valEl.value;
 
-                // Check duplicate
-                const existing = wrapper.querySelector(`input[name$="[attribute_value_id]"][value="${valEl.value}"]`);
-                if (existing) {
-                    alert('This variation already exists!');
-                    return;
-                }
-
-                valId = valEl.value;
-                sku   = '';
-                price = '';
-                stock = '';
-                variationLabel = `${typeName}: ${valText}`;
+                variationData = [{
+                    id: parseInt(valEl.value),
+                    name: typeName,
+                    value: valText
+                }];
             }
 
+            // Check for duplicate variations
+            const existingVariations = wrapper.querySelectorAll('.variation-row');
+            const attributesString = JSON.stringify(attributes.sort());
+
+            for (const existing of existingVariations) {
+                const existingAttrs = existing.dataset.attributes;
+                if (existingAttrs === attributesString) {
+                    alert('This variation combination already exists!');
+                    return;
+                }
+            }
+
+            // Build variation label
+            const variationLabel = variationData
+                .map(item => `${item.name}: ${item.value}`)
+                .join(' - ');
+
+            // Build attributes hidden inputs
+            const attributesInputs = attributes.map((attrId, idx) =>
+                `<input type="hidden" name="variations[${vIndex}][attributes][${idx}]" value="${attrId}">`
+            ).join('');
+
             const html = `
-                <div class="border rounded-lg p-3 bg-gray-50 relative grid grid-cols-1 md:grid-cols-4 gap-2 items-center variation-row">
-                    <input type="hidden"
-                           name="variations[${vIndex}][attribute_value_id]"
-                           value="${escHtml(valId)}">
+                <div class="border rounded-lg p-3 bg-gray-50 relative grid grid-cols-1 md:grid-cols-4 gap-2 items-center variation-row"
+                     data-attributes='${attributesString}'>
+                    ${attributesInputs}
                     <div class="md:col-span-4">
                         <span class="inline-flex items-center rounded-full bg-blue-50 text-blue-700 border border-blue-200 px-3 py-1 text-xs font-medium">
                             ${escHtml(variationLabel)}

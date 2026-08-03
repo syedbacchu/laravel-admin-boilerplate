@@ -118,7 +118,9 @@ class ProductsCreateRequest extends FormRequest
             'variations.*.sku'                     => ['nullable', 'string'],
             'variations.*.price'                   => ['nullable', 'numeric', 'min:0'],
             'variations.*.stock'                   => ['nullable', 'integer', 'min:0'],
-            'variations.*.attribute_value_id'      => ['nullable', 'integer'],
+            'variations.*.attribute_value_id'      => ['nullable', 'integer'], // Backward compatibility
+            'variations.*.attributes'              => ['nullable', 'array'], // NEW: Multiple attributes
+            'variations.*.attributes.*'            => ['nullable', 'integer', 'exists:attribute_values,id'],
             'variations.*.status'                  => ['nullable', 'boolean'],
 
             /*
@@ -157,10 +159,20 @@ class ProductsCreateRequest extends FormRequest
             'is_featured' => (int) ($this->is_featured ?? 0),
         ]);
 
-        // Variation status fix
+        // Variation status fix & attributes array handling
         if ($this->variations) {
             $variations = collect($this->variations)->map(function ($var) {
                 $var['status'] = isset($var['status']) ? (int) $var['status'] : 1;
+
+                // Normalize attributes array (filter out empty values)
+                if (isset($var['attributes']) && is_array($var['attributes'])) {
+                    $var['attributes'] = array_filter($var['attributes'], function ($value) {
+                        return !empty($value) && is_numeric($value);
+                    });
+                    // Re-index array
+                    $var['attributes'] = array_values($var['attributes']);
+                }
+
                 return $var;
             })->toArray();
 
